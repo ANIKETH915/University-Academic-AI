@@ -1,0 +1,3524 @@
+{
+  "http_status": 200,
+  "ingest": {
+    "status": "success",
+    "document_id": "doc-be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+    "source_file": "be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+    "workspace_id": "ws-nlp-31567ba5",
+    "pages": 1,
+    "questions_extracted": 18,
+    "chunks_created": 18,
+    "embeddings_created": 18,
+    "vectors_inserted": 18,
+    "rejected_questions": 0,
+    "ingestion_status": "ready",
+    "extraction_quality": "COMPLETE",
+    "extraction_audit": {
+      "page_extraction_audit": [
+        {
+          "page": 1,
+          "pymupdf_chars": 3087,
+          "filtered_native_chars": 1621,
+          "ocr_used": true,
+          "ocr_chars": 1786,
+          "final_chars": 1492,
+          "quality_reason": "selected_ocr_layout_yield_18",
+          "quality_valid": true,
+          "raw_native_chars": 3087,
+          "raw_ocr_chars": 1786,
+          "reconstructed_chars": 1492,
+          "selected_representation": "ocr_layout",
+          "representations": [
+            {
+              "representation": "native",
+              "chars": 1621,
+              "accepted_questions": 13,
+              "rejected_candidates": 0,
+              "structure_score": 0.833,
+              "text_quality": 0.972
+            },
+            {
+              "representation": "ocr_text",
+              "chars": 1542,
+              "accepted_questions": 12,
+              "rejected_candidates": 0,
+              "structure_score": 1.0,
+              "text_quality": 0.972
+            },
+            {
+              "representation": "ocr_layout",
+              "chars": 1492,
+              "accepted_questions": 18,
+              "rejected_candidates": 0,
+              "structure_score": 1.0,
+              "text_quality": 0.972
+            }
+          ],
+          "status": "TEXT_READY"
+        }
+      ],
+      "rejected_candidates": [],
+      "accepted_question_ids": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q1(f)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q3(c)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q4(c)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "detected_markers": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q1(f)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q3(c)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q4(c)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "reconciled_markers": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q1(f)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q3(c)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q4(c)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "missing_questions": [],
+      "accepted_count": 18,
+      "rejected_count": 0,
+      "candidate_count": 18,
+      "selected_representation": "ocr_layout",
+      "extraction_incomplete": false,
+      "incomplete_reason": null,
+      "persisted_pdf": "D:\\pyqrag\\data\\uploads\\ws-nlp-31567ba5\\be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf"
+    },
+    "quality": {
+      "questions_extracted": 18,
+      "source_markers_detected": 18,
+      "missing_questions": [],
+      "extra_without_marker": [],
+      "extraction_quality": "COMPLETE",
+      "confidence": 0.95,
+      "question_extraction_confidence": 0.95,
+      "accepted_count": 18,
+      "rejected_count": 0,
+      "total_pages": 1,
+      "exam_year": 2022,
+      "exam_session": "Nov/Dec",
+      "ocr_pages": 1,
+      "llm_used": false,
+      "llm_candidates": 0,
+      "llm_rejected_for_truncation": 0,
+      "cross_page_merges": 0,
+      "grounding_coverage": 1.0,
+      "selected_representations": [
+        {
+          "page": 1,
+          "selected": "ocr_layout"
+        }
+      ],
+      "rejection_reasons": []
+    },
+    "persisted_pdf": "D:\\pyqrag\\data\\uploads\\ws-nlp-31567ba5\\be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf"
+  },
+  "analyze_pyq": {
+    "available": true,
+    "single_paper_mode": true,
+    "total_papers": 1,
+    "pyq_paper_count": 1,
+    "workspace_id": "ws-nlp-31567ba5",
+    "subject": "natural language processing",
+    "semester": "Semester 7",
+    "total_questions_analyzed": 18,
+    "total_questions_extracted": 18,
+    "total_valid_questions": 18,
+    "questions_extracted": 18,
+    "unique_topic_clusters": 36,
+    "unique_question_intents": 18,
+    "years_covered": [
+      2022
+    ],
+    "exact_repeat_count": 0,
+    "semantic_repeat_count": 0,
+    "topics": [
+      {
+        "topic_name": "Stage Involved",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          10
+        ],
+        "average_marks": 10.0,
+        "min_marks": 10,
+        "max_marks": 10,
+        "priority_score": 34.0,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Explain Different stage involved in NLP process with suitable example.",
+        "source_questions": [
+          {
+            "question_id": "Q2(b)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q2(b)",
+            "marks": 10,
+            "exact_text": "Explain Different stage involved in NLP process with suitable example.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Stage",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          10
+        ],
+        "average_marks": 10.0,
+        "min_marks": 10,
+        "max_marks": 10,
+        "priority_score": 34.0,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Explain Different stage involved in NLP process with suitable example.",
+        "source_questions": [
+          {
+            "question_id": "Q2(b)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q2(b)",
+            "marks": 10,
+            "exact_text": "Explain Different stage involved in NLP process with suitable example.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Tagging Challenges Faced",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          10
+        ],
+        "average_marks": 10.0,
+        "min_marks": 10,
+        "max_marks": 10,
+        "priority_score": 34.0,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "What is POS tagging? Discuss various challenges faced by POS tagging.",
+        "source_questions": [
+          {
+            "question_id": "Q3(c)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q3(c)",
+            "marks": 10,
+            "exact_text": "What is POS tagging? Discuss various challenges faced by POS tagging.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Challenges Faced Tagging",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          10
+        ],
+        "average_marks": 10.0,
+        "min_marks": 10,
+        "max_marks": 10,
+        "priority_score": 34.0,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "What is POS tagging? Discuss various challenges faced by POS tagging.",
+        "source_questions": [
+          {
+            "question_id": "Q3(c)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q3(c)",
+            "marks": 10,
+            "exact_text": "What is POS tagging? Discuss various challenges faced by POS tagging.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Top-Down Bottom-Up Approach vs Bottom-Up Approach Parsing",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          10
+        ],
+        "average_marks": 10.0,
+        "min_marks": 10,
+        "max_marks": 10,
+        "priority_score": 34.0,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Compare top-down and bottom-up approach of parsing with example.",
+        "source_questions": [
+          {
+            "question_id": "Q4(c)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q4(c)",
+            "marks": 10,
+            "exact_text": "Compare top-down and bottom-up approach of parsing with example.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Bottom-Up Approach Parsing",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          10
+        ],
+        "average_marks": 10.0,
+        "min_marks": 10,
+        "max_marks": 10,
+        "priority_score": 34.0,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Compare top-down and bottom-up approach of parsing with example.",
+        "source_questions": [
+          {
+            "question_id": "Q4(c)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q4(c)",
+            "marks": 10,
+            "exact_text": "Compare top-down and bottom-up approach of parsing with example.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Word Sense Disambiguation",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          10
+        ],
+        "average_marks": 10.0,
+        "min_marks": 10,
+        "max_marks": 10,
+        "priority_score": 34.0,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "What do you mean by word sense disambiguation (WSD)? Discuss dictionary based  approach for WSD.",
+        "source_questions": [
+          {
+            "question_id": "Q5(a)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q5(a)",
+            "marks": 10,
+            "exact_text": "What do you mean by word sense disambiguation (WSD)? Discuss dictionary based  approach for WSD.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Sense Disambiguation Dictionary",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          10
+        ],
+        "average_marks": 10.0,
+        "min_marks": 10,
+        "max_marks": 10,
+        "priority_score": 34.0,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "What do you mean by word sense disambiguation (WSD)? Discuss dictionary based  approach for WSD.",
+        "source_questions": [
+          {
+            "question_id": "Q5(a)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q5(a)",
+            "marks": 10,
+            "exact_text": "What do you mean by word sense disambiguation (WSD)? Discuss dictionary based  approach for WSD.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Hobbs Pronoun Resolution",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          10
+        ],
+        "average_marks": 10.0,
+        "min_marks": 10,
+        "max_marks": 10,
+        "priority_score": 34.0,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Explain Hobbs algorithm for pronoun resolution.",
+        "source_questions": [
+          {
+            "question_id": "Q5(b)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q5(b)",
+            "marks": 10,
+            "exact_text": "Explain Hobbs algorithm for pronoun resolution.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Hobbs Pronoun",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          10
+        ],
+        "average_marks": 10.0,
+        "min_marks": 10,
+        "max_marks": 10,
+        "priority_score": 34.0,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Explain Hobbs algorithm for pronoun resolution.",
+        "source_questions": [
+          {
+            "question_id": "Q5(b)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q5(b)",
+            "marks": 10,
+            "exact_text": "Explain Hobbs algorithm for pronoun resolution.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Text Summarization",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          10
+        ],
+        "average_marks": 10.0,
+        "min_marks": 10,
+        "max_marks": 10,
+        "priority_score": 34.0,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Explain Text summarization in detail.",
+        "source_questions": [
+          {
+            "question_id": "Q6(a)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q6(a)",
+            "marks": 10,
+            "exact_text": "Explain Text summarization in detail.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Text",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          10
+        ],
+        "average_marks": 10.0,
+        "min_marks": 10,
+        "max_marks": 10,
+        "priority_score": 34.0,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Explain Text summarization in detail.",
+        "source_questions": [
+          {
+            "question_id": "Q6(a)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q6(a)",
+            "marks": 10,
+            "exact_text": "Explain Text summarization in detail.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Porter Stemming",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          10
+        ],
+        "average_marks": 10.0,
+        "min_marks": 10,
+        "max_marks": 10,
+        "priority_score": 34.0,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Explain Porter Stemming algorithm in detail",
+        "source_questions": [
+          {
+            "question_id": "Q6(b)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q6(b)",
+            "marks": 10,
+            "exact_text": "Explain Porter Stemming algorithm in detail",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Porter",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          10
+        ],
+        "average_marks": 10.0,
+        "min_marks": 10,
+        "max_marks": 10,
+        "priority_score": 34.0,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Explain Porter Stemming algorithm in detail",
+        "source_questions": [
+          {
+            "question_id": "Q6(b)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q6(b)",
+            "marks": 10,
+            "exact_text": "Explain Porter Stemming algorithm in detail",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Syntactic Ambiguity Lexical vs Ambiguity Lexical Ambiguity",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Differentiate between Syntactic ambiguity and Lexical Ambiguity.",
+        "source_questions": [
+          {
+            "question_id": "Q1(a)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q1(a)",
+            "marks": 5,
+            "exact_text": "Differentiate between Syntactic ambiguity and Lexical Ambiguity.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Ambiguity Lexical Ambiguity",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Differentiate between Syntactic ambiguity and Lexical Ambiguity.",
+        "source_questions": [
+          {
+            "question_id": "Q1(a)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q1(a)",
+            "marks": 5,
+            "exact_text": "Differentiate between Syntactic ambiguity and Lexical Ambiguity.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Affixes Affixes",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Define affixes. Explain the types of affixes.",
+        "source_questions": [
+          {
+            "question_id": "Q1(b)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q1(b)",
+            "marks": 5,
+            "exact_text": "Define affixes. Explain the types of affixes.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Affixes",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Define affixes. Explain the types of affixes.",
+        "source_questions": [
+          {
+            "question_id": "Q1(b)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q1(b)",
+            "marks": 5,
+            "exact_text": "Define affixes. Explain the types of affixes.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Open Class Words",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Describe open class words and closed class words in English with examples.",
+        "source_questions": [
+          {
+            "question_id": "Q1(c)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q1(c)",
+            "marks": 5,
+            "exact_text": "Describe open class words and closed class words in English with examples.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Class Words Closed",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Describe open class words and closed class words in English with examples.",
+        "source_questions": [
+          {
+            "question_id": "Q1(c)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q1(c)",
+            "marks": 5,
+            "exact_text": "Describe open class words and closed class words in English with examples.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Rule Base Machine",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "What is rule base machine translation?",
+        "source_questions": [
+          {
+            "question_id": "Q1(d)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q1(d)",
+            "marks": 5,
+            "exact_text": "What is rule base machine translation?",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Base Machine Translation",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "What is rule base machine translation?",
+        "source_questions": [
+          {
+            "question_id": "Q1(d)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q1(d)",
+            "marks": 5,
+            "exact_text": "What is rule base machine translation?",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Relationships Word Meanings",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Explain with suitable example following relationships between word meanings.  Homonymy, Polysemy, Synonymy, Antonymy",
+        "source_questions": [
+          {
+            "question_id": "Q1(e)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q1(e)",
+            "marks": 5,
+            "exact_text": "Explain with suitable example following relationships between word meanings.  Homonymy, Polysemy, Synonymy, Antonymy",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Word Meanings Homonymy",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Explain with suitable example following relationships between word meanings.  Homonymy, Polysemy, Synonymy, Antonymy",
+        "source_questions": [
+          {
+            "question_id": "Q1(e)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q1(e)",
+            "marks": 5,
+            "exact_text": "Explain with suitable example following relationships between word meanings.  Homonymy, Polysemy, Synonymy, Antonymy",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Perplexity Language Model",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Explain perplexity of any language model.",
+        "source_questions": [
+          {
+            "question_id": "Q1(f)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q1(f)",
+            "marks": 5,
+            "exact_text": "Explain perplexity of any language model.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Perplexity Language",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Explain perplexity of any language model.",
+        "source_questions": [
+          {
+            "question_id": "Q1(f)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q1(f)",
+            "marks": 5,
+            "exact_text": "Explain perplexity of any language model.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Corpus Tell Sleep Calculation",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Consider the following corpus  <s> I tell you to sleep and rest </s> <s> I would like to sleep for an hour </s> <s> Sleep helps one torelax.</s> List all possible bigrams. Compute conditional probabilities and predict the next ord for the word \u201cto\u201d.",
+        "source_questions": [
+          {
+            "question_id": "Q3(a)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q3(a)",
+            "marks": 5,
+            "exact_text": "Consider the following corpus  <s> I tell you to sleep and rest </s> <s> I would like to sleep for an hour </s> <s> Sleep helps one torelax.</s> List all possible bigrams. Compute conditional probabilities and predict the next ord for the word \u201cto\u201d.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Tell Sleep Rest",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Consider the following corpus  <s> I tell you to sleep and rest </s> <s> I would like to sleep for an hour </s> <s> Sleep helps one torelax.</s> List all possible bigrams. Compute conditional probabilities and predict the next ord for the word \u201cto\u201d.",
+        "source_questions": [
+          {
+            "question_id": "Q3(a)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q3(a)",
+            "marks": 5,
+            "exact_text": "Consider the following corpus  <s> I tell you to sleep and rest </s> <s> I would like to sleep for an hour </s> <s> Sleep helps one torelax.</s> List all possible bigrams. Compute conditional probabilities and predict the next ord for the word \u201cto\u201d.",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Yarowsky Bootstrapping Approach",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "\u2014 Explain Yarowsky bootstrapping approach of semi supervised learning",
+        "source_questions": [
+          {
+            "question_id": "Q3(b)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q3(b)",
+            "marks": 5,
+            "exact_text": "\u2014 Explain Yarowsky bootstrapping approach of semi supervised learning",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Bootstrapping Approach Semi",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "\u2014 Explain Yarowsky bootstrapping approach of semi supervised learning",
+        "source_questions": [
+          {
+            "question_id": "Q3(b)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q3(b)",
+            "marks": 5,
+            "exact_text": "\u2014 Explain Yarowsky bootstrapping approach of semi supervised learning",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Limitations Hidden Markov",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "What are the limitations of Hidden Markov Model?",
+        "source_questions": [
+          {
+            "question_id": "Q4(a)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q4(a)",
+            "marks": 5,
+            "exact_text": "What are the limitations of Hidden Markov Model?",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Hidden Markov Model",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "What are the limitations of Hidden Markov Model?",
+        "source_questions": [
+          {
+            "question_id": "Q4(a)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q4(a)",
+            "marks": 5,
+            "exact_text": "What are the limitations of Hidden Markov Model?",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Steps Text Processing",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Explain the different steps in text processing for Information Retrieval",
+        "source_questions": [
+          {
+            "question_id": "Q4(b)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q4(b)",
+            "marks": 5,
+            "exact_text": "Explain the different steps in text processing for Information Retrieval",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Text Processing Information",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          5
+        ],
+        "average_marks": 5.0,
+        "min_marks": 5,
+        "max_marks": 5,
+        "priority_score": 29.5,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 4.5,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 29.5
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 5M \u2013 5M (Avg: 5.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Explain the different steps in text processing for Information Retrieval",
+        "source_questions": [
+          {
+            "question_id": "Q4(b)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q4(b)",
+            "marks": 5,
+            "exact_text": "Explain the different steps in text processing for Information Retrieval",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Role Morphological Analysis",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          0
+        ],
+        "average_marks": 0.0,
+        "min_marks": 0,
+        "max_marks": 0,
+        "priority_score": 25.0,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 0.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 25.0
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 0M \u2013 0M (Avg: 0.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Explain the role of FSA in morphological analysis?",
+        "source_questions": [
+          {
+            "question_id": "Q2(a)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q2(a)",
+            "marks": 0,
+            "exact_text": "Explain the role of FSA in morphological analysis?",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "topic_name": "Role Morphological",
+        "subject": "natural language processing",
+        "unit": "Unmapped: Unmapped",
+        "appearances_count": 1,
+        "years_appeared": [
+          2022
+        ],
+        "exam_sessions": [
+          "Nov/Dec"
+        ],
+        "marks_distribution": [
+          0
+        ],
+        "average_marks": 0.0,
+        "min_marks": 0,
+        "max_marks": 0,
+        "priority_score": 25.0,
+        "prediction_score": null,
+        "prediction_confidence": "LOW",
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "prediction_method": "deterministic_source_first_aggregation",
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 0.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 25.0
+        },
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 0M \u2013 0M (Avg: 0.0M)"
+        ],
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "sample_question": "Explain the role of FSA in morphological analysis?",
+        "source_questions": [
+          {
+            "question_id": "Q2(a)",
+            "year": 2022,
+            "source_ref": "2022 Nov \u2014 Q2(a)",
+            "marks": 0,
+            "exact_text": "Explain the role of FSA in morphological analysis?",
+            "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+            "source_page": 1
+          }
+        ]
+      }
+    ],
+    "most_repeated_questions": [],
+    "exact_repeats": [],
+    "semantic_repeats": [],
+    "related_topics": [
+      {
+        "topic": "Steps Text Processing",
+        "q1": {
+          "text": "Explain the different steps in text processing for Information Retrieval",
+          "source_ref": "2022 Nov \u2014 Q4(b)"
+        },
+        "q2": {
+          "text": "Explain Text summarization in detail.",
+          "source_ref": "2022 Nov \u2014 Q6(a)"
+        },
+        "confidence": 0.55,
+        "reason": "Shared topic vocabulary but different question intent/constraints \u2014 not a repeat",
+        "is_repeat": false
+      },
+      {
+        "topic": "Perplexity Language Model",
+        "q1": {
+          "text": "Explain perplexity of any language model.",
+          "source_ref": "2022 Nov \u2014 Q1(f)"
+        },
+        "q2": {
+          "text": "What are the limitations of Hidden Markov Model?",
+          "source_ref": "2022 Nov \u2014 Q4(a)"
+        },
+        "confidence": 0.167,
+        "reason": "Shared topic vocabulary but different question intent/constraints \u2014 not a repeat",
+        "is_repeat": false
+      }
+    ],
+    "topic_recurrence": [
+      {
+        "topic": "Syntactic Ambiguity Lexical vs Ambiguity Lexical Ambiguity",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q1(a)"
+        ]
+      },
+      {
+        "topic": "Ambiguity Lexical Ambiguity",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q1(a)"
+        ]
+      },
+      {
+        "topic": "Affixes Affixes",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q1(b)"
+        ]
+      },
+      {
+        "topic": "Affixes",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q1(b)"
+        ]
+      },
+      {
+        "topic": "Open Class Words",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q1(c)"
+        ]
+      },
+      {
+        "topic": "Class Words Closed",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q1(c)"
+        ]
+      },
+      {
+        "topic": "Rule Base Machine",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q1(d)"
+        ]
+      },
+      {
+        "topic": "Base Machine Translation",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q1(d)"
+        ]
+      },
+      {
+        "topic": "Relationships Word Meanings",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q1(e)"
+        ]
+      },
+      {
+        "topic": "Word Meanings Homonymy",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q1(e)"
+        ]
+      },
+      {
+        "topic": "Perplexity Language Model",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q1(f)"
+        ]
+      },
+      {
+        "topic": "Perplexity Language",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q1(f)"
+        ]
+      },
+      {
+        "topic": "Role Morphological Analysis",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q2(a)"
+        ]
+      },
+      {
+        "topic": "Role Morphological",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q2(a)"
+        ]
+      },
+      {
+        "topic": "Stage Involved",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q2(b)"
+        ]
+      },
+      {
+        "topic": "Stage",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q2(b)"
+        ]
+      },
+      {
+        "topic": "Corpus Tell Sleep Calculation",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q3(a)"
+        ]
+      },
+      {
+        "topic": "Tell Sleep Rest",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q3(a)"
+        ]
+      },
+      {
+        "topic": "Yarowsky Bootstrapping Approach",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q3(b)"
+        ]
+      },
+      {
+        "topic": "Bootstrapping Approach Semi",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q3(b)"
+        ]
+      },
+      {
+        "topic": "Tagging Challenges Faced",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q3(c)"
+        ]
+      },
+      {
+        "topic": "Challenges Faced Tagging",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q3(c)"
+        ]
+      },
+      {
+        "topic": "Limitations Hidden Markov",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q4(a)"
+        ]
+      },
+      {
+        "topic": "Hidden Markov Model",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q4(a)"
+        ]
+      },
+      {
+        "topic": "Steps Text Processing",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q4(b)"
+        ]
+      },
+      {
+        "topic": "Text Processing Information",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q4(b)"
+        ]
+      },
+      {
+        "topic": "Top-Down Bottom-Up Approach vs Bottom-Up Approach Parsing",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q4(c)"
+        ]
+      },
+      {
+        "topic": "Bottom-Up Approach Parsing",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q4(c)"
+        ]
+      },
+      {
+        "topic": "Word Sense Disambiguation",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q5(a)"
+        ]
+      },
+      {
+        "topic": "Sense Disambiguation Dictionary",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q5(a)"
+        ]
+      },
+      {
+        "topic": "Hobbs Pronoun Resolution",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q5(b)"
+        ]
+      },
+      {
+        "topic": "Hobbs Pronoun",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q5(b)"
+        ]
+      },
+      {
+        "topic": "Text Summarization",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q6(a)"
+        ]
+      },
+      {
+        "topic": "Text",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q6(a)"
+        ]
+      },
+      {
+        "topic": "Porter Stemming",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q6(b)"
+        ]
+      },
+      {
+        "topic": "Porter",
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "note": "Topic recurrence is broader than question recurrence \u2014 related questions are not automatically repeats.",
+        "source_refs": [
+          "2022 Nov \u2014 Q6(b)"
+        ]
+      }
+    ],
+    "study_priorities": [
+      {
+        "rank": 1,
+        "topic_name": "Stage Involved",
+        "priority_score": 34.0,
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ]
+      },
+      {
+        "rank": 2,
+        "topic_name": "Stage",
+        "priority_score": 34.0,
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ]
+      },
+      {
+        "rank": 3,
+        "topic_name": "Tagging Challenges Faced",
+        "priority_score": 34.0,
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ]
+      },
+      {
+        "rank": 4,
+        "topic_name": "Challenges Faced Tagging",
+        "priority_score": 34.0,
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ]
+      },
+      {
+        "rank": 5,
+        "topic_name": "Top-Down Bottom-Up Approach vs Bottom-Up Approach Parsing",
+        "priority_score": 34.0,
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ]
+      },
+      {
+        "rank": 6,
+        "topic_name": "Bottom-Up Approach Parsing",
+        "priority_score": 34.0,
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ]
+      },
+      {
+        "rank": 7,
+        "topic_name": "Word Sense Disambiguation",
+        "priority_score": 34.0,
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ]
+      },
+      {
+        "rank": 8,
+        "topic_name": "Sense Disambiguation Dictionary",
+        "priority_score": 34.0,
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ]
+      },
+      {
+        "rank": 9,
+        "topic_name": "Hobbs Pronoun Resolution",
+        "priority_score": 34.0,
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ]
+      },
+      {
+        "rank": 10,
+        "topic_name": "Hobbs Pronoun",
+        "priority_score": 34.0,
+        "signals": {
+          "frequency_score": 7.0,
+          "year_recurrence_score": 8.0,
+          "exact_repeat_score": 0.0,
+          "semantic_repeat_score": 0.0,
+          "marks_score": 9.0,
+          "recency_score": 0.0,
+          "consistency_score": 10.0,
+          "total_priority_score": 34.0
+        },
+        "years": [
+          2022
+        ],
+        "appearances": 1,
+        "exact_repeat_count": 0,
+        "semantic_repeat_count": 0,
+        "evidence_label": "Single paper analyzed (Within-paper pattern only)",
+        "explanation": [
+          "Evidence Level: Single paper analyzed (Within-paper pattern only) (1 paper(s) analyzed)",
+          "Appeared 1 time(s) across 1 past exam session(s): 2022",
+          "Syllabus Unit: Unmapped: Unmapped",
+          "Marks Range: 10M \u2013 10M (Avg: 10.0M)"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "exam_year": 2022,
+        "exam_session": "Nov/Dec",
+        "valid_questions": 18,
+        "rejected_questions": 0,
+        "exact_repeats": 0,
+        "semantic_repeats": 0
+      }
+    ],
+    "within_paper_patterns": [
+      {
+        "q1_id": "Q4(b)",
+        "q1_number": "Q4(b)",
+        "q1_text": "Explain the different steps in text processing for Information Retrieval",
+        "q2_id": "Q6(a)",
+        "q2_number": "Q6(a)",
+        "q2_text": "Explain Text summarization in detail.",
+        "concept": "Steps Text Processing",
+        "relationship": "RELATED",
+        "relationship_canonical": "RELATED_TOPIC",
+        "similarity": 0.312,
+        "confidence": 0.55,
+        "reason": "Shared topic vocabulary but different question intent/constraints \u2014 not a repeat"
+      },
+      {
+        "q1_id": "Q1(f)",
+        "q1_number": "Q1(f)",
+        "q1_text": "Explain perplexity of any language model.",
+        "q2_id": "Q4(a)",
+        "q2_number": "Q4(a)",
+        "q2_text": "What are the limitations of Hidden Markov Model?",
+        "concept": "Perplexity Language Model",
+        "relationship": "RELATED",
+        "relationship_canonical": "RELATED_TOPIC",
+        "similarity": 0.229,
+        "confidence": 0.167,
+        "reason": "Shared topic vocabulary but different question intent/constraints \u2014 not a repeat"
+      }
+    ],
+    "prediction_notice": "Single paper analyzed. Within-paper patterns only.",
+    "source_questions_available_via": "/workspaces/ws-nlp-31567ba5/pyq-questions",
+    "debug_trace": {
+      "workspace_id": "ws-nlp-31567ba5",
+      "papers_analyzed": [
+        "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf"
+      ],
+      "total_canonical_questions": 18,
+      "unique_topics": 36,
+      "exact_repeat_groups_count": 0,
+      "semantic_repeat_groups_count": 0
+    },
+    "extracted_questions": []
+  },
+  "pyq_questions": {
+    "workspace_id": "ws-nlp-31567ba5",
+    "accepted_questions": [
+      {
+        "question_id": "Q1(a)",
+        "question_number": "Q1(a)",
+        "parent_question": "Q1",
+        "subquestion": "a",
+        "exact_text": "Differentiate between Syntactic ambiguity and Lexical Ambiguity.",
+        "normalized_text": "differentiate between syntactic ambiguity and lexical ambiguity",
+        "detected_topics": [
+          "Syntactic Ambiguity Lexical vs Ambiguity Lexical Ambiguity",
+          "Ambiguity Lexical Ambiguity",
+          "Syntactic Ambiguity",
+          "Ambiguity Lexical"
+        ],
+        "question_intent": "compare::syntactic ambiguity lexical+ambiguity lexical ambiguity+syntactic ambiguity+ambiguity lexical::comparison",
+        "question_type": "compare",
+        "entities": [
+          "Syntactic Ambiguity Lexical",
+          "Ambiguity Lexical Ambiguity",
+          "Syntactic Ambiguity",
+          "Ambiguity Lexical",
+          "Lexical Ambiguity",
+          "Syntactic",
+          "Ambiguity",
+          "Lexical"
+        ],
+        "constraints": [
+          "comparison"
+        ],
+        "syllabus_mapping": {
+          "module": "Unmapped",
+          "chapter": "Unmapped",
+          "topic": "Syntactic Ambiguity Lexical vs Ambiguity Lexical Ambiguity"
+        },
+        "year": 2022,
+        "exam_session": "Nov/Dec",
+        "marks": 5,
+        "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "source_page": 1,
+        "source_ref": "2022 Nov \u2014 Q1(a)"
+      },
+      {
+        "question_id": "Q1(b)",
+        "question_number": "Q1(b)",
+        "parent_question": "Q1",
+        "subquestion": "b",
+        "exact_text": "Define affixes. Explain the types of affixes.",
+        "normalized_text": "define affixes explain the types of affixes",
+        "detected_topics": [
+          "Affixes Affixes",
+          "Affixes"
+        ],
+        "question_intent": "explain::affixes affixes+affixes::enumerate_types",
+        "question_type": "explain",
+        "entities": [
+          "Affixes Affixes",
+          "Affixes"
+        ],
+        "constraints": [
+          "enumerate_types"
+        ],
+        "syllabus_mapping": {
+          "module": "Unmapped",
+          "chapter": "Unmapped",
+          "topic": "Affixes Affixes"
+        },
+        "year": 2022,
+        "exam_session": "Nov/Dec",
+        "marks": 5,
+        "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "source_page": 1,
+        "source_ref": "2022 Nov \u2014 Q1(b)"
+      },
+      {
+        "question_id": "Q1(c)",
+        "question_number": "Q1(c)",
+        "parent_question": "Q1",
+        "subquestion": "c",
+        "exact_text": "Describe open class words and closed class words in English with examples.",
+        "normalized_text": "describe open class words and closed class words in english with examples",
+        "detected_topics": [
+          "Open Class Words",
+          "Class Words Closed",
+          "Words Closed Class",
+          "Closed Class Words"
+        ],
+        "question_intent": "describe::open class words+class words closed+words closed class+closed class words::none",
+        "question_type": "describe",
+        "entities": [
+          "Open Class Words",
+          "Class Words Closed",
+          "Words Closed Class",
+          "Closed Class Words",
+          "Class Words English",
+          "Open Class",
+          "Class Words",
+          "Words Closed"
+        ],
+        "constraints": [],
+        "syllabus_mapping": {
+          "module": "Unmapped",
+          "chapter": "Unmapped",
+          "topic": "Open Class Words"
+        },
+        "year": 2022,
+        "exam_session": "Nov/Dec",
+        "marks": 5,
+        "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "source_page": 1,
+        "source_ref": "2022 Nov \u2014 Q1(c)"
+      },
+      {
+        "question_id": "Q1(d)",
+        "question_number": "Q1(d)",
+        "parent_question": "Q1",
+        "subquestion": "d",
+        "exact_text": "What is rule base machine translation?",
+        "normalized_text": "what is rule base machine translation",
+        "detected_topics": [
+          "Rule Base Machine",
+          "Base Machine Translation",
+          "Rule Base",
+          "Base Machine"
+        ],
+        "question_intent": "define::rule base machine+base machine translation+rule base+base machine::none",
+        "question_type": "define",
+        "entities": [
+          "Rule Base Machine",
+          "Base Machine Translation",
+          "Rule Base",
+          "Base Machine",
+          "Machine Translation",
+          "Rule",
+          "Base",
+          "Machine"
+        ],
+        "constraints": [],
+        "syllabus_mapping": {
+          "module": "Unmapped",
+          "chapter": "Unmapped",
+          "topic": "Rule Base Machine"
+        },
+        "year": 2022,
+        "exam_session": "Nov/Dec",
+        "marks": 5,
+        "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "source_page": 1,
+        "source_ref": "2022 Nov \u2014 Q1(d)"
+      },
+      {
+        "question_id": "Q1(e)",
+        "question_number": "Q1(e)",
+        "parent_question": "Q1",
+        "subquestion": "e",
+        "exact_text": "Explain with suitable example following relationships between word meanings.  Homonymy, Polysemy, Synonymy, Antonymy",
+        "normalized_text": "explain with suitable example following relationships between word meanings homonymy polysemy synonymy antonymy",
+        "detected_topics": [
+          "Relationships Word Meanings",
+          "Word Meanings Homonymy",
+          "Meanings Homonymy Polysemy",
+          "Homonymy Polysemy Synonymy"
+        ],
+        "question_intent": "explain::relationships word meanings+word meanings homonymy+meanings homonymy polysemy+homonymy polysemy synonymy::none",
+        "question_type": "explain",
+        "entities": [
+          "Relationships Word Meanings",
+          "Word Meanings Homonymy",
+          "Meanings Homonymy Polysemy",
+          "Homonymy Polysemy Synonymy",
+          "Polysemy Synonymy Antonymy",
+          "Relationships Word",
+          "Word Meanings",
+          "Meanings Homonymy"
+        ],
+        "constraints": [],
+        "syllabus_mapping": {
+          "module": "Unmapped",
+          "chapter": "Unmapped",
+          "topic": "Relationships Word Meanings"
+        },
+        "year": 2022,
+        "exam_session": "Nov/Dec",
+        "marks": 5,
+        "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "source_page": 1,
+        "source_ref": "2022 Nov \u2014 Q1(e)"
+      },
+      {
+        "question_id": "Q1(f)",
+        "question_number": "Q1(f)",
+        "parent_question": "Q1",
+        "subquestion": "f",
+        "exact_text": "Explain perplexity of any language model.",
+        "normalized_text": "explain perplexity of any language model",
+        "detected_topics": [
+          "Perplexity Language Model",
+          "Perplexity Language",
+          "Language Model",
+          "Perplexity"
+        ],
+        "question_intent": "explain::perplexity language model+perplexity language+language model+perplexity::none",
+        "question_type": "explain",
+        "entities": [
+          "Perplexity Language Model",
+          "Perplexity Language",
+          "Language Model",
+          "Perplexity",
+          "Language"
+        ],
+        "constraints": [],
+        "syllabus_mapping": {
+          "module": "Unmapped",
+          "chapter": "Unmapped",
+          "topic": "Perplexity Language Model"
+        },
+        "year": 2022,
+        "exam_session": "Nov/Dec",
+        "marks": 5,
+        "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "source_page": 1,
+        "source_ref": "2022 Nov \u2014 Q1(f)"
+      },
+      {
+        "question_id": "Q2(a)",
+        "question_number": "Q2(a)",
+        "parent_question": "Q2",
+        "subquestion": "a",
+        "exact_text": "Explain the role of FSA in morphological analysis?",
+        "normalized_text": "explain the role of fsa in morphological analysis",
+        "detected_topics": [
+          "Role Morphological Analysis",
+          "Role Morphological",
+          "Morphological Analysis"
+        ],
+        "question_intent": "explain::fsa+role morphological analysis+role morphological+morphological analysis::none",
+        "question_type": "explain",
+        "entities": [
+          "FSA",
+          "Role Morphological Analysis",
+          "Role Morphological",
+          "Morphological Analysis",
+          "Role",
+          "Morphological",
+          "Analysis"
+        ],
+        "constraints": [],
+        "syllabus_mapping": {
+          "module": "Unmapped",
+          "chapter": "Unmapped",
+          "topic": "Role Morphological Analysis"
+        },
+        "year": 2022,
+        "exam_session": "Nov/Dec",
+        "marks": 0,
+        "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "source_page": 1,
+        "source_ref": "2022 Nov \u2014 Q2(a)"
+      },
+      {
+        "question_id": "Q2(b)",
+        "question_number": "Q2(b)",
+        "parent_question": "Q2",
+        "subquestion": "b",
+        "exact_text": "Explain Different stage involved in NLP process with suitable example.",
+        "normalized_text": "explain different stage involved in nlp process with suitable example",
+        "detected_topics": [
+          "Stage Involved",
+          "Stage",
+          "Involved"
+        ],
+        "question_intent": "explain::nlp+stage involved+stage+involved::none",
+        "question_type": "explain",
+        "entities": [
+          "NLP",
+          "Stage Involved",
+          "Stage",
+          "Involved"
+        ],
+        "constraints": [],
+        "syllabus_mapping": {
+          "module": "Unmapped",
+          "chapter": "Unmapped",
+          "topic": "Stage Involved"
+        },
+        "year": 2022,
+        "exam_session": "Nov/Dec",
+        "marks": 10,
+        "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "source_page": 1,
+        "source_ref": "2022 Nov \u2014 Q2(b)"
+      },
+      {
+        "question_id": "Q3(a)",
+        "question_number": "Q3(a)",
+        "parent_question": "Q3",
+        "subquestion": "a",
+        "exact_text": "Consider the following corpus  <s> I tell you to sleep and rest </s> <s> I would like to sleep for an hour </s> <s> Sleep helps one torelax.</s> List all possible bigrams. Compute conditional probabilities and predict the next ord for the word \u201cto\u201d.",
+        "normalized_text": "consider the following corpus s i tell you to sleep and rest s s i would like to sleep for an hour s s sleep helps one torelax s list all possible bigrams compute conditional probabilities and predict the next ord for the word to",
+        "detected_topics": [
+          "Corpus Tell Sleep Calculation",
+          "Tell Sleep Rest",
+          "Sleep Rest Like",
+          "Rest Like Sleep"
+        ],
+        "question_intent": "describe::corpus tell sleep+tell sleep rest+sleep rest like+rest like sleep::numerical_calculation",
+        "question_type": "describe",
+        "entities": [
+          "Corpus Tell Sleep",
+          "Tell Sleep Rest",
+          "Sleep Rest Like",
+          "Rest Like Sleep",
+          "Like Sleep Hour",
+          "Sleep Hour Sleep",
+          "Hour Sleep Helps",
+          "Sleep Helps One"
+        ],
+        "constraints": [
+          "numerical_calculation"
+        ],
+        "syllabus_mapping": {
+          "module": "Unmapped",
+          "chapter": "Unmapped",
+          "topic": "Corpus Tell Sleep Calculation"
+        },
+        "year": 2022,
+        "exam_session": "Nov/Dec",
+        "marks": 5,
+        "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "source_page": 1,
+        "source_ref": "2022 Nov \u2014 Q3(a)"
+      },
+      {
+        "question_id": "Q3(b)",
+        "question_number": "Q3(b)",
+        "parent_question": "Q3",
+        "subquestion": "b",
+        "exact_text": "\u2014 Explain Yarowsky bootstrapping approach of semi supervised learning",
+        "normalized_text": "explain yarowsky bootstrapping approach of semi supervised learning",
+        "detected_topics": [
+          "Yarowsky Bootstrapping Approach",
+          "Bootstrapping Approach Semi",
+          "Approach Semi Supervised",
+          "Semi Supervised Learning"
+        ],
+        "question_intent": "explain::yarowsky bootstrapping approach+bootstrapping approach semi+approach semi supervised+semi supervised learning::none",
+        "question_type": "explain",
+        "entities": [
+          "Yarowsky Bootstrapping Approach",
+          "Bootstrapping Approach Semi",
+          "Approach Semi Supervised",
+          "Semi Supervised Learning",
+          "Yarowsky Bootstrapping",
+          "Bootstrapping Approach",
+          "Approach Semi",
+          "Semi Supervised"
+        ],
+        "constraints": [],
+        "syllabus_mapping": {
+          "module": "Unmapped",
+          "chapter": "Unmapped",
+          "topic": "Yarowsky Bootstrapping Approach"
+        },
+        "year": 2022,
+        "exam_session": "Nov/Dec",
+        "marks": 5,
+        "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "source_page": 1,
+        "source_ref": "2022 Nov \u2014 Q3(b)"
+      },
+      {
+        "question_id": "Q3(c)",
+        "question_number": "Q3(c)",
+        "parent_question": "Q3",
+        "subquestion": "c",
+        "exact_text": "What is POS tagging? Discuss various challenges faced by POS tagging.",
+        "normalized_text": "what is pos tagging discuss various challenges faced by pos tagging",
+        "detected_topics": [
+          "Tagging Challenges Faced",
+          "Challenges Faced Tagging",
+          "Tagging Challenges"
+        ],
+        "question_intent": "explain::pos+tagging challenges faced+challenges faced tagging+tagging challenges::none",
+        "question_type": "explain",
+        "entities": [
+          "POS",
+          "Tagging Challenges Faced",
+          "Challenges Faced Tagging",
+          "Tagging Challenges",
+          "Challenges Faced",
+          "Faced Tagging",
+          "Tagging",
+          "Challenges"
+        ],
+        "constraints": [],
+        "syllabus_mapping": {
+          "module": "Unmapped",
+          "chapter": "Unmapped",
+          "topic": "Tagging Challenges Faced"
+        },
+        "year": 2022,
+        "exam_session": "Nov/Dec",
+        "marks": 10,
+        "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "source_page": 1,
+        "source_ref": "2022 Nov \u2014 Q3(c)"
+      },
+      {
+        "question_id": "Q4(a)",
+        "question_number": "Q4(a)",
+        "parent_question": "Q4",
+        "subquestion": "a",
+        "exact_text": "What are the limitations of Hidden Markov Model?",
+        "normalized_text": "what are the limitations of hidden markov model",
+        "detected_topics": [
+          "Limitations Hidden Markov",
+          "Hidden Markov Model",
+          "Limitations Hidden",
+          "Hidden Markov"
+        ],
+        "question_intent": "define::limitations hidden markov+hidden markov model+limitations hidden+hidden markov::none",
+        "question_type": "define",
+        "entities": [
+          "Limitations Hidden Markov",
+          "Hidden Markov Model",
+          "Limitations Hidden",
+          "Hidden Markov",
+          "Markov Model",
+          "Limitations",
+          "Hidden",
+          "Markov"
+        ],
+        "constraints": [],
+        "syllabus_mapping": {
+          "module": "Unmapped",
+          "chapter": "Unmapped",
+          "topic": "Limitations Hidden Markov"
+        },
+        "year": 2022,
+        "exam_session": "Nov/Dec",
+        "marks": 5,
+        "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "source_page": 1,
+        "source_ref": "2022 Nov \u2014 Q4(a)"
+      },
+      {
+        "question_id": "Q4(b)",
+        "question_number": "Q4(b)",
+        "parent_question": "Q4",
+        "subquestion": "b",
+        "exact_text": "Explain the different steps in text processing for Information Retrieval",
+        "normalized_text": "explain the different steps in text processing for information retrieval",
+        "detected_topics": [
+          "Steps Text Processing",
+          "Text Processing Information",
+          "Processing Information Retrieval",
+          "Steps Text"
+        ],
+        "question_intent": "explain::steps text processing+text processing information+processing information retrieval+steps text::none",
+        "question_type": "explain",
+        "entities": [
+          "Steps Text Processing",
+          "Text Processing Information",
+          "Processing Information Retrieval",
+          "Steps Text",
+          "Text Processing",
+          "Processing Information",
+          "Information Retrieval",
+          "Steps"
+        ],
+        "constraints": [],
+        "syllabus_mapping": {
+          "module": "Unmapped",
+          "chapter": "Unmapped",
+          "topic": "Steps Text Processing"
+        },
+        "year": 2022,
+        "exam_session": "Nov/Dec",
+        "marks": 5,
+        "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "source_page": 1,
+        "source_ref": "2022 Nov \u2014 Q4(b)"
+      },
+      {
+        "question_id": "Q4(c)",
+        "question_number": "Q4(c)",
+        "parent_question": "Q4",
+        "subquestion": "c",
+        "exact_text": "Compare top-down and bottom-up approach of parsing with example.",
+        "normalized_text": "compare top down and bottom up approach of parsing with example",
+        "detected_topics": [
+          "Top-Down Bottom-Up Approach vs Bottom-Up Approach Parsing",
+          "Bottom-Up Approach Parsing",
+          "Top-Down Bottom-Up",
+          "Bottom-Up Approach"
+        ],
+        "question_intent": "compare::top-down bottom-up approach+bottom-up approach parsing+top-down bottom-up+bottom-up approach::comparison",
+        "question_type": "compare",
+        "entities": [
+          "Top-Down Bottom-Up Approach",
+          "Bottom-Up Approach Parsing",
+          "Top-Down Bottom-Up",
+          "Bottom-Up Approach",
+          "Approach Parsing",
+          "Top-Down",
+          "Bottom-Up",
+          "Parsing"
+        ],
+        "constraints": [
+          "comparison"
+        ],
+        "syllabus_mapping": {
+          "module": "Unmapped",
+          "chapter": "Unmapped",
+          "topic": "Top-Down Bottom-Up Approach vs Bottom-Up Approach Parsing"
+        },
+        "year": 2022,
+        "exam_session": "Nov/Dec",
+        "marks": 10,
+        "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "source_page": 1,
+        "source_ref": "2022 Nov \u2014 Q4(c)"
+      },
+      {
+        "question_id": "Q5(a)",
+        "question_number": "Q5(a)",
+        "parent_question": "Q5",
+        "subquestion": "a",
+        "exact_text": "What do you mean by word sense disambiguation (WSD)? Discuss dictionary based  approach for WSD.",
+        "normalized_text": "what do you mean by word sense disambiguation wsd discuss dictionary based approach for wsd",
+        "detected_topics": [
+          "Word Sense Disambiguation",
+          "Sense Disambiguation Dictionary",
+          "Disambiguation Dictionary Based"
+        ],
+        "question_intent": "explain::wsd+word sense disambiguation+sense disambiguation dictionary+disambiguation dictionary based::none",
+        "question_type": "explain",
+        "entities": [
+          "WSD",
+          "Word Sense Disambiguation",
+          "Sense Disambiguation Dictionary",
+          "Disambiguation Dictionary Based",
+          "Dictionary Based Approach",
+          "Word Sense",
+          "Sense Disambiguation",
+          "Disambiguation Dictionary"
+        ],
+        "constraints": [],
+        "syllabus_mapping": {
+          "module": "Unmapped",
+          "chapter": "Unmapped",
+          "topic": "Word Sense Disambiguation"
+        },
+        "year": 2022,
+        "exam_session": "Nov/Dec",
+        "marks": 10,
+        "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "source_page": 1,
+        "source_ref": "2022 Nov \u2014 Q5(a)"
+      },
+      {
+        "question_id": "Q5(b)",
+        "question_number": "Q5(b)",
+        "parent_question": "Q5",
+        "subquestion": "b",
+        "exact_text": "Explain Hobbs algorithm for pronoun resolution.",
+        "normalized_text": "explain hobbs algorithm for pronoun resolution",
+        "detected_topics": [
+          "Hobbs Pronoun Resolution",
+          "Hobbs Pronoun",
+          "Pronoun Resolution",
+          "Hobbs"
+        ],
+        "question_intent": "explain::hobbs pronoun resolution+hobbs pronoun+pronoun resolution+hobbs::none",
+        "question_type": "explain",
+        "entities": [
+          "Hobbs Pronoun Resolution",
+          "Hobbs Pronoun",
+          "Pronoun Resolution",
+          "Hobbs",
+          "Pronoun",
+          "Resolution"
+        ],
+        "constraints": [],
+        "syllabus_mapping": {
+          "module": "Unmapped",
+          "chapter": "Unmapped",
+          "topic": "Hobbs Pronoun Resolution"
+        },
+        "year": 2022,
+        "exam_session": "Nov/Dec",
+        "marks": 10,
+        "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "source_page": 1,
+        "source_ref": "2022 Nov \u2014 Q5(b)"
+      },
+      {
+        "question_id": "Q6(a)",
+        "question_number": "Q6(a)",
+        "parent_question": "Q6",
+        "subquestion": "a",
+        "exact_text": "Explain Text summarization in detail.",
+        "normalized_text": "explain text summarization in detail",
+        "detected_topics": [
+          "Text Summarization",
+          "Text",
+          "Summarization"
+        ],
+        "question_intent": "explain::text summarization+text+summarization::none",
+        "question_type": "explain",
+        "entities": [
+          "Text Summarization",
+          "Text",
+          "Summarization"
+        ],
+        "constraints": [],
+        "syllabus_mapping": {
+          "module": "Unmapped",
+          "chapter": "Unmapped",
+          "topic": "Text Summarization"
+        },
+        "year": 2022,
+        "exam_session": "Nov/Dec",
+        "marks": 10,
+        "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "source_page": 1,
+        "source_ref": "2022 Nov \u2014 Q6(a)"
+      },
+      {
+        "question_id": "Q6(b)",
+        "question_number": "Q6(b)",
+        "parent_question": "Q6",
+        "subquestion": "b",
+        "exact_text": "Explain Porter Stemming algorithm in detail",
+        "normalized_text": "explain porter stemming algorithm in detail",
+        "detected_topics": [
+          "Porter Stemming",
+          "Porter",
+          "Stemming"
+        ],
+        "question_intent": "explain::porter stemming+porter+stemming::none",
+        "question_type": "explain",
+        "entities": [
+          "Porter Stemming",
+          "Porter",
+          "Stemming"
+        ],
+        "constraints": [],
+        "syllabus_mapping": {
+          "module": "Unmapped",
+          "chapter": "Unmapped",
+          "topic": "Porter Stemming"
+        },
+        "year": 2022,
+        "exam_session": "Nov/Dec",
+        "marks": 10,
+        "source_file": "upload_be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "source_page": 1,
+        "source_ref": "2022 Nov \u2014 Q6(b)"
+      }
+    ],
+    "rejected_candidates": [],
+    "quality_summary": {
+      "accepted_count": 18,
+      "rejected_count": 0
+    }
+  }
+}

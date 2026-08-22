@@ -1,0 +1,322 @@
+[
+  {
+    "id": 1,
+    "category": "direct_syllabus",
+    "question": "What is meant by double entry bookkeeping system? Explain its advantages.",
+    "expected_topic": "Double Entry Bookkeeping",
+    "expected_doc_type": "both",
+    "expected_source": "BCOMF_2025.pdf",
+    "expected_page": 2,
+    "expected_pyq": true
+  },
+  {
+    "id": 2,
+    "category": "direct_syllabus",
+    "question": "Explain the nature and scope of accounting in detail.",
+    "expected_topic": "Nature and Scope of Accounting",
+    "expected_doc_type": "syllabus",
+    "expected_source": "BCOMF_2025.pdf",
+    "expected_page": 2,
+    "expected_pyq": false
+  },
+  {
+    "id": 3,
+    "category": "direct_pyq",
+    "question": "What do you mean by an accounting information system? Outline the salient features of an accounting system.",
+    "expected_topic": "Accounting Information System",
+    "expected_doc_type": "both",
+    "expected_source": "BCOC131_June2025.pdf",
+    "expected_page": 1,
+    "expected_pyq": true
+  },
+  {
+    "id": 4,
+    "category": "direct_pyq",
+    "question": "Compare Straight Line Method and Written Down Value Method of depreciation.",
+    "expected_topic": "Depreciation Methods",
+    "expected_doc_type": "both",
+    "expected_source": "BCOC131_2023_PYQ.pdf",
+    "expected_page": 1,
+    "expected_pyq": true
+  },
+  {
+    "id": 5,
+    "category": "pyq_reworded",
+    "question": "How does SLM depreciation differ from WDV method in financial accounting?",
+    "expected_topic": "Depreciation Methods",
+    "expected_doc_type": "both",
+    "expected_source": "BCOC131_2023_PYQ.pdf",
+    "expected_page": 1,
+    "expected_pyq": true
+  },
+  {
+    "id": 6,
+    "category": "concept",
+    "question": "What are Generally Accepted Accounting Principles (GAAP)?",
+    "expected_topic": "GAAP Principles",
+    "expected_doc_type": "both",
+    "expected_source": "BCOC131_2023_PYQ.pdf",
+    "expected_page": 1,
+    "expected_pyq": true
+  },
+  {
+    "id": 7,
+    "category": "concept",
+    "question": "Explain the concept of trial balance and rectification of errors.",
+    "expected_topic": "Trial Balance and Errors",
+    "expected_doc_type": "syllabus",
+    "expected_source": "BCOMF_2025.pdf",
+    "expected_page": 2,
+    "expected_pyq": false
+  },
+  {
+    "id": 8,
+    "category": "comparison",
+    "question": "Differentiate between journal and ledger in the accounting process.",
+    "expected_topic": "Journal vs Ledger",
+    "expected_doc_type": "syllabus",
+    "expected_source": "BCOMF_2025.pdf",
+    "expected_page": 2,
+    "expected_pyq": false
+  },
+  {
+    "id": 9,
+    "category": "definition",
+    "question": "Define Accounting Standard and explain its significance.",
+    "expected_topic": "Accounting Standards",
+    "expected_doc_type": "syllabus",
+    "expected_source": "BCOMF_2025.pdf",
+    "expected_page": 2,
+    "expected_pyq": false
+  },
+  {
+    "id": 10,
+    "category": "process",
+    "question": "Describe the complete steps involved in the accounting cycle.",
+    "expected_topic": "Accounting Process",
+    "expected_doc_type": "both",
+    "expected_source": "BCOC131_2023_PYQ.pdf",
+    "expected_page": 1,
+    "expected_pyq": true
+  },
+  {
+    "id": 11,
+    "category": "numerical_treatment",
+    "question": "How are journal entries posted into ledger accounts? Explain the rules of debit and credit.",
+    "expected_topic": "Debit and Credit Rules",
+    "expected_doc_type": "syllabus",
+    "expected_source": "BCOMF_2025.pdf",
+    "expected_page": 2,
+    "expected_pyq": false
+  },
+  {
+    "id": 12,
+    "category": "syllabus_pyq_combined",
+    "question": "Explain the accounting process and GAAP principles as asked in past examination papers.",
+    "expected_topic": "Accounting Process & GAAP",
+    "expected_doc_type": "both",
+    "expected_source": "BCOC131_2023_PYQ.pdf",
+    "expected_page": 1,
+    "expected_pyq": true
+  },
+  {
+    "id": 13,
+    "category": "unsupported",
+    "question": "Explain the count to infinity problem in distance vector routing protocols.",
+    "expected_topic": "Computer Networks Routing",
+    "expected_doc_type": "none",
+    "expected_source": "none",
+    "expected_page": 0,
+    "expected_pyq": false
+  },
+  {
+    "id": 14,
+    "category": "unsupported",
+    "question": "What is quantum cryptography and key distribution using BB84 protocol?",
+    "expected_topic": "Quantum Cryptography",
+    "expected_doc_type": "none",
+    "expected_source": "none",
+    "expected_page": 0,
+    "expected_pyq": false
+  },
+  {
+    "id": 15,
+    "category": "unsupported",
+    "question": "Explain sliding window protocol using selective repeat technique.",
+    "expected_topic": "Sliding Window Protocol",
+    "expected_doc_type": "none",
+    "expected_source": "none",
+    "expected_page": 0,
+    "expected_pyq": false
+  },
+  {
+    "id": 16,
+    "category": "unsupported",
+    "question": "What is the function of TCP 3-way handshake in transport layer?",
+    "expected_topic": "TCP Handshake",
+    "expected_doc_type": "none",
+    "expected_source": "none",
+    "expected_page": 0,
+    "expected_pyq": false
+  },
+  {
+    "id": 17,
+    "category": "unsupported",
+    "question": "Describe the architecture of 8086 microprocessor and its registers.",
+    "expected_topic": "Microprocessor Architecture",
+    "expected_doc_type": "none",
+    "expected_source": "none",
+    "expected_page": 0,
+    "expected_pyq": false
+  },
+  {
+    "id": 18,
+    "category": "pyq_false_positive_check",
+    "question": "Explain the concept of subsidiary books and cash book preparation.",
+    "expected_topic": "Subsidiary Books",
+    "expected_doc_type": "syllabus",
+    "expected_source": "BCOMF_2025.pdf",
+    "expected_page": 2,
+    "expected_pyq": false
+  },
+  {
+    "id": 19,
+    "category": "direct_syllabus",
+    "question": "What are the objectives of preparing a Trial Balance?",
+    "expected_topic": "Trial Balance Objectives",
+    "expected_doc_type": "syllabus",
+    "expected_source": "BCOMF_2025.pdf",
+    "expected_page": 2,
+    "expected_pyq": false
+  },
+  {
+    "id": 20,
+    "category": "concept",
+    "question": "Explain the concept of internal controls in an accounting information system.",
+    "expected_topic": "Internal Controls",
+    "expected_doc_type": "both",
+    "expected_source": "BCOC131_Accounting_Info_System.pdf",
+    "expected_page": 1,
+    "expected_pyq": true
+  },
+  {
+    "id": 21,
+    "category": "definition",
+    "question": "Define GAAP and state two basic accounting concepts.",
+    "expected_topic": "GAAP Definition",
+    "expected_doc_type": "both",
+    "expected_source": "BCOC131_2023_PYQ.pdf",
+    "expected_page": 1,
+    "expected_pyq": true
+  },
+  {
+    "id": 22,
+    "category": "comparison",
+    "question": "Compare single entry system with double entry bookkeeping system.",
+    "expected_topic": "Single vs Double Entry",
+    "expected_doc_type": "syllabus",
+    "expected_source": "BCOMF_2025.pdf",
+    "expected_page": 2,
+    "expected_pyq": false
+  },
+  {
+    "id": 23,
+    "category": "process",
+    "question": "Outline the data processing steps in an Accounting Information System.",
+    "expected_topic": "AIS Data Processing",
+    "expected_doc_type": "both",
+    "expected_source": "BCOC131_Accounting_Info_System.pdf",
+    "expected_page": 1,
+    "expected_pyq": true
+  },
+  {
+    "id": 24,
+    "category": "pyq_reworded",
+    "question": "What are the salient features of AIS mentioned in past exam papers?",
+    "expected_topic": "AIS Salient Features",
+    "expected_doc_type": "both",
+    "expected_source": "BCOC131_June2025.pdf",
+    "expected_page": 1,
+    "expected_pyq": true
+  },
+  {
+    "id": 25,
+    "category": "numerical_treatment",
+    "question": "Explain how depreciation is calculated under the straight line method.",
+    "expected_topic": "SLM Calculation",
+    "expected_doc_type": "both",
+    "expected_source": "BCOC131_2023_PYQ.pdf",
+    "expected_page": 1,
+    "expected_pyq": true
+  },
+  {
+    "id": 26,
+    "category": "syllabus_pyq_combined",
+    "question": "What is an accounting standard and how often has it been asked in exams?",
+    "expected_topic": "Accounting Standards",
+    "expected_doc_type": "syllabus",
+    "expected_source": "BCOMF_2025.pdf",
+    "expected_page": 2,
+    "expected_pyq": false
+  },
+  {
+    "id": 27,
+    "category": "direct_syllabus",
+    "question": "Explain Block 1 Theoretical Framework in BCOC-131 syllabus.",
+    "expected_topic": "Theoretical Framework",
+    "expected_doc_type": "syllabus",
+    "expected_source": "BCOMF_2025.pdf",
+    "expected_page": 2,
+    "expected_pyq": false
+  },
+  {
+    "id": 28,
+    "category": "direct_pyq",
+    "question": "What are the features of accounting information system according to June 2025 exam?",
+    "expected_topic": "AIS June 2025 Exam",
+    "expected_doc_type": "both",
+    "expected_source": "BCOC131_June2025.pdf",
+    "expected_page": 1,
+    "expected_pyq": true
+  },
+  {
+    "id": 29,
+    "category": "cross_workspace_test",
+    "question": "What is the double entry bookkeeping system?",
+    "expected_topic": "Double Entry Bookkeeping",
+    "expected_doc_type": "none",
+    "expected_source": "none",
+    "expected_page": 0,
+    "expected_pyq": false
+  },
+  {
+    "id": 30,
+    "category": "definition",
+    "question": "What is meant by depreciation in financial accounting?",
+    "expected_topic": "Depreciation Definition",
+    "expected_doc_type": "both",
+    "expected_source": "BCOC131_2023_PYQ.pdf",
+    "expected_page": 1,
+    "expected_pyq": true
+  },
+  {
+    "id": 31,
+    "category": "concept",
+    "question": "Explain the concept of debit and credit in accounting.",
+    "expected_topic": "Debit and Credit Concept",
+    "expected_doc_type": "syllabus",
+    "expected_source": "BCOMF_2025.pdf",
+    "expected_page": 2,
+    "expected_pyq": false
+  },
+  {
+    "id": 32,
+    "category": "process",
+    "question": "What is the process of generating financial statements from accounting data?",
+    "expected_topic": "Financial Statement Generation",
+    "expected_doc_type": "both",
+    "expected_source": "BCOC131_Accounting_Info_System.pdf",
+    "expected_page": 1,
+    "expected_pyq": true
+  }
+]

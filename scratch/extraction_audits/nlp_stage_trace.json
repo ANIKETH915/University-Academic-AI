@@ -1,0 +1,925 @@
+{
+  "pdf": "be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+  "pages": 1,
+  "page_traces": [
+    {
+      "page": 1,
+      "native_valid": true,
+      "quality_reason": "valid",
+      "quality_metrics": {
+        "printable_ratio": 0.967,
+        "alpha_ratio": 0.709,
+        "replacement_ratio": 0.0,
+        "entropy": 5.01,
+        "unique_token_ratio": 0.59,
+        "avg_word_length": 5.37,
+        "word_quality_ratio": 0.972,
+        "garbled_ratio": 0.028
+      },
+      "native_chars": 3087,
+      "ocr_chars": 1786,
+      "layout_chars": 1508,
+      "classified": [
+        {
+          "x0": 166,
+          "top": 21,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "Paper / Subject Code: 42175 / NATURAL LANGUAGE PROCESSING (DLOC - IIT)",
+          "rest": "Paper / Subject Code: 42175 / NATURAL LANGUAGE PROCESSING (DLOC - IIT)"
+        },
+        {
+          "x0": 151,
+          "top": 121,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "Time: 3 Hours Max. Marks: 80",
+          "rest": "Time: 3 Hours Max. Marks: 80"
+        },
+        {
+          "x0": 168,
+          "top": 187,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "N.B. (1) Question No. | is compulsory",
+          "rest": "N.B. (1) Question No. | is compulsory"
+        },
+        {
+          "x0": 219,
+          "top": 220,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "(2) Assume suitable data if necessary",
+          "rest": "(2) Assume suitable data if necessary"
+        },
+        {
+          "x0": 221,
+          "top": 254,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "(3)Attempt any three questions from remaining questions",
+          "rest": "(3)Attempt any three questions from remaining questions"
+        },
+        {
+          "x0": 178,
+          "top": 353,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "Q.1. Any Four 20[M]",
+          "rest": "Q.1. Any Four 20[M]"
+        },
+        {
+          "x0": 191,
+          "top": 386,
+          "kind": "marker_lead",
+          "parent": null,
+          "sub": "a",
+          "text": "a Differentiate between Syntactic ambiguity and Lexical Ambiguity. 5M]",
+          "rest": "Differentiate between Syntactic ambiguity and Lexical Ambiguity. 5M]"
+        },
+        {
+          "x0": 191,
+          "top": 419,
+          "kind": "marker_lead",
+          "parent": null,
+          "sub": "b",
+          "text": "b Define affixes. Explain the types of affixes. 5M]",
+          "rest": "Define affixes. Explain the types of affixes. 5M]"
+        },
+        {
+          "x0": 192,
+          "top": 452,
+          "kind": "marker_lead",
+          "parent": null,
+          "sub": "c",
+          "text": "c Describe open class words and closed class words in English with examples. 5M]",
+          "rest": "Describe open class words and closed class words in English with examples. 5M]"
+        },
+        {
+          "x0": 191,
+          "top": 485,
+          "kind": "marker_lead",
+          "parent": null,
+          "sub": "d",
+          "text": "d What is rule base machine translation? 5M]",
+          "rest": "What is rule base machine translation? 5M]"
+        },
+        {
+          "x0": 192,
+          "top": 518,
+          "kind": "marker_lead",
+          "parent": null,
+          "sub": "e",
+          "text": "e Explain with suitable example following relationships between word meanings. 5M]",
+          "rest": "Explain with suitable example following relationships between word meanings. 5M]"
+        },
+        {
+          "x0": 256,
+          "top": 552,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "Homonymy, Polysemy, Synonymy, Antonymy",
+          "rest": "Homonymy, Polysemy, Synonymy, Antonymy"
+        },
+        {
+          "x0": 193,
+          "top": 585,
+          "kind": "marker_lead",
+          "parent": null,
+          "sub": "f",
+          "text": "f Explain perplexity of any language model. 5M]",
+          "rest": "Explain perplexity of any language model. 5M]"
+        },
+        {
+          "x0": 165,
+          "top": 651,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "Q.2.a) Explain the role of FSA in morphological analysis?",
+          "rest": "Q.2.a) Explain the role of FSA in morphological analysis?"
+        },
+        {
+          "x0": 164,
+          "top": 684,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "Q.2b) Explain Different stage involved in NLP process with suitable example. [10M]",
+          "rest": "Q.2b) Explain Different stage involved in NLP process with suitable example. [10"
+        },
+        {
+          "x0": 165,
+          "top": 752,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "Q.3.a) Consider the following corpus 5M]",
+          "rest": "Q.3.a) Consider the following corpus 5M]"
+        },
+        {
+          "x0": 332,
+          "top": 785,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "<s> I tell you to sleep and rest </s>",
+          "rest": "<s> I tell you to sleep and rest </s>"
+        },
+        {
+          "x0": 332,
+          "top": 818,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "<s> I would like to sleep for an hour </s>",
+          "rest": "<s> I would like to sleep for an hour </s>"
+        },
+        {
+          "x0": 332,
+          "top": 851,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "<s> Sleep helps one torelax.</s>",
+          "rest": "<s> Sleep helps one torelax.</s>"
+        },
+        {
+          "x0": 256,
+          "top": 884,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "List all possible bigrams. Compute conditional probabilities and predict",
+          "rest": "List all possible bigrams. Compute conditional probabilities and predict"
+        },
+        {
+          "x0": 255,
+          "top": 917,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "the next ord for the word \u201cto\u201d.",
+          "rest": "the next ord for the word \u201cto\u201d."
+        },
+        {
+          "x0": 164,
+          "top": 979,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "Q.3 b) \u2014 Explain Yarowsky bootstrapping approach of semi supervised learning [5M]",
+          "rest": "Q.3 b) \u2014 Explain Yarowsky bootstrapping approach of semi supervised learning [5M"
+        },
+        {
+          "x0": 166,
+          "top": 1016,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "Q.3.c) What is POS tagging? Discuss various challenges faced by POS tagging. [10M]",
+          "rest": "Q.3.c) What is POS tagging? Discuss various challenges faced by POS tagging. [10"
+        },
+        {
+          "x0": 165,
+          "top": 1083,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "Q.4a) What are the limitations of Hidden Markov Model? [5M]",
+          "rest": "Q.4a) What are the limitations of Hidden Markov Model? [5M]"
+        },
+        {
+          "x0": 164,
+          "top": 1116,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "Q.4b) Explain the different steps in text processing for Information Retrieval [5M]",
+          "rest": "Q.4b) Explain the different steps in text processing for Information Retrieval ["
+        },
+        {
+          "x0": 166,
+          "top": 1149,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "Q.4.c\u00a2) Compare top-down and bottom-up approach of parsing with example. [10M]",
+          "rest": "Q.4.c\u00a2) Compare top-down and bottom-up approach of parsing with example. [10M]"
+        },
+        {
+          "x0": 165,
+          "top": 1211,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "Q.5 a) | What do you mean by word sense disambiguation (WSD)? Discuss dictionary based [10M]",
+          "rest": "Q.5 a) | What do you mean by word sense disambiguation (WSD)? Discuss dictionary"
+        },
+        {
+          "x0": 256,
+          "top": 1248,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "approach for WSD.",
+          "rest": "approach for WSD."
+        },
+        {
+          "x0": 164,
+          "top": 1281,
+          "kind": "parent_sub",
+          "parent": "Q5",
+          "sub": "b",
+          "text": "Q5 b) Explain Hobbs algorithm for pronoun resolution. [10M]",
+          "rest": "Explain Hobbs algorithm for pronoun resolution. [10M]"
+        },
+        {
+          "x0": 165,
+          "top": 1347,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "Q.6a) Explain Text summarization in detail. [10M]",
+          "rest": "Q.6a) Explain Text summarization in detail. [10M]"
+        },
+        {
+          "x0": 164,
+          "top": 1380,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "Q.6b) Explain Porter Stemming algorithm in detail [10M]",
+          "rest": "Q.6b) Explain Porter Stemming algorithm in detail [10M]"
+        },
+        {
+          "x0": 152,
+          "top": 1638,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "16298",
+          "rest": "16298"
+        },
+        {
+          "x0": 434,
+          "top": 1719,
+          "kind": "text",
+          "parent": null,
+          "sub": null,
+          "text": "2EDB91068CE737F5A29FB8A844D0A882",
+          "rest": "2EDB91068CE737F5A29FB8A844D0A882"
+        }
+      ],
+      "layout_reconstructed": "Q1(a) Differentiate between Syntactic ambiguity and Lexical Ambiguity. 5M]\nQ1(b) Define affixes. Explain the types of affixes. 5M]\nQ1(c) Describe open class words and closed class words in English with examples. 5M]\nQ1(d) What is rule base machine translation? 5M]\nQ1(e) Explain with suitable example following relationships between word meanings. 5M] Homonymy, Polysemy, Synonymy, Antonymy\nQ1(f) Explain perplexity of any language model. 5M] Q.2.a) Explain the role of FSA in morphological analysis? Q.2b) Explain Different stage involved in NLP process with suitable example. [10M] Q.3.a) Consider the following corpus 5M] <s> I tell you to sleep and rest </s> <s> I would like to sleep for an hour </s> <s> Sleep helps one torelax.</s> List all possible bigrams. Compute conditional probabilities and predict the next ord for the word \u201cto\u201d. Q.3 b) \u2014 Explain Yarowsky bootstrapping approach of semi supervised learning [5M] Q.3.c) What is POS tagging? Discuss various challenges faced by POS tagging. [10M] Q.4a) What are the limitations of Hidden Markov Model? [5M] Q.4b) Explain the different steps in text processing for Information Retrieval [5M] Q.4.c\u00a2) Compare top-down and bottom-up approach of parsing with example. [10M] Q.5 a) | What do you mean by word sense disambiguation (WSD)? Discuss dictionary based [10M] approach for WSD.\nQ5(b) Explain Hobbs algorithm for pronoun resolution. [10M] Q.6a) Explain Text summarization in detail. [10M] Q.6b) Explain Porter Stemming algorithm in detail [10M]",
+      "reps": {
+        "native": {
+          "name": "native",
+          "empty": false,
+          "chars": 3087,
+          "prepared_chars": 2943,
+          "prepared_head": "E737F5A29FB8A844D0A8822EDB91068CE737F5A29FB8A844D0A8822EDB91068CE737F5A29FB8A844D0A8822EDB91068\n068CE737F5A29FB8A844D0A8822EDB91068CE737F5A29FB8A844D0A8822EDB91068CE737F5A29FB8A844D0A8822EDB91068CE737F5A\nDB91068CE737F5A29FB8A844D0A8822EDB91068CE737F5A29FB8A844D0A8822EDB91068CE737F5A29FB8A844D0A8822EDB91068CE737F5A29FB8A8\n2EDB91068CE737F5A29FB8A844D0A8822EDB91068CE737F5A29FB8A844D0A8822EDB91068CE737F5A29FB8A844D0A8822EDB91068CE737F5A29FB8A844D0A882\nDB91068CE737F5A29FB8A844D0A8822EDB91068CE737F5A29FB8A844D0A8822EDB91068CE737F5A29FB8A844D0A8822EDB91068CE737F5A29FB8A844D0A882\nCE737F5A29FB8A844D0A8822EDB91068CE737F5A29FB8A844D0A8822EDB91068CE737F5A29FB8A844D0A8822EDB91068CE737F5A29FB8A844D0\n29FB8A844D0A8822EDB91068CE737F5A29FB8A844D0A8822EDB91068CE737F5A29FB8A844D0A8822EDB91068CE737F5A29FB8A84\n \u2026",
+          "markers": [
+            "Q1(a)",
+            "Q2(a)",
+            "Q2(b)",
+            "Q3(a)",
+            "Q3(b)",
+            "Q3(c)",
+            "Q4(a)",
+            "Q4(b)",
+            "Q4(c)",
+            "Q5(a)",
+            "Q5(b)",
+            "Q6(a)",
+            "Q6(b)",
+            "Q1(b)",
+            "Q1(c)",
+            "Q1(d)",
+            "Q1(e)",
+            "Q1(f)"
+          ],
+          "accepted_ids": [
+            "Q1",
+            "Q2(a)",
+            "Q2(b)",
+            "Q3(a)",
+            "Q3(b)",
+            "Q3(q)",
+            "Q4(a)",
+            "Q4(b)",
+            "Q4(q)",
+            "Q5(a)",
+            "Q5(b)",
+            "Q6(a)",
+            "Q6(b)"
+          ],
+          "accepted": [
+            {
+              "id": "Q1",
+              "marks": 0,
+              "text": "Any Four 20[M] a Differentiate between Syntactic ambiguity and Lexical Ambiguity. b Define affixes. Explain the types of affixes. c Describe open class words and closed class words in English with examples. d What is rule base machine trans",
+              "len": 409
+            },
+            {
+              "id": "Q2(a)",
+              "marks": 0,
+              "text": "Explain the role of FSA in morphological analysis?",
+              "len": 50
+            },
+            {
+              "id": "Q2(b)",
+              "marks": 0,
+              "text": "Explain Different stage involved in NLP process with suitable example.",
+              "len": 70
+            },
+            {
+              "id": "Q3(a)",
+              "marks": 0,
+              "text": "Consider the following corpus <s> I tell you to sleep and rest </s> <s> I would like to sleep for an hour </s> <s> Sleep helps one to relax </s> List all possible bigrams. Compute conditional probabilities and predict the next ord for the w",
+              "len": 249
+            },
+            {
+              "id": "Q3(b)",
+              "marks": 0,
+              "text": "Explain Yarowsky bootstrapping approach of semi supervised learning",
+              "len": 67
+            },
+            {
+              "id": "Q3(q)",
+              "marks": 0,
+              "text": "3 c) What is POS tagging? Discuss various challenges faced by POS tagging.",
+              "len": 74
+            },
+            {
+              "id": "Q4(a)",
+              "marks": 0,
+              "text": "What are the limitations of Hidden Markov Model?",
+              "len": 48
+            },
+            {
+              "id": "Q4(b)",
+              "marks": 0,
+              "text": "Explain the different steps in text processing for Information Retrieval",
+              "len": 72
+            },
+            {
+              "id": "Q4(q)",
+              "marks": 0,
+              "text": "4 c) Compare top-down and bottom-up approach of parsing with example.",
+              "len": 69
+            },
+            {
+              "id": "Q5(a)",
+              "marks": 0,
+              "text": "What do you mean by word sense disambiguation (WSD)? Discuss dictionary based approach for WSD.",
+              "len": 95
+            },
+            {
+              "id": "Q5(b)",
+              "marks": 0,
+              "text": "Explain Hobbs algorithm for pronoun resolution.",
+              "len": 47
+            },
+            {
+              "id": "Q6(a)",
+              "marks": 0,
+              "text": "Explain Text summarization in detail.",
+              "len": 37
+            },
+            {
+              "id": "Q6(b)",
+              "marks": 0,
+              "text": "Explain Porter Stemming algorithm in detail",
+              "len": 43
+            }
+          ],
+          "rejected": [],
+          "structure_score": 0.8333
+        },
+        "filtered_native": {
+          "name": "filtered_native",
+          "empty": false,
+          "chars": 1621,
+          "prepared_chars": 1621,
+          "prepared_head": "=====================================================================\nN.B. (1) Question No. 1 is compulsory\nQ.1\nAny Four\n20[M]\na\nDifferentiate between Syntactic ambiguity and Lexical Ambiguity.\n[5M]\nb\nDefine affixes. Explain the types of affixes.\n[5M]\nc\nDescribe open class words and closed class words in English with examples.\n[5M]\nd\nWhat is rule base machine translation?\n[5M]\ne\nExplain with suitable example following relationships between word meanings.\nHomonymy, Polysemy, Synonymy, Antonymy\n[5M]\nf\nExplain perplexity of any language model.\n[5M]\nQ.2 a) Explain the role of FSA in morphological analysis?\nQ.2 b) Explain Different stage involved in NLP process with suitable example.\n[10M]\nQ.3 a) Consider the following corpus\n<s> I tell you to sleep and rest </s>\n<s> I would like to sleep for a \u2026",
+          "markers": [
+            "Q1(a)",
+            "Q2(a)",
+            "Q2(b)",
+            "Q3(a)",
+            "Q3(b)",
+            "Q3(c)",
+            "Q4(a)",
+            "Q4(b)",
+            "Q4(c)",
+            "Q5(a)",
+            "Q5(b)",
+            "Q6(a)",
+            "Q6(b)",
+            "Q1(b)",
+            "Q1(c)",
+            "Q1(d)",
+            "Q1(e)",
+            "Q1(f)"
+          ],
+          "accepted_ids": [
+            "Q1",
+            "Q2(a)",
+            "Q2(b)",
+            "Q3(a)",
+            "Q3(b)",
+            "Q3(q)",
+            "Q4(a)",
+            "Q4(b)",
+            "Q4(q)",
+            "Q5(a)",
+            "Q5(b)",
+            "Q6(a)",
+            "Q6(b)"
+          ],
+          "accepted": [
+            {
+              "id": "Q1",
+              "marks": 0,
+              "text": "Any Four 20[M] a Differentiate between Syntactic ambiguity and Lexical Ambiguity. b Define affixes. Explain the types of affixes. c Describe open class words and closed class words in English with examples. d What is rule base machine trans",
+              "len": 409
+            },
+            {
+              "id": "Q2(a)",
+              "marks": 0,
+              "text": "Explain the role of FSA in morphological analysis?",
+              "len": 50
+            },
+            {
+              "id": "Q2(b)",
+              "marks": 0,
+              "text": "Explain Different stage involved in NLP process with suitable example.",
+              "len": 70
+            },
+            {
+              "id": "Q3(a)",
+              "marks": 0,
+              "text": "Consider the following corpus <s> I tell you to sleep and rest </s> <s> I would like to sleep for an hour </s> <s> Sleep helps one to relax </s> List all possible bigrams. Compute conditional probabilities and predict the next ord for the w",
+              "len": 249
+            },
+            {
+              "id": "Q3(b)",
+              "marks": 0,
+              "text": "Explain Yarowsky bootstrapping approach of semi supervised learning",
+              "len": 67
+            },
+            {
+              "id": "Q3(q)",
+              "marks": 0,
+              "text": "3 c) What is POS tagging? Discuss various challenges faced by POS tagging.",
+              "len": 74
+            },
+            {
+              "id": "Q4(a)",
+              "marks": 0,
+              "text": "What are the limitations of Hidden Markov Model?",
+              "len": 48
+            },
+            {
+              "id": "Q4(b)",
+              "marks": 0,
+              "text": "Explain the different steps in text processing for Information Retrieval",
+              "len": 72
+            },
+            {
+              "id": "Q4(q)",
+              "marks": 0,
+              "text": "4 c) Compare top-down and bottom-up approach of parsing with example.",
+              "len": 69
+            },
+            {
+              "id": "Q5(a)",
+              "marks": 0,
+              "text": "What do you mean by word sense disambiguation (WSD)? Discuss dictionary based approach for WSD.",
+              "len": 95
+            },
+            {
+              "id": "Q5(b)",
+              "marks": 0,
+              "text": "Explain Hobbs algorithm for pronoun resolution.",
+              "len": 47
+            },
+            {
+              "id": "Q6(a)",
+              "marks": 0,
+              "text": "Explain Text summarization in detail.",
+              "len": 37
+            },
+            {
+              "id": "Q6(b)",
+              "marks": 0,
+              "text": "Explain Porter Stemming algorithm in detail",
+              "len": 43
+            }
+          ],
+          "rejected": [],
+          "structure_score": 0.8333
+        },
+        "ocr_text": {
+          "name": "ocr_text",
+          "empty": false,
+          "chars": 1542,
+          "prepared_chars": 1542,
+          "prepared_head": "N.B. (1) Question No. | is compulsory\nQ.1. Any Four 20[M]\na Differentiate between Syntactic ambiguity and Lexical Ambiguity. 5M]\nb Define affixes. Explain the types of affixes. 5M]\nc Describe open class words and closed class words in English with examples. 5M]\nd What is rule base machine translation? 5M]\ne Explain with suitable example following relationships between word meanings. 5M]\nHomonymy, Polysemy, Synonymy, Antonymy\nf Explain perplexity of any language model. 5M]\nQ.2.a) Explain the role of FSA in morphological analysis?\nQ.2b) Explain Different stage involved in NLP process with suitable example. [10M]\nQ.3.a) Consider the following corpus 5M]\n<s> I tell you to sleep and rest </s>\n<s> I would like to sleep for an hour </s>\n<s> Sleep helps one torelax.</s>\nList all possible bigrams.  \u2026",
+          "markers": [
+            "Q1(a)",
+            "Q2(a)",
+            "Q2(b)",
+            "Q3(a)",
+            "Q3(b)",
+            "Q3(c)",
+            "Q4(a)",
+            "Q4(b)",
+            "Q4(c)",
+            "Q5(a)",
+            "Q5(b)",
+            "Q6(a)",
+            "Q6(b)"
+          ],
+          "accepted_ids": [
+            "Q2(a)",
+            "Q2(b)",
+            "Q3(a)",
+            "Q3(b)",
+            "Q3(c)",
+            "Q4(a)",
+            "Q4(b)",
+            "Q4(q)",
+            "Q5(a)",
+            "Q5(b)",
+            "Q6(a)",
+            "Q6(b)"
+          ],
+          "accepted": [
+            {
+              "id": "Q2(a)",
+              "marks": 0,
+              "text": "Explain the role of FSA in morphological analysis?",
+              "len": 50
+            },
+            {
+              "id": "Q2(b)",
+              "marks": 10,
+              "text": "Explain Different stage involved in NLP process with suitable example.",
+              "len": 70
+            },
+            {
+              "id": "Q3(a)",
+              "marks": 5,
+              "text": "Consider the following corpus <s> I tell you to sleep and rest </s> <s> I would like to sleep for an hour </s> <s> Sleep helps one torelax.</s> List all possible bigrams. Compute conditional probabilities and predict the next ord for the wo",
+              "len": 248
+            },
+            {
+              "id": "Q3(b)",
+              "marks": 5,
+              "text": "\u2014 Explain Yarowsky bootstrapping approach of semi supervised learning",
+              "len": 69
+            },
+            {
+              "id": "Q3(c)",
+              "marks": 10,
+              "text": "What is POS tagging? Discuss various challenges faced by POS tagging.",
+              "len": 69
+            },
+            {
+              "id": "Q4(a)",
+              "marks": 5,
+              "text": "What are the limitations of Hidden Markov Model?",
+              "len": 48
+            },
+            {
+              "id": "Q4(b)",
+              "marks": 5,
+              "text": "Explain the different steps in text processing for Information Retrieval",
+              "len": 72
+            },
+            {
+              "id": "Q4(q)",
+              "marks": 10,
+              "text": "4.c\u00a2) Compare top-down and bottom-up approach of parsing with example.",
+              "len": 70
+            },
+            {
+              "id": "Q5(a)",
+              "marks": 10,
+              "text": "| What do you mean by word sense disambiguation (WSD)? Discuss dictionary based approach for WSD.",
+              "len": 97
+            },
+            {
+              "id": "Q5(b)",
+              "marks": 10,
+              "text": "Explain Hobbs algorithm for pronoun resolution.",
+              "len": 47
+            },
+            {
+              "id": "Q6(a)",
+              "marks": 10,
+              "text": "Explain Text summarization in detail.",
+              "len": 37
+            },
+            {
+              "id": "Q6(b)",
+              "marks": 10,
+              "text": "Explain Porter Stemming algorithm in detail",
+              "len": 43
+            }
+          ],
+          "rejected": [],
+          "structure_score": 0.9
+        },
+        "ocr_layout": {
+          "name": "ocr_layout",
+          "empty": false,
+          "chars": 1508,
+          "prepared_chars": 1508,
+          "prepared_head": "Q1(a) Differentiate between Syntactic ambiguity and Lexical Ambiguity. 5M]\nQ1(b) Define affixes. Explain the types of affixes. 5M]\nQ1(c) Describe open class words and closed class words in English with examples. 5M]\nQ1(d) What is rule base machine translation? 5M]\nQ1(e) Explain with suitable example following relationships between word meanings. 5M] Homonymy, Polysemy, Synonymy, Antonymy\nQ1(f) Explain perplexity of any language model. 5M] Q.2.a) Explain the role of FSA in morphological analysis? Q.2b) Explain Different stage involved in NLP process with suitable example. [10M] Q.3.a) Consider the following corpus 5M] <s> I tell you to sleep and rest </s> <s> I would like to sleep for an hour </s> <s> Sleep helps one torelax.</s> List all possible bigrams. Compute conditional probabilities  \u2026",
+          "markers": [
+            "Q1(a)",
+            "Q1(b)",
+            "Q1(c)",
+            "Q1(d)",
+            "Q1(e)",
+            "Q1(f)",
+            "Q5(b)"
+          ],
+          "accepted_ids": [
+            "Q1(a)",
+            "Q1(b)",
+            "Q1(c)",
+            "Q1(d)",
+            "Q1(e)",
+            "Q1(f)",
+            "Q5(b)"
+          ],
+          "accepted": [
+            {
+              "id": "Q1(a)",
+              "marks": 5,
+              "text": "Differentiate between Syntactic ambiguity and Lexical Ambiguity.",
+              "len": 64
+            },
+            {
+              "id": "Q1(b)",
+              "marks": 5,
+              "text": "Define affixes. Explain the types of affixes.",
+              "len": 45
+            },
+            {
+              "id": "Q1(c)",
+              "marks": 5,
+              "text": "Describe open class words and closed class words in English with examples.",
+              "len": 74
+            },
+            {
+              "id": "Q1(d)",
+              "marks": 5,
+              "text": "What is rule base machine translation?",
+              "len": 38
+            },
+            {
+              "id": "Q1(e)",
+              "marks": 5,
+              "text": "Explain with suitable example following relationships between word meanings. 5M] Homonymy, Polysemy, Synonymy, Antonymy",
+              "len": 119
+            },
+            {
+              "id": "Q1(f)",
+              "marks": 5,
+              "text": "Explain perplexity of any language model. 5M] Q.2.a) Explain the role of FSA in morphological analysis? Q.2b) Explain Different stage involved in NLP process with suitable example. [10M] Q.3.a) Consider the following corpus 5M] <s> I tell y",
+              "len": 945
+            },
+            {
+              "id": "Q5(b)",
+              "marks": 10,
+              "text": "Explain Hobbs algorithm for pronoun resolution. [10M] Q.6a) Explain Text summarization in detail. [10M] Q.6b) Explain Porter Stemming algorithm in detail",
+              "len": 153
+            }
+          ],
+          "rejected": [],
+          "structure_score": 0.25
+        }
+      }
+    }
+  ],
+  "hybrid": {
+    "accepted_ids": [
+      "Q1",
+      "Q2(a)",
+      "Q2(b)",
+      "Q3(a)",
+      "Q3(b)",
+      "Q3(q)",
+      "Q4(a)",
+      "Q4(b)",
+      "Q4(q)",
+      "Q5(a)",
+      "Q5(b)",
+      "Q6(a)",
+      "Q6(b)"
+    ],
+    "accepted": [
+      {
+        "id": "Q1",
+        "marks": 0,
+        "pages": [
+          1
+        ],
+        "text": "Any Four 20[M] a Differentiate between Syntactic ambiguity and Lexical Ambiguity. b Define affixes. Explain the types of affixes. c Describe open class words and closed class words in English with examples. d What is rule base machine translation? e Explain with suitable example following relationships between word meanings. Homonymy, Polysemy, Synonymy, Antonymy f Explain perplexity of any language model."
+      },
+      {
+        "id": "Q2(a)",
+        "marks": 0,
+        "pages": [
+          1
+        ],
+        "text": "Explain the role of FSA in morphological analysis?"
+      },
+      {
+        "id": "Q2(b)",
+        "marks": 0,
+        "pages": [
+          1
+        ],
+        "text": "Explain Different stage involved in NLP process with suitable example."
+      },
+      {
+        "id": "Q3(a)",
+        "marks": 0,
+        "pages": [
+          1
+        ],
+        "text": "Consider the following corpus <s> I tell you to sleep and rest </s> <s> I would like to sleep for an hour </s> <s> Sleep helps one to relax </s> List all possible bigrams. Compute conditional probabilities and predict the next ord for the word \u201cto\u201d."
+      },
+      {
+        "id": "Q3(b)",
+        "marks": 0,
+        "pages": [
+          1
+        ],
+        "text": "Explain Yarowsky bootstrapping approach of semi supervised learning"
+      },
+      {
+        "id": "Q3(q)",
+        "marks": 0,
+        "pages": [
+          1
+        ],
+        "text": "3 c) What is POS tagging? Discuss various challenges faced by POS tagging."
+      },
+      {
+        "id": "Q4(a)",
+        "marks": 0,
+        "pages": [
+          1
+        ],
+        "text": "What are the limitations of Hidden Markov Model?"
+      },
+      {
+        "id": "Q4(b)",
+        "marks": 0,
+        "pages": [
+          1
+        ],
+        "text": "Explain the different steps in text processing for Information Retrieval"
+      },
+      {
+        "id": "Q4(q)",
+        "marks": 0,
+        "pages": [
+          1
+        ],
+        "text": "4 c) Compare top-down and bottom-up approach of parsing with example."
+      },
+      {
+        "id": "Q5(a)",
+        "marks": 0,
+        "pages": [
+          1
+        ],
+        "text": "What do you mean by word sense disambiguation (WSD)? Discuss dictionary based approach for WSD."
+      },
+      {
+        "id": "Q5(b)",
+        "marks": 0,
+        "pages": [
+          1
+        ],
+        "text": "Explain Hobbs algorithm for pronoun resolution."
+      },
+      {
+        "id": "Q6(a)",
+        "marks": 0,
+        "pages": [
+          1
+        ],
+        "text": "Explain Text summarization in detail."
+      },
+      {
+        "id": "Q6(b)",
+        "marks": 0,
+        "pages": [
+          1
+        ],
+        "text": "Explain Porter Stemming algorithm in detail"
+      }
+    ],
+    "rejected": [],
+    "markers": [
+      "Q1(a)",
+      "Q2(a)",
+      "Q2(b)",
+      "Q3(a)",
+      "Q3(b)",
+      "Q3(c)",
+      "Q4(a)",
+      "Q4(b)",
+      "Q4(c)",
+      "Q5(a)",
+      "Q5(b)",
+      "Q6(a)",
+      "Q6(b)",
+      "Q1(b)",
+      "Q1(c)",
+      "Q1(d)",
+      "Q1(e)",
+      "Q1(f)"
+    ],
+    "quality": {
+      "questions_extracted": 13,
+      "source_markers_detected": 18,
+      "missing_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q1(f)",
+        "Q3(c)",
+        "Q4(c)"
+      ],
+      "extra_without_marker": [
+        "Q1",
+        "Q3(q)",
+        "Q4(q)"
+      ],
+      "extraction_quality": "PARTIAL",
+      "confidence": 0.722,
+      "question_extraction_confidence": 0.722
+    },
+    "cross_page_merges": 0,
+    "grounding_coverage": 1.0
+  }
+}

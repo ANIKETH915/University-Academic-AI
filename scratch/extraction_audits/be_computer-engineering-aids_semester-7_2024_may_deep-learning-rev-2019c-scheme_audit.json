@@ -1,0 +1,163 @@
+{
+  "pdf": "be_computer-engineering-aids_semester-7_2024_may_deep-learning-rev-2019c-scheme.pdf",
+  "path": "D:\\pyqrag\\data\\pyq\\deep-learning\\be_computer-engineering-aids_semester-7_2024_may_deep-learning-rev-2019c-scheme.pdf",
+  "pages": [
+    {
+      "page": 1,
+      "native_len": 2386,
+      "filtered_native_len": 974,
+      "native_quality_ok": true,
+      "quality_reason": "valid",
+      "quality_metrics": {
+        "printable_ratio": 0.962,
+        "alpha_ratio": 0.738,
+        "replacement_ratio": 0.0,
+        "entropy": 4.81,
+        "unique_token_ratio": 0.49,
+        "avg_word_length": 5.13,
+        "word_quality_ratio": 0.993,
+        "garbled_ratio": 0.007
+      },
+      "ocr_triggered": false,
+      "ocr_used_as_final": false,
+      "ocr_len": 0,
+      "reconstructed_len": 949,
+      "markers": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "native_head": "94X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X\nADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA\n25YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525Y\n94X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X\n525YADA494",
+      "native_tail": "tion Functions in Neural Networks, explain \ndifferent types Activation functions used in NN. \n[10] \n \nb) What are Generative Adversarial Networks, comment on it’s applications. \n[10] \n \n \n********************* \nPaper / Subject Code: 42371 / Deep Learning\nX525YADA494X525YADA494X525YADA494X525YADA494\n",
+      "ocr_head": "",
+      "reconstructed_head": "Q1(a) What are Feed Forward Neural Network?\nQ1(b) Explain Gradient Descent in Deep Learning.\nQ1(c) Explain the dropout method and it’s advantages.\nQ1(d) What are Undercomplete Autoencoders?\nQ1(e) Explain Pooling operation in CNN.\nQ2(a) What are the Three Classes of Deep Learning, explain each?\nQ2(b) Explain the architecture of CNN with the help of a diagram.\nQ3(a) What are the different types of Gradient Descent methods, explain any three of them.\nQ3(b) Explain main components of an Autoencoder and it’s architecture.\nQ4(a) Explain LSTM model, how it overcomes the limitation of RNN.\nQ4(b) What "
+    }
+  ],
+  "full_texts": {
+    "page_1": {
+      "native": "94X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X\nADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA\n25YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525Y\n94X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X\n525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X\nA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA\nYADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525Y\nX525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X\nA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA494X525YADA\n55301 \n1\nDuration: 3hrs                                                                                            [Max Marks:80] \n \n  \n(1) Question No 1 is Compulsory. \n \n(2) Attempt any three questions out of the remaining five. \n \n(3) All questions carry equal marks. \n(4) Assume suitable data, if required and state it clearly.   \n \n1  \n Attempt any four \n[20] \n \na) \nWhat are Feed Forward Neural Network? \n \n \nb) Explain Gradient Descent in Deep Learning. \n \n \nc) \nExplain the dropout method and it’s advantages. \n \n \nd) What are Undercomplete Autoencoders? \n \n \ne) \nExplain Pooling operation in CNN. \n \n \n2 a) \nWhat are the Three Classes of Deep Learning, explain each? \n[10] \n \nb) Explain the architecture of CNN with the help of a diagram. \n[10] \n \n \n \n \n3 a) \nWhat are the different types of Gradient Descent methods, explain any three of \nthem. \n[10] \n \nb)  Explain main components of an Autoencoder and it’s architecture. \n[10] \n \n \n \n \n4 a) \nExplain LSTM model, how it overcomes the limitation of RNN. \n[10] \n \nb) What are the issues faced by Vanilla GAN models? \n[10] \n \n \n \n \n5 a) \nWhat are L1 and L2 regularization methods? \n[10] \n \nb) Explain any three types of Autoencoders. \n[10] \n \n \n \n \n6 a) \nWhat is the significance of Activation Functions in Neural Networks, explain \ndifferent types Activation functions used in NN. \n[10] \n \nb) What are Generative Adversarial Networks, comment on it’s applications. \n[10] \n \n \n********************* \nPaper / Subject Code: 42371 / Deep Learning\nX525YADA494X525YADA494X525YADA494X525YADA494\n",
+      "ocr": "",
+      "filtered": "1\n1\n[20]\na)\nWhat are Feed Forward Neural Network?\nb) Explain Gradient Descent in Deep Learning.\nc)\nExplain the dropout method and it’s advantages.\nd) What are Undercomplete Autoencoders?\ne)\nExplain Pooling operation in CNN.\n2 a)\nWhat are the Three Classes of Deep Learning, explain each?\n[10]\nb) Explain the architecture of CNN with the help of a diagram.\n[10]\n3 a)\nWhat are the different types of Gradient Descent methods, explain any three of\nthem.\n[10]\nb)  Explain main components of an Autoencoder and it’s architecture.\n[10]\n4 a)\nExplain LSTM model, how it overcomes the limitation of RNN.\n[10]\nb) What are the issues faced by Vanilla GAN models?\n[10]\n5 a)\nWhat are L1 and L2 regularization methods?\n[10]\nb) Explain any three types of Autoencoders.\n[10]\n6 a)\nWhat is the significance of Activation Functions in Neural Networks, explain\ndifferent types Activation functions used in NN.\n[10]\nb) What are Generative Adversarial Networks, comment on it’s applications.\n[10]",
+      "reconstructed": "Q1(a) What are Feed Forward Neural Network?\nQ1(b) Explain Gradient Descent in Deep Learning.\nQ1(c) Explain the dropout method and it’s advantages.\nQ1(d) What are Undercomplete Autoencoders?\nQ1(e) Explain Pooling operation in CNN.\nQ2(a) What are the Three Classes of Deep Learning, explain each?\nQ2(b) Explain the architecture of CNN with the help of a diagram.\nQ3(a) What are the different types of Gradient Descent methods, explain any three of them.\nQ3(b) Explain main components of an Autoencoder and it’s architecture.\nQ4(a) Explain LSTM model, how it overcomes the limitation of RNN.\nQ4(b) What are the issues faced by Vanilla GAN models?\nQ5(a) What are L1 and L2 regularization methods?\nQ5(b) Explain any three types of Autoencoders.\nQ6(a) What is the significance of Activation Functions in Neural Networks, explain different types Activation functions used in NN.\nQ6(b) What are Generative Adversarial Networks, comment on it’s applications."
+    }
+  },
+  "hybrid": {
+    "accepted": [
+      {
+        "question_id": "Q1(a)",
+        "exact_text": "What are Feed Forward Neural Network?",
+        "marks": 5
+      },
+      {
+        "question_id": "Q1(b)",
+        "exact_text": "Explain Gradient Descent in Deep Learning.",
+        "marks": 5
+      },
+      {
+        "question_id": "Q1(c)",
+        "exact_text": "Explain the dropout method and it’s advantages.",
+        "marks": 5
+      },
+      {
+        "question_id": "Q1(d)",
+        "exact_text": "What are Undercomplete Autoencoders?",
+        "marks": 5
+      },
+      {
+        "question_id": "Q1(e)",
+        "exact_text": "Explain Pooling operation in CNN.",
+        "marks": 5
+      },
+      {
+        "question_id": "Q2(a)",
+        "exact_text": "What are the Three Classes of Deep Learning, explain each?",
+        "marks": 10
+      },
+      {
+        "question_id": "Q2(b)",
+        "exact_text": "Explain the architecture of CNN with the help of a diagram.",
+        "marks": 10
+      },
+      {
+        "question_id": "Q3(a)",
+        "exact_text": "What are the different types of Gradient Descent methods, explain any three of them.",
+        "marks": 10
+      },
+      {
+        "question_id": "Q3(b)",
+        "exact_text": "Explain main components of an Autoencoder and it’s architecture.",
+        "marks": 10
+      },
+      {
+        "question_id": "Q4(a)",
+        "exact_text": "Explain LSTM model, how it overcomes the limitation of RNN.",
+        "marks": 10
+      },
+      {
+        "question_id": "Q4(b)",
+        "exact_text": "What are the issues faced by Vanilla GAN models?",
+        "marks": 10
+      },
+      {
+        "question_id": "Q5(a)",
+        "exact_text": "What are L1 and L2 regularization methods?",
+        "marks": 10
+      },
+      {
+        "question_id": "Q5(b)",
+        "exact_text": "Explain any three types of Autoencoders.",
+        "marks": 10
+      },
+      {
+        "question_id": "Q6(a)",
+        "exact_text": "What is the significance of Activation Functions in Neural Networks, explain different types Activation functions used in NN.",
+        "marks": 10
+      },
+      {
+        "question_id": "Q6(b)",
+        "exact_text": "What are Generative Adversarial Networks, comment on it’s applications.",
+        "marks": 10
+      }
+    ],
+    "rejected": [],
+    "markers": [
+      "Q1(a)",
+      "Q1(b)",
+      "Q1(c)",
+      "Q1(d)",
+      "Q1(e)",
+      "Q2(a)",
+      "Q2(b)",
+      "Q3(a)",
+      "Q3(b)",
+      "Q4(a)",
+      "Q4(b)",
+      "Q5(a)",
+      "Q5(b)",
+      "Q6(a)",
+      "Q6(b)"
+    ],
+    "quality": {
+      "questions_extracted": 15,
+      "source_markers_detected": 15,
+      "missing_questions": [],
+      "extra_without_marker": [],
+      "extraction_quality": "COMPLETE",
+      "confidence": 0.95,
+      "question_extraction_confidence": 0.95
+    },
+    "llm_used": false
+  }
+}

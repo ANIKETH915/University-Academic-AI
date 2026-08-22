@@ -1,0 +1,260 @@
+{
+  "extraction_quality": "COMPLETE",
+  "ingestion_status": "ready",
+  "vectors": 18,
+  "quality_summary": {
+    "questions_extracted": 18,
+    "source_markers_detected": 18,
+    "missing_questions": [],
+    "extra_without_marker": [],
+    "extraction_quality": "COMPLETE",
+    "confidence": 0.95,
+    "question_extraction_confidence": 0.95,
+    "accepted_count": 18,
+    "rejected_count": 0,
+    "total_pages": 1,
+    "exam_year": 2022,
+    "exam_session": "Nov/Dec",
+    "ocr_pages": 1,
+    "llm_used": false,
+    "llm_candidates": 0,
+    "llm_rejected_for_truncation": 0,
+    "cross_page_merges": 0,
+    "grounding_coverage": 1.0,
+    "selected_representations": [
+      {
+        "page": 1,
+        "selected": "ocr_layout"
+      }
+    ],
+    "rejection_reasons": []
+  },
+  "source_markers": [
+    "Q1(a)",
+    "Q1(b)",
+    "Q1(c)",
+    "Q1(d)",
+    "Q1(e)",
+    "Q1(f)",
+    "Q2(a)",
+    "Q2(b)",
+    "Q3(a)",
+    "Q3(b)",
+    "Q3(c)",
+    "Q4(a)",
+    "Q4(b)",
+    "Q4(c)",
+    "Q5(a)",
+    "Q5(b)",
+    "Q6(a)",
+    "Q6(b)"
+  ],
+  "rejected": [],
+  "page_audit": [
+    {
+      "page": 1,
+      "pymupdf_chars": 3087,
+      "filtered_native_chars": 1621,
+      "ocr_used": true,
+      "ocr_chars": 1786,
+      "final_chars": 1417,
+      "quality_reason": "selected_ocr_layout_yield_18",
+      "quality_valid": true,
+      "raw_native_chars": 3087,
+      "raw_ocr_chars": 1786,
+      "reconstructed_chars": 1417,
+      "selected_representation": "ocr_layout",
+      "representations": [
+        {
+          "representation": "native",
+          "chars": 1621,
+          "accepted_questions": 13,
+          "rejected_candidates": 0,
+          "structure_score": 0.833,
+          "text_quality": 0.972
+        },
+        {
+          "representation": "ocr_text",
+          "chars": 1542,
+          "accepted_questions": 12,
+          "rejected_candidates": 0,
+          "structure_score": 1.0,
+          "text_quality": 0.972
+        },
+        {
+          "representation": "ocr_layout",
+          "chars": 1417,
+          "accepted_questions": 18,
+          "rejected_candidates": 0,
+          "structure_score": 1.0,
+          "text_quality": 0.971
+        }
+      ],
+      "status": "TEXT_READY"
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1(a)",
+      "marks": 0,
+      "pages": [
+        1
+      ],
+      "method": "canonical_boundary_parse",
+      "text": "Differentiate between Syntactic ambiguity and Lexical Ambiguity."
+    },
+    {
+      "id": "Q1(b)",
+      "marks": 0,
+      "pages": [
+        1
+      ],
+      "method": "canonical_boundary_parse",
+      "text": "Define affixes. Explain the types of affixes."
+    },
+    {
+      "id": "Q1(c)",
+      "marks": 0,
+      "pages": [
+        1
+      ],
+      "method": "canonical_boundary_parse",
+      "text": "Describe open class words and closed class words in English with examples."
+    },
+    {
+      "id": "Q1(d)",
+      "marks": 0,
+      "pages": [
+        1
+      ],
+      "method": "canonical_boundary_parse",
+      "text": "What is rule base machine translation?"
+    },
+    {
+      "id": "Q1(e)",
+      "marks": 0,
+      "pages": [
+        1
+      ],
+      "method": "canonical_boundary_parse",
+      "text": "Explain with suitable example following relationships between word meanings.  Homonymy, Polysemy, Synonymy, Antonymy"
+    },
+    {
+      "id": "Q1(f)",
+      "marks": 0,
+      "pages": [
+        1
+      ],
+      "method": "canonical_boundary_parse",
+      "text": "Explain perplexity of any language model."
+    },
+    {
+      "id": "Q2(a)",
+      "marks": 0,
+      "pages": [
+        1
+      ],
+      "method": "canonical_boundary_parse",
+      "text": "Explain the role of FSA in morphological analysis?"
+    },
+    {
+      "id": "Q2(b)",
+      "marks": 0,
+      "pages": [
+        1
+      ],
+      "method": "canonical_boundary_parse",
+      "text": "Explain Different stage involved in NLP process with suitable example."
+    },
+    {
+      "id": "Q3(a)",
+      "marks": 0,
+      "pages": [
+        1
+      ],
+      "method": "canonical_boundary_parse",
+      "text": "Consider the following corpus  <s> I tell you to sleep and rest </s> <s> I would like to sleep for an hour </s> <s> Sleep helps one torelax.</s> List all possible bigrams. Compute conditional probabilities and predict the next ord for the word \u201cto\u201d."
+    },
+    {
+      "id": "Q3(b)",
+      "marks": 0,
+      "pages": [
+        1
+      ],
+      "method": "canonical_boundary_parse",
+      "text": "\u2014 Explain Yarowsky bootstrapping approach of semi supervised learning"
+    },
+    {
+      "id": "Q3(c)",
+      "marks": 0,
+      "pages": [
+        1
+      ],
+      "method": "canonical_boundary_parse",
+      "text": "What is POS tagging? Discuss various challenges faced by POS tagging."
+    },
+    {
+      "id": "Q4(a)",
+      "marks": 0,
+      "pages": [
+        1
+      ],
+      "method": "canonical_boundary_parse",
+      "text": "What are the limitations of Hidden Markov Model?"
+    },
+    {
+      "id": "Q4(b)",
+      "marks": 0,
+      "pages": [
+        1
+      ],
+      "method": "canonical_boundary_parse",
+      "text": "Explain the different steps in text processing for Information Retrieval"
+    },
+    {
+      "id": "Q4(c)",
+      "marks": 0,
+      "pages": [
+        1
+      ],
+      "method": "canonical_boundary_parse",
+      "text": "Compare top-down and bottom-up approach of parsing with example."
+    },
+    {
+      "id": "Q5(a)",
+      "marks": 0,
+      "pages": [
+        1
+      ],
+      "method": "canonical_boundary_parse",
+      "text": "What do you mean by word sense disambiguation (WSD)? Discuss dictionary based  approach for WSD."
+    },
+    {
+      "id": "Q5(b)",
+      "marks": 0,
+      "pages": [
+        1
+      ],
+      "method": "canonical_boundary_parse",
+      "text": "Explain Hobbs algorithm for pronoun resolution."
+    },
+    {
+      "id": "Q6(a)",
+      "marks": 0,
+      "pages": [
+        1
+      ],
+      "method": "canonical_boundary_parse",
+      "text": "Explain Text summarization in detail."
+    },
+    {
+      "id": "Q6(b)",
+      "marks": 0,
+      "pages": [
+        1
+      ],
+      "method": "canonical_boundary_parse",
+      "text": "Explain Porter Stemming algorithm in detail"
+    }
+  ]
+}

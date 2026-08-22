@@ -1,0 +1,101 @@
+[
+  {
+    "id": "ws-nlp-31567ba5",
+    "university": "mumbai",
+    "branch": "computer-engineering",
+    "program": "computer-engineering",
+    "semester": "Semester 7",
+    "subject": "natural language processing",
+    "subject_code": "42175",
+    "is_demo": false,
+    "created_at": "2026-08-22T00:00:00+00:00",
+    "syllabus_files": [],
+    "pyq_files": []
+  },
+  {
+    "id": "ws-deep-learning-afcf1d1e",
+    "university": "mumbai",
+    "branch": "aids",
+    "program": "aids",
+    "semester": "Semester 7",
+    "subject": "deep learning",
+    "subject_code": "CS3591",
+    "is_demo": false,
+    "created_at": "2026-08-21T18:44:30.104420+00:00",
+    "syllabus_files": [],
+    "pyq_files": [
+      {
+        "id": "doc-be_computer-engineering-aids_semester-7_2023_december_deep-learning-rev-2019\u2018c\u2019-scheme.pdf",
+        "name": "be_computer-engineering-aids_semester-7_2023_december_deep-learning-rev-2019\u2018c\u2019-scheme.pdf",
+        "size": "0.5 MB",
+        "metadata": "Semester 7",
+        "status": "VERIFIED"
+      },
+      {
+        "id": "doc-be_computer-engineering-aids_semester-7_2023_december_deep-learning-rev-2019\u2018c\u2019-scheme.pdf",
+        "name": "be_computer-engineering-aids_semester-7_2023_december_deep-learning-rev-2019\u2018c\u2019-scheme.pdf",
+        "size": "0.5 MB",
+        "metadata": "Semester 7",
+        "status": "VERIFIED"
+      }
+    ]
+  },
+  {
+    "id": "ws-dbms-2377cb63",
+    "university": "mumbai",
+    "branch": "aids",
+    "program": "aids",
+    "semester": "Semester 5",
+    "subject": "dbms",
+    "subject_code": "CS3591",
+    "is_demo": false,
+    "created_at": "2026-08-21T18:35:11.706556+00:00",
+    "syllabus_files": [
+      {
+        "id": "doc-AIDSAIML-SEM-7_2024_compressed.pdf",
+        "name": "AIDSAIML-SEM-7_2024_compressed.pdf",
+        "size": "16.6 MB",
+        "metadata": "Semester 5",
+        "status": "VERIFIED"
+      }
+    ],
+    "pyq_files": [
+      {
+        "id": "doc-be_computer-engineering-aids_semester-7_2023_december_deep-learning-rev-2019\u2018c\u2019-scheme - Copy.pdf",
+        "name": "be_computer-engineering-aids_semester-7_2023_december_deep-learning-rev-2019\u2018c\u2019-scheme - Copy.pdf",
+        "size": "0.5 MB",
+        "metadata": "Semester 5",
+        "status": "VERIFIED"
+      }
+    ]
+  },
+  {
+    "id": "ws-deep-learning-18c9f645",
+    "university": "mumbai",
+    "branch": "aids",
+    "program": "aids",
+    "semester": "Semester 5",
+    "subject": "deep learning",
+    "subject_code": "CS3591",
+    "is_demo": false,
+    "created_at": "2026-08-21T18:15:45.994646+00:00",
+    "syllabus_files": [
+      {
+        "id": "doc-be_computer-engineering-aids_semester-7_2024_may_deep-learning-rev-2019c-scheme.pdf",
+        "name": "be_computer-engineering-aids_semester-7_2024_may_deep-learning-rev-2019c-scheme.pdf",
+        "size": "0.4 MB",
+        "metadata": "Semester 5",
+        "status": "FAILED"
+      }
+    ],
+    "pyq_files": [
+      {
+        "id": "doc-be_computer-engineering-aids_semester-7_2023_december_deep-learning-rev-2019\u2018c\u2019-scheme - Copy.pdf",
+        "name": "be_computer-engineering-aids_semester-7_2023_december_deep-learning-rev-2019\u2018c\u2019-scheme - Copy.pdf",
+        "size": "0.5 MB",
+        "metadata": "Semester 5",
+        "status": "VERIFIED"
+      }
+    ]
+  }
+]
