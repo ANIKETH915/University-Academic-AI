@@ -34,12 +34,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Uploaded User Data & Runtime PDF Collections (Local data — DO NOT COMMIT)
-data/uploads/
-data/pyq/
-data/tmp/
-
-# Vector Storage & Cache (Regenerated dynamically via ingestion)
+# Local runtime / user data (Local data — DO NOT COMMIT)
+data/
+workspaces.json
 chroma_db/
 
 # Local Restore Snapshots & Diagnostics
