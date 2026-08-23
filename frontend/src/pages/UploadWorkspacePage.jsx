@@ -34,6 +34,7 @@ class IngestError extends Error {
 function readDiagnostics(payload, filename) {
   if (!payload || typeof payload !== 'object') return null;
   const audit = payload.extraction_audit || {};
+  const reprs = audit.representations || {};
   const rows = [];
   const push = (label, value) => {
     if (value === undefined || value === null || value === '') return;
@@ -41,30 +42,36 @@ function readDiagnostics(payload, filename) {
   };
 
   push('File', filename);
-  push('Extraction quality', payload.extraction_quality || payload.ingestion_status || payload.status);
+  push('Extraction status', payload.extraction_quality || payload.ingestion_status || payload.status);
   push('Pages', payload.pages ?? audit.pages);
-  push('Questions extracted', payload.questions_extracted ?? audit.accepted_count);
-  push('Candidates detected', payload.candidates ?? audit.candidate_count);
-  push('Accepted', audit.accepted_count);
-  push('Rejected', payload.rejected_questions ?? audit.rejected_count);
-  push('Representation selected', audit.selected_representation);
-  push('Text source used', payload.extraction_method || audit.selected_representation);
-  push('OCR used', audit.ocr_used === undefined ? undefined : audit.ocr_used ? 'yes' : 'no');
-  push('Vectors inserted', payload.vectors_inserted);
+  if (reprs.native) push('Native questions', reprs.native.pages ? `${reprs.native.pages} page(s)` : '0');
+  if (reprs.ocr_text) push('OCR questions', reprs.ocr_text.pages ? `${reprs.ocr_text.pages} page(s)` : '0');
+  if (reprs.ocr_layout) push('Layout questions', reprs.ocr_layout.pages ? `${reprs.ocr_layout.pages} page(s)` : '0');
 
-  const detected = audit.detected_markers || payload.detected_markers;
-  if (Array.isArray(detected) && detected.length) {
-    push('Detected markers', detected.join(', '));
-  }
-  const reconciled = audit.reconciled_markers || audit.accepted_question_ids;
+  const reconciled = audit.reconciled_questions || audit.reconciled_markers || audit.accepted_question_ids;
   if (Array.isArray(reconciled) && reconciled.length) {
-    push('Reconciled markers', reconciled.join(', '));
+    push('Reconciled questions', `${reconciled.length} (${reconciled.join(', ')})`);
+  } else {
+    push('Reconciled questions', payload.questions_extracted ?? audit.accepted_count ?? '0');
   }
 
-  const missing = payload.missing_questions || audit.missing_questions;
-  if (Array.isArray(missing) && missing.length) {
-    push('Missing markers', missing.slice(0, 12).join(', '));
+  const ambiguous = audit.ambiguous_markers;
+  if (Array.isArray(ambiguous) && ambiguous.length) {
+    const ambStr = ambiguous.map(a => typeof a === 'object' ? a.question_id : a).filter(Boolean).join(', ');
+    if (ambStr) push('Ambiguous markers', ambStr);
   }
+
+  const rejected = audit.rejected_markers || payload.rejected_candidates;
+  if (Array.isArray(rejected) && rejected.length) {
+    push('Rejected markers', `${rejected.length} candidate(s)`);
+  }
+
+  const missing = audit.missing_genuine_questions || payload.missing_questions || audit.missing_questions;
+  if (Array.isArray(missing) && missing.length) {
+    push('Missing genuine questions', missing.slice(0, 12).join(', '));
+  }
+
+  push('Vectors inserted', payload.vectors_inserted ?? 0);
 
   const reasons = payload.rejection_reasons || audit.rejection_reasons;
   if (Array.isArray(reasons) && reasons.length) {

@@ -226,6 +226,32 @@ class TestSubLetterDepth(StructureMatrixBase):
         got = sorted(m["question_id"] for m in metas)
         self.assertEqual(got, sorted(truth))
 
+    def test_sub_letters_a_to_e(self):
+        lines = list(HEADER)
+        truth = [f"Q1({s})" for s in "abcde"]
+        for i, s in enumerate("abcde"):
+            lines.append(f"Q1({s}) {body(i)} [5]")
+        metas = self.ingest("subs_ae.pdf", [lines])
+        self.assertEqual(sorted(m["question_id"] for m in metas), sorted(truth))
+
+    def test_sub_letters_a_to_z(self):
+        lines = list(HEADER)
+        truth = [f"Q1({s})" for s in "abcdefghijklmnopqrstuvwxyz"]
+        for i, s in enumerate("abcdefghijklmnopqrstuvwxyz"):
+            lines.append(f"Q1({s}) Explain concept {s} with a short example. [2]")
+        metas = self.ingest("subs_az.pdf", [lines])
+        self.assertEqual(sorted(m["question_id"] for m in metas), sorted(truth))
+
+    def test_gap_a_c_without_b_is_complete(self):
+        lines = list(HEADER) + [
+            "Q1(a) Explain the first recovered concept with a worked example. [5]",
+            "Q1(c) Discuss the third recovered concept and justify the choice. [5]",
+        ]
+        metas = self.ingest("gap_ac.pdf", [lines])
+        got = sorted(m["question_id"] for m in metas)
+        self.assertEqual(got, ["Q1(a)", "Q1(c)"])
+        self.assertNotIn("Q1(b)", got)
+
 
 class TestNumberingStyles(StructureMatrixBase):
     """Numbering style must not change what is recovered."""
@@ -258,6 +284,117 @@ class TestNumberingStyles(StructureMatrixBase):
         ids = sorted(m["question_id"] for m in metas)
         self.assertEqual(len(ids), 9, f"roman subquestions lost: {ids}")
 
+    def test_bare_parent_and_undelimited_letter_verb(self):
+        lines = list(HEADER) + [
+            "1",
+            "Attempt any FOUR",
+            "a What is the first recovered concept with a worked example.",
+            "b Explain the second recovered concept and justify the choice.",
+            "2 a Discuss the third recovered concept with a diagram.",
+            "b Derive the expression and state every assumption clearly.",
+        ]
+        metas = self.ingest("bare_letter_verb.pdf", [lines])
+        got = sorted(m["question_id"] for m in metas)
+        self.assertEqual(got, ["Q1(a)", "Q1(b)", "Q2(a)", "Q2(b)"])
+
+    def test_nested_roman_parts_are_not_question_ids(self):
+        lines = list(HEADER) + [
+            "Q3(a) Explain the first recovered concept with a worked example. [10]",
+            "Q3(b) Consider the following data frame:",
+            "i. Create a subset of rows and demonstrate the output.",
+            "ii. Create a second subset and demonstrate the output.",
+            "Q4(a) Discuss the third recovered concept with a diagram. [10]",
+            "Q4(b) Derive the expression and state every assumption clearly. [10]",
+        ]
+        metas = self.ingest("nested_roman.pdf", [lines])
+        got = sorted(m["question_id"] for m in metas)
+        self.assertEqual(got, ["Q3(a)", "Q3(b)", "Q4(a)", "Q4(b)"])
+        self.assertNotIn("Q3(i)", got)
+        self.assertNotIn("Q3(ii)", got)
+
+    def test_nested_roman_after_table_rows_stays_on_lettered_parent(self):
+        """i./ii. after a lettered stem remain parts of that letter, even when a table sits between them."""
+        table = [str(n) if n % 3 == 0 else f"{n} {20 + n}000" for n in range(1, 12)]
+        lines = list(HEADER) + [
+            "Q5 a)",
+            "Explain the first recovered concept with a worked example. [10]",
+            "Q6 a)",
+            "i. The following table shows sample numeric observations:",
+            "Name Value",
+            *table,
+            "Create five sample numeric vectors from this data.",
+            "ii. Name and explain the operators used to form data subsets.",
+            "b)",
+            "Define collaborative filtering and describe a recommendation example. [10]",
+        ]
+        metas = self.ingest("nested_roman_table.pdf", [lines])
+        got = sorted(m["question_id"] for m in metas)
+        self.assertEqual(got, ["Q5(a)", "Q6(a)", "Q6(b)"])
+        self.assertNotIn("Q6(i)", got)
+        self.assertNotIn("Q6(ii)", got)
+
+    def test_page_leading_letter_sub_inherits_previous_parent(self):
+        """A page that opens with b) continues the previous page's parent, not a new paper."""
+        p1 = list(HEADER) + [
+            "Q4(a) Explain the first recovered concept with a worked example. [10]",
+            "Q4(b) Discuss the second recovered concept and justify the choice. [10]",
+            "Q5 a)",
+            "Determine communities for the given social network graph. [10]",
+        ]
+        p2 = [
+            "Page 2 of 2",
+            "b)",
+            "List and discuss various types of data structures used for this analysis. [10]",
+            "Q6 a)",
+            "Explain how collaborative filtering produces a recommendation. [10]",
+            "b)",
+            "Compare the two indexing structures and evaluate lookup complexity. [10]",
+        ]
+        metas = self.ingest("crosspage_leading_b.pdf", [p1, p2])
+        got = sorted(m["question_id"] for m in metas)
+        self.assertEqual(got, ["Q4(a)", "Q4(b)", "Q5(a)", "Q5(b)", "Q6(a)", "Q6(b)"])
+        q5b = next(m for m in metas if m["question_id"] == "Q5(b)")
+        self.assertIn("data structures", (q5b.get("exact_text") or "").lower())
+
+    def test_unlabelled_stems_after_choice_parent(self):
+        """OCR may drop a)/b) glyphs; verb-initial stems under a choice parent stay ordered letters."""
+        lines = list(HEADER) + [
+            "1 Attempt any FOUR",
+            "What is the first recovered concept with a worked example.",
+            "Explain the second recovered concept and justify the choice.",
+            "Discuss the third recovered concept with a diagram.",
+            "Differentiate between the two recovered forms with an example.",
+            "Q2(a) Derive the expression and state every assumption clearly. [10]",
+            "Q2(b) Compare the two indexing structures and evaluate lookup. [10]",
+        ]
+        metas = self.ingest("unlabelled_stems.pdf", [lines])
+        got = sorted(m["question_id"] for m in metas)
+        self.assertEqual(got, ["Q1(a)", "Q1(b)", "Q1(c)", "Q1(d)", "Q2(a)", "Q2(b)"])
+
+    def test_parent_solve_any_is_not_a_question(self):
+        lines = list(HEADER) + [
+            "Q.1 Solve any Four out of Five",
+            "a Explain the first recovered concept with a worked example.",
+            "b Discuss the second recovered concept and justify the choice.",
+            "Q2(a) Derive the expression and state every assumption clearly. [10]",
+            "Q2(b) Compare the two indexing structures and evaluate lookup. [10]",
+        ]
+        metas = self.ingest("solve_any.pdf", [lines])
+        got = sorted(m["question_id"] for m in metas)
+        self.assertEqual(got, ["Q1(a)", "Q1(b)", "Q2(a)", "Q2(b)"])
+        self.assertNotIn("Q1", got)
+
+    def test_glued_parent_letter_markers(self):
+        lines = list(HEADER) + [
+            "Q1a) Explain the first recovered concept with a worked example. [5]",
+            "Q1b) Discuss the second recovered concept and justify the choice. [5]",
+            "Q2a) Derive the expression and state every assumption clearly. [10]",
+            "Q2b) Compare the two indexing structures and evaluate lookup. [10]",
+        ]
+        metas = self.ingest("glued_q3a.pdf", [lines])
+        got = sorted(m["question_id"] for m in metas)
+        self.assertEqual(got, ["Q1(a)", "Q1(b)", "Q2(a)", "Q2(b)"])
+
 
 class TestFalseMarkersRejected(StructureMatrixBase):
     """Decoys must not become questions (no false success)."""
@@ -280,6 +417,57 @@ class TestFalseMarkersRejected(StructureMatrixBase):
         for m in metas:
             self.assertNotIn("Page 1 of 2", m["exact_text"])
             self.assertFalse(m["exact_text"].strip().startswith("B.E."))
+
+    def test_marker_only_line_then_body(self):
+        lines = list(HEADER) + [
+            "Q1 a)",
+            "Explain the first recovered concept with a worked example. [5]",
+            "b)",
+            "Discuss the second recovered concept and justify the choice. [5]",
+            "Q2 a)",
+            "Derive the expression and state every assumption clearly. [10]",
+            "b)",
+            "Compare the two indexing structures and evaluate lookup. [10]",
+        ]
+        metas = self.ingest("marker_only.pdf", [lines])
+        got = sorted(m["question_id"] for m in metas)
+        self.assertEqual(got, ["Q1(a)", "Q1(b)", "Q2(a)", "Q2(b)"])
+
+    def test_demonstrate_is_a_valid_question_verb(self):
+        lines = list(HEADER) + [
+            "Q3(a) Explain hidden markov model for POS based tagging. [10]",
+            "Q3(b) Demonstrate the concept of conditional Random field in NLP [10]",
+            "Q6(a) Demonstrate the working of machine translation systems [10]",
+            "Q6(b) Explain the Information retrieval system [10]",
+        ]
+        metas = self.ingest("demonstrate.pdf", [lines])
+        got = sorted(m["question_id"] for m in metas)
+        self.assertEqual(got, ["Q3(a)", "Q3(b)", "Q6(a)", "Q6(b)"])
+
+    def test_page_replacement_is_not_skipped_as_footer(self):
+        lines = list(HEADER) + [
+            "Q1(a) Explain race conditions and mutual exclusion using Peterson's algorithm. [4]",
+            "Q1(b) Discuss virtual memory management and page replacement algorithms. [4]",
+            "Q1(c) Explain process scheduling algorithms in multi-core operating systems. [4]",
+        ]
+        metas = self.ingest("page_replacement.pdf", [lines])
+        got = sorted(m["question_id"] for m in metas)
+        self.assertEqual(got, ["Q1(a)", "Q1(b)", "Q1(c)"])
+        self.assertTrue(any("page replacement" in (m.get("exact_text") or "").lower() for m in metas))
+
+    def test_glued_two_digit_parent_is_rejected(self):
+        lines = list(HEADER) + [
+            "Q1(a) Explain the first recovered concept with a worked example. [5]",
+            "Q1(b) Discuss the second recovered concept and justify the choice. [5]",
+            "Q2(a) Derive the expression and state every assumption clearly. [10]",
+            "Q53(ii) Create a subset of rows and demonstrate the output. [10]",
+            "Q3(a) Compare the two indexing structures and evaluate lookup. [10]",
+        ]
+        metas = self.ingest("glued_parent.pdf", [lines])
+        got = sorted(m["question_id"] for m in metas)
+        self.assertNotIn("Q53(ii)", got)
+        self.assertIn("Q1(a)", got)
+        self.assertIn("Q3(a)", got)
 
 
 if __name__ == "__main__":

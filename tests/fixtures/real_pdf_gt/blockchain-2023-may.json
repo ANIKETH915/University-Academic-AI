@@ -1,0 +1,33 @@
+{
+  "filename": "be_computer-engineering_semester-7_2023_may_dloc-iv-blockchain-rev-2019-c-scheme.pdf",
+  "subject": "Blockchain",
+  "university": "University of Mumbai",
+  "semester": "7",
+  "exam_year": 2023,
+  "exam_session": "May",
+  "pages": 1,
+  "genuine_question_ids": [
+    "Q1(a)",
+    "Q1(b)",
+    "Q1(c)",
+    "Q1(d)",
+    "Q1(e)",
+    "Q2(a)",
+    "Q2(b)",
+    "Q3(a)",
+    "Q3(b)",
+    "Q4(a)",
+    "Q4(b)",
+    "Q5(a)",
+    "Q5(b)",
+    "Q6(a)",
+    "Q6(b)",
+    "Q6(c)",
+    "Q6(d)"
+  ],
+  "expect_cross_page": false,
+  "expect_tables": false,
+  "expect_diagrams": false,
+  "source_kind": "scanned_ocr",
+  "notes": "inspected 2026-08-22; scanned PDF with Q1(a-e), Q2-Q5(a-b), Q6(a-d short notes)"
+}

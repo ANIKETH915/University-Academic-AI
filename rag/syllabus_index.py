@@ -18,20 +18,25 @@ def empty_syllabus_index(subject: str = "Academic Subject") -> Dict[str, Any]:
 
 
 def parse_unit_label(unit_str: str) -> Dict[str, str]:
-    """Parse 'Module 4: Convolutional Networks' / 'Unit 2 Normalization' into parts."""
+    """Parse 'Module 4: Convolutional Networks' / 'Unit 2 Normalization' into parts with OCR cleanup."""
     if not unit_str:
         return {"module": "Unmapped", "chapter": "Unmapped"}
+
+    u = re.sub(r"\bModule C:\s*ontent\b", "Module Content", unit_str, flags=re.I)
+    u = re.sub(r"\s*\(Answer Any\s+[A-Za-z0-9]+\)\s*|\s*\(Any Two\)\s*", "", u, flags=re.I).strip(" -:,.()")
+
     m = re.match(
         r"^\s*(Module|Unit|Chapter|Section|Block)\s*([0-9IVX]+|[A-Z])\s*:?\s*(.*)$",
-        unit_str.strip(),
+        u.strip(),
         re.IGNORECASE,
     )
     if m:
         kind = m.group(1).title()
         num = m.group(2)
-        rest = (m.group(3) or "").strip() or "Unmapped"
-        return {"module": f"{kind} {num}", "chapter": rest}
-    return {"module": "Unmapped", "chapter": unit_str.strip()[:80]}
+        rest = (m.group(3) or "").strip()
+        rest = re.sub(r"\bontent\b", "Content", rest, flags=re.I).strip(" -:,.()")
+        return {"module": f"{kind} {num}", "chapter": rest if rest else f"{kind} {num}"}
+    return {"module": "Unmapped", "chapter": u.strip()[:80]}
 
 
 def extract_topics_from_text(text: str, limit: int = 40) -> List[str]:
@@ -124,9 +129,11 @@ def build_syllabus_index_from_chunks(
 def build_syllabus_index_from_workspace(
     vector_store: Any, workspace_id: str, subject: str = "Academic Subject"
 ) -> Dict[str, Any]:
-    """Load syllabus vectors for workspace_id and build a subject-scoped index."""
-    if not workspace_id or not vector_store:
+    """Load syllabus chunks from vector store for workspace_id and build syllabus index."""
+    if not workspace_id:
         return empty_syllabus_index(subject)
+
+    syllabus_chunks = []
     try:
         res = vector_store.collection.get(
             where={
@@ -136,106 +143,69 @@ def build_syllabus_index_from_workspace(
                 ]
             }
         )
-    except Exception:
+        if res and res.get("documents"):
+            for doc_text, meta in zip(res["documents"], res["metadatas"]):
+                syllabus_chunks.append({"text": doc_text, "metadata": meta})
+    except Exception as ex:
+        print(f"[SYLLABUS_INDEX] collection.get failed: {ex}")
+
+    if not syllabus_chunks:
         return empty_syllabus_index(subject)
 
-    if not res or not res.get("documents"):
-        return empty_syllabus_index(subject)
-
-    chunks = []
-    for doc, meta in zip(res["documents"], res.get("metadatas") or []):
-        chunks.append({"text": doc, "metadata": meta or {}})
-    return build_syllabus_index_from_chunks(chunks, subject=subject)
+    return build_syllabus_index_from_chunks(syllabus_chunks, subject=subject)
 
 
 def map_question_to_syllabus_index(
     question_text: str,
     detected_topics: List[str],
-    syllabus_index: Optional[Dict[str, Any]],
-) -> tuple:
+    syllabus_index: Dict[str, Any],
+) -> Tuple[Dict[str, str], float]:
     """
-    Map a question against an uploaded syllabus index only.
-    Returns (mapping_dict, confidence). Unmapped when insufficient evidence.
+    Map question to syllabus index modules.
+    Returns ({module, chapter, topic}, confidence).
+    Unmapped when confidence < 0.4.
     """
-    best_topic = (detected_topics[0] if detected_topics else None) or "Unmapped"
     if not syllabus_index or not syllabus_index.get("modules"):
-        return {"module": "Unmapped", "chapter": "Unmapped", "topic": best_topic}, 0.0
+        return {"module": "Unmapped", "chapter": "Unmapped", "topic": "Unmapped"}, 0.0
 
     q_lower = (question_text or "").lower()
     topics_lower = [t.lower() for t in (detected_topics or []) if t]
-    # Prefer precise tokens (acronyms / multi-word topics) over vague words
-    q_tokens = set(re.findall(r"[a-z0-9]{2,}", q_lower))
 
-    def _norm_stem(s: str) -> str:
-        s = s.lower().strip()
-        if len(s) > 4 and s.endswith("s"):
-            return s[:-1]
-        return s
+    best_module = "Unmapped"
+    best_chapter = "Unmapped"
+    best_topic = "Unmapped"
+    best_score = 0.0
 
-    q_stems = {_norm_stem(t) for t in q_tokens}
+    for mod_info in syllabus_index["modules"]:
+        mod_name = mod_info.get("module", "Unmapped")
+        chap_name = mod_info.get("chapter", "Unmapped")
+        mod_topics = mod_info.get("topics", [])
 
-    best_module = None
-    best_chapter = None
-    best_score = 0
-    best_hit = ""
+        # Match against module topics
+        for t in mod_topics:
+            t_low = t.lower()
+            if len(t_low) >= 3:
+                score = 0.0
+                if t_low in q_lower:
+                    score = 0.85
+                elif any(dt in t_low or t_low in dt for dt in topics_lower):
+                    score = 0.75
+                elif len(t_low.split()) > 1:
+                    matched_words = sum(1 for w in t_low.split() if len(w) > 3 and w in q_lower)
+                    if matched_words >= 2:
+                        score = 0.65
 
-    for m in syllabus_index["modules"]:
-        mod_name = m.get("module", "")
-        chap_name = m.get("chapter", "")
-        mod_topics = m.get("topics", []) or []
-        score = 0
-        hit = ""
-        for top in mod_topics:
-            top_lower = str(top).lower().strip()
-            if len(top_lower) < 3:
-                continue
-            top_stem = _norm_stem(top_lower)
-            # Exact / contained topic phrase in question — strong signal
-            if top_lower in q_lower or (len(top_stem) >= 5 and top_stem in q_lower):
-                bonus = 6 if len(top_lower) >= 6 else 4
-                if bonus >= 4:
-                    hit = top_lower
-                score += bonus
-            elif any(
-                t_low == top_lower
-                or _norm_stem(t_low) == top_stem
-                or (len(top_lower) >= 5 and (t_low in top_lower or top_lower in t_low))
-                for t_low in topics_lower
-            ):
-                score += 3
-                hit = hit or top_lower
-            else:
-                # Acronym / token hit (e.g. CNN)
-                top_toks = set(re.findall(r"[a-z0-9]{2,}", top_lower))
-                strong = set()
-                for t in top_toks:
-                    if len(t) < 3:
-                        continue
-                    if t in q_tokens or _norm_stem(t) in q_stems:
-                        strong.add(t)
-                # Ignore ultra-generic chapter words
-                strong -= {"neural", "networks", "network", "models", "model", "learning", "system", "systems"}
-                if strong:
-                    score += 2 + min(3, len(strong))
-                    hit = hit or next(iter(strong))
-        for cw in [w.lower() for w in re.findall(r"[A-Za-z0-9]{4,}", str(chap_name))]:
-            if cw in {"neural", "networks", "network", "models", "model", "learning", "system", "systems"}:
-                continue
-            if cw in q_lower or _norm_stem(cw) in q_stems:
-                score += 2
-                hit = hit or cw
-        if score > best_score:
-            best_score = score
-            best_module = mod_name
-            best_chapter = chap_name
-            best_hit = hit
+                if score > best_score:
+                    best_score = score
+                    best_module = mod_name
+                    best_chapter = chap_name
+                    best_topic = t
 
-    if best_score >= 3 and best_module and best_module != "Unmapped":
-        confidence = min(0.96, round(0.70 + (best_score * 0.04), 2))
+    if best_score >= 0.40:
         return {
             "module": best_module,
-            "chapter": best_chapter or "Unmapped",
-            "topic": best_topic if best_topic != "Unmapped" else (best_hit.title() if best_hit else "Unmapped"),
-        }, confidence
+            "chapter": best_chapter,
+            "topic": best_topic,
+        }, best_score
 
-    return {"module": "Unmapped", "chapter": "Unmapped", "topic": best_topic}, 0.0
+    return {"module": "Unmapped", "chapter": "Unmapped", "topic": "Unmapped"}, 0.0

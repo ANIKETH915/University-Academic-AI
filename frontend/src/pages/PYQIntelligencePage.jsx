@@ -223,11 +223,25 @@ export default function PYQIntelligencePage({ setActiveTab, setSelectedTopicForA
               <div className="space-y-3">
                 {data.exact_repeats.map((g, idx) => (
                   <div key={idx} className="p-4 rounded-xl bg-[#0B1020] border border-[#1F2937] space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded border bg-emerald-500/10 text-emerald-300 border-emerald-500/30">{g.group_type || 'EXACT'}</span>
+                      <span className="text-[11px] text-slate-400">conf {g.confidence ?? 1}</span>
+                    </div>
                     <p className="text-xs text-slate-200 leading-relaxed">{g.exact_text}</p>
+                    {(g.original_questions || []).length > 0 && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {g.original_questions.map((oq, i2) => (
+                          <div key={i2} className="p-2 rounded bg-[#111827] border border-[#1F2937] text-[11px] text-slate-300">
+                            <div className="text-purple-300 font-semibold mb-1">{oq.source_ref}</div>
+                            {oq.text}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     <div className="text-[11px] text-slate-400">
                       Years: {(g.years || []).join(', ')} · {(g.source_refs || []).join(' · ')}
                     </div>
-                    <p className="text-[11px] text-emerald-400/90">{g.reason || 'Normalized wording essentially identical'}</p>
+                    <p className="text-[11px] text-emerald-400/90">Why grouped: {g.why_grouped || g.reason || 'Normalized wording essentially identical'}</p>
                   </div>
                 ))}
               </div>
@@ -242,7 +256,11 @@ export default function PYQIntelligencePage({ setActiveTab, setSelectedTopicForA
               <div className="space-y-3">
                 {data.semantic_repeats.map((g, idx) => (
                   <div key={idx} className="p-4 rounded-xl bg-[#0B1020] border border-[#1F2937] space-y-3">
-                    <h4 className="text-sm font-semibold text-white">{g.display_title}</h4>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded border bg-amber-500/10 text-amber-300 border-amber-500/30">{g.group_type || 'SEMANTIC'}</span>
+                      <h4 className="text-sm font-semibold text-white">{g.display_title}</h4>
+                      <span className="text-[11px] text-slate-400">conf {g.confidence ?? '—'}</span>
+                    </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {(g.original_questions || []).map((oq, i2) => (
                         <div key={i2} className="p-2 rounded bg-[#111827] border border-[#1F2937] text-[11px] text-slate-300">
@@ -252,6 +270,39 @@ export default function PYQIntelligencePage({ setActiveTab, setSelectedTopicForA
                       ))}
                     </div>
                     <p className="text-[11px] text-amber-300/90">Why they are considered the same: {g.why_same || g.reason}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Section>
+
+          {/* Related Topics */}
+          <Section title="Related Topics (not repeats)" icon={Link2}>
+            <p className="text-[11px] text-slate-500 mb-3">
+              Broader than a repeat: shared concept, different academic ask. Original questions stay visible.
+            </p>
+            {(data?.related_topics || []).length === 0 ? (
+              <Empty note="No related-topic pairs met the conservative threshold." />
+            ) : (
+              <div className="space-y-3">
+                {data.related_topics.slice(0, 20).map((r, idx) => (
+                  <div key={idx} className="p-4 rounded-xl bg-[#0B1020] border border-[#1F2937] space-y-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded border bg-indigo-500/10 text-indigo-300 border-indigo-500/30">{r.group_type || 'RELATED'}</span>
+                      <span className="font-semibold text-white text-sm">{r.topic}</span>
+                      <span className="text-[11px] text-slate-400">sim {r.similarity ?? '—'} · conf {r.confidence ?? '—'}</span>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <div className="p-2 rounded bg-[#111827] border border-[#1F2937] text-[11px] text-slate-300">
+                        <div className="text-purple-300 font-semibold mb-1">{r.q1?.source_ref}</div>
+                        {r.q1?.text}
+                      </div>
+                      <div className="p-2 rounded bg-[#111827] border border-[#1F2937] text-[11px] text-slate-300">
+                        <div className="text-purple-300 font-semibold mb-1">{r.q2?.source_ref}</div>
+                        {r.q2?.text}
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-slate-400 italic">Why grouped: {r.why_grouped || r.reason}</p>
                   </div>
                 ))}
               </div>

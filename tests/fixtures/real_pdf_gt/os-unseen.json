@@ -1,0 +1,32 @@
+{
+  "filename": "os_unseen_paper.pdf",
+  "subject": "Operating Systems",
+  "university": "University of Stanford",
+  "semester": "Unknown",
+  "exam_year": null,
+  "exam_session": null,
+  "pages": 1,
+  "genuine_question_ids": [
+    "Q1(a)",
+    "Q1(b)",
+    "Q1(c)",
+    "Q1(d)",
+    "Q1(e)",
+    "Q1(f)",
+    "Q2(a)",
+    "Q2(b)",
+    "Q3(a)",
+    "Q3(b)",
+    "Q4(a)",
+    "Q4(b)",
+    "Q5(a)",
+    "Q5(b)",
+    "Q6(a)",
+    "Q6(b)"
+  ],
+  "expect_cross_page": false,
+  "expect_tables": false,
+  "expect_diagrams": false,
+  "source_kind": "native",
+  "notes": "inspected 2026-08-22; Q1(a-f)+Q2-Q6(a-b)=16; three hashes on disk, same question set"
+}

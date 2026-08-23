@@ -1,0 +1,5995 @@
+{
+  "frozen_architecture": true,
+  "production_code_modified": false,
+  "source": "D:\\pyqrag\\scratch\\restore_points\\20260823\\full_universe_evaluation.json",
+  "unique_pdfs": 34,
+  "gt_pdfs_missing_on_disk": [
+    "be_computer-engineering_semester-7_2022_december_big-data-analysis-rev-2019-c-scheme.pdf",
+    "be_computer-engineering_semester-7_2024_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+    "be_computer-engineering_semester-7_2024_may_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+    "be_computer-engineering_semester-7_2025_may_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf"
+  ],
+  "contamination": {
+    "workspace_a": "ws-eval-fam-be0490c17a",
+    "workspace_b": "ws-eval-fam-efe3fbaa6d",
+    "overlap": [],
+    "contaminated": false,
+    "failures": []
+  },
+  "summary": {
+    "unique_pdfs": 34,
+    "complete": 27,
+    "partial": 6,
+    "failed": 1,
+    "gt_papers": 13,
+    "gt_id_match": 12,
+    "gt_complete_and_id_match": 10,
+    "papers_with_missing_markers": 5,
+    "papers_with_fabricated_markers": 0,
+    "papers_with_duplicate_ids": 0,
+    "papers_with_cross_page_errors": 2,
+    "papers_with_visual_errors": 0,
+    "papers_with_zero_marks": 18
+  },
+  "taxonomy": {
+    "canonical_reconciliation": {
+      "partial_without_gt_gap": 2,
+      "system_unrecovered_marker": 6
+    },
+    "extraction": {
+      "cross_page_miss": 2,
+      "missing_genuine_marker": 2,
+      "ocr_noise": 2
+    },
+    "intelligence_grouping": {
+      "exact_repeat_false_positive": 6,
+      "semantic_repeat_false_positive": 7
+    }
+  },
+  "papers": [
+    {
+      "pdf": "be_computer-engineering_semester-7_2023_december_big-data-analysis-rev-2019-c-scheme.pdf",
+      "family": "Big Data Analytics",
+      "year": 2023,
+      "pages": 2,
+      "has_ground_truth": true,
+      "genuine_source_authority": "ground_truth",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 2,
+      "extraction_confidence": 0.99,
+      "extraction_status": "COMPLETE",
+      "vectors": 14,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 8,
+      "marks_present_count": 6
+    },
+    {
+      "pdf": "be_computer-engineering_semester-7_2023_may_big-data-analysis-rev-2019-c-scheme.pdf",
+      "family": "Big Data Analytics",
+      "year": 2023,
+      "pages": 2,
+      "has_ground_truth": true,
+      "genuine_source_authority": "ground_truth",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 2,
+      "extraction_confidence": 0.99,
+      "extraction_status": "COMPLETE",
+      "vectors": 14,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 14,
+      "marks_present_count": 0
+    },
+    {
+      "pdf": "be_computer-engineering_semester-7_2024_december_big-data-analysis-rev-2019-c-scheme.pdf",
+      "family": "Big Data Analytics",
+      "year": 2024,
+      "pages": 2,
+      "has_ground_truth": true,
+      "genuine_source_authority": "ground_truth",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 5,
+      "extraction_confidence": 0.875,
+      "extraction_status": "PARTIAL",
+      "vectors": 14,
+      "failure_count": 1,
+      "failures": [
+        {
+          "layer": "canonical_reconciliation",
+          "kind": "partial_without_gt_gap",
+          "detail": "PARTIAL while all GT IDs extracted; system_missing=['Q6(c)', 'Q6(d)']"
+        }
+      ],
+      "marks_zero_count": 2,
+      "marks_present_count": 12
+    },
+    {
+      "pdf": "be_computer-engineering_semester-7_2024_may_big-data-analysis-rev-2019-c-scheme.pdf",
+      "family": "Big Data Analytics",
+      "year": 2024,
+      "pages": 2,
+      "has_ground_truth": true,
+      "genuine_source_authority": "ground_truth",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [
+        "expected_cross_page_but_no_merge"
+      ],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 0,
+      "extraction_confidence": 0.99,
+      "extraction_status": "COMPLETE",
+      "vectors": 14,
+      "failure_count": 1,
+      "failures": [
+        {
+          "layer": "extraction",
+          "kind": "cross_page_miss",
+          "detail": "GT expects cross-page continuation; no merged/multi-page question recorded"
+        }
+      ],
+      "marks_zero_count": 11,
+      "marks_present_count": 3
+    },
+    {
+      "pdf": "be_computer-engineering_semester-7_2025_may_big-data-analysis-rev-2019-c-scheme.pdf",
+      "family": "Big Data Analytics",
+      "year": 2025,
+      "pages": 2,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q2(e)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)",
+        "Q2(c)",
+        "Q2(d)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q2(e)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "missing_genuine_markers": [
+        "Q2(c)",
+        "Q2(d)"
+      ],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 3,
+      "extraction_confidence": 0.882,
+      "extraction_status": "PARTIAL",
+      "vectors": 15,
+      "failure_count": 2,
+      "failures": [
+        {
+          "layer": "canonical_reconciliation",
+          "kind": "system_unrecovered_marker",
+          "detail": "Q2(c)",
+          "note": "No human GT; system claims source-proven marker was not extracted."
+        },
+        {
+          "layer": "canonical_reconciliation",
+          "kind": "system_unrecovered_marker",
+          "detail": "Q2(d)",
+          "note": "No human GT; system claims source-proven marker was not extracted."
+        }
+      ],
+      "marks_zero_count": 10,
+      "marks_present_count": 5
+    },
+    {
+      "pdf": "be_computer-engineering_semester-7_2022_december_dloc-iv-blockchain-rev-2019-c-scheme.pdf",
+      "family": "Blockchain",
+      "year": 2022,
+      "pages": 1,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)",
+        "Q6(c)",
+        "Q6(d)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)",
+        "Q6(c)",
+        "Q6(d)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 0,
+      "extraction_confidence": 0.99,
+      "extraction_status": "COMPLETE",
+      "vectors": 17,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 17,
+      "marks_present_count": 0
+    },
+    {
+      "pdf": "be_computer-engineering_semester-7_2023_december_dloc-iv-blockchain-rev-2019-c-scheme.pdf",
+      "family": "Blockchain",
+      "year": 2023,
+      "pages": 1,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)",
+        "Q6(c)",
+        "Q6(d)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)",
+        "Q6(c)",
+        "Q6(d)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 0,
+      "extraction_confidence": 0.99,
+      "extraction_status": "COMPLETE",
+      "vectors": 17,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 17,
+      "marks_present_count": 0
+    },
+    {
+      "pdf": "be_computer-engineering_semester-7_2023_may_dloc-iv-blockchain-rev-2019-c-scheme.pdf",
+      "family": "Blockchain",
+      "year": 2023,
+      "pages": 1,
+      "has_ground_truth": true,
+      "genuine_source_authority": "ground_truth",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)",
+        "Q6(c)",
+        "Q6(d)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)",
+        "Q6(c)",
+        "Q6(d)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 0,
+      "extraction_confidence": 0.99,
+      "extraction_status": "COMPLETE",
+      "vectors": 17,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 17,
+      "marks_present_count": 0
+    },
+    {
+      "pdf": "be_computer-engineering_semester-7_2024_december_dloc-iv-blockchain-rev-2019-c-scheme.pdf",
+      "family": "Blockchain",
+      "year": 2024,
+      "pages": 1,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)",
+        "Q6(c)",
+        "Q6(d)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)",
+        "Q6(c)",
+        "Q6(d)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 0,
+      "extraction_confidence": 0.99,
+      "extraction_status": "COMPLETE",
+      "vectors": 17,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 17,
+      "marks_present_count": 0
+    },
+    {
+      "pdf": "be_computer-engineering_semester-7_2024_may_dloc-iv-blockchain-rev-2019-c-scheme.pdf",
+      "family": "Blockchain",
+      "year": 2024,
+      "pages": 1,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)",
+        "Q6(c)",
+        "Q6(d)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)",
+        "Q6(c)",
+        "Q6(d)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 0,
+      "extraction_confidence": 0.99,
+      "extraction_status": "COMPLETE",
+      "vectors": 17,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 17,
+      "marks_present_count": 0
+    },
+    {
+      "pdf": "be_computer-engineering_semester-7_2025_may_dloc-iv-blockchain-rev-2019-c-scheme.pdf",
+      "family": "Blockchain",
+      "year": 2025,
+      "pages": 1,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)",
+        "Q6(c)",
+        "Q6(d)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)",
+        "Q6(c)",
+        "Q6(d)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 0,
+      "extraction_confidence": 0.99,
+      "extraction_status": "COMPLETE",
+      "vectors": 17,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 17,
+      "marks_present_count": 0
+    },
+    {
+      "pdf": "be_computer-engineering-aids_semester-7_2023_december_deep-learning-rev-2019\u2018c\u2019-scheme.pdf",
+      "family": "Deep Learning",
+      "year": 2023,
+      "pages": 1,
+      "has_ground_truth": true,
+      "genuine_source_authority": "ground_truth",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 1,
+      "extraction_confidence": 0.99,
+      "extraction_status": "COMPLETE",
+      "vectors": 15,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 15,
+      "marks_present_count": 0
+    },
+    {
+      "pdf": "be_computer-engineering-aids_semester-7_2024_december_deep-learning-rev-2019c-scheme.pdf",
+      "family": "Deep Learning",
+      "year": 2024,
+      "pages": 1,
+      "has_ground_truth": true,
+      "genuine_source_authority": "ground_truth",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 1,
+      "extraction_confidence": 0.882,
+      "extraction_status": "PARTIAL",
+      "vectors": 15,
+      "failure_count": 1,
+      "failures": [
+        {
+          "layer": "canonical_reconciliation",
+          "kind": "partial_without_gt_gap",
+          "detail": "PARTIAL while all GT IDs extracted; system_missing=['Q3(c)', 'Q3(e)']"
+        }
+      ],
+      "marks_zero_count": 5,
+      "marks_present_count": 10
+    },
+    {
+      "pdf": "be_computer-engineering-aids_semester-7_2024_may_deep-learning-rev-2019c-scheme.pdf",
+      "family": "Deep Learning",
+      "year": 2024,
+      "pages": 1,
+      "has_ground_truth": true,
+      "genuine_source_authority": "ground_truth",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 0,
+      "extraction_confidence": 0.99,
+      "extraction_status": "COMPLETE",
+      "vectors": 15,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 15,
+      "marks_present_count": 0
+    },
+    {
+      "pdf": "be_computer-engineering-aids_semester-7_2025_may_deep-learning-rev-2019c-scheme.pdf",
+      "family": "Deep Learning",
+      "year": 2025,
+      "pages": 1,
+      "has_ground_truth": true,
+      "genuine_source_authority": "ground_truth",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 2,
+      "extraction_confidence": 0.99,
+      "extraction_status": "COMPLETE",
+      "vectors": 15,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 5,
+      "marks_present_count": 10
+    },
+    {
+      "pdf": "be_computer-engineering_semester-5_2023_december_internet-programmingrev-2019-c-scheme.pdf",
+      "family": "Internet Programming",
+      "year": 2023,
+      "pages": 1,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q2(a)",
+        "Q2(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q6(a)",
+        "Q6(b)",
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q3(a)",
+        "Q3(b)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 2,
+      "extraction_confidence": 0.98,
+      "extraction_status": "COMPLETE",
+      "vectors": 13,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 13,
+      "marks_present_count": 0
+    },
+    {
+      "pdf": "be_computer-engineering_semester-5_2023_may_internet-programmingrev-2019-c-scheme.pdf",
+      "family": "Internet Programming",
+      "year": 2023,
+      "pages": 2,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(b)",
+        "Q2(c)",
+        "Q5(a)",
+        "Q5(b)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(b)",
+        "Q2(c)",
+        "Q5(a)",
+        "Q5(b)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 3,
+      "extraction_confidence": 0.94,
+      "extraction_status": "COMPLETE",
+      "vectors": 9,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 6,
+      "marks_present_count": 3
+    },
+    {
+      "pdf": "be_computer-engineering_semester-5_2024_december_internet-programmingrev-2019-c-scheme.pdf",
+      "family": "Internet Programming",
+      "year": 2024,
+      "pages": 1,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 1,
+      "extraction_confidence": 0.98,
+      "extraction_status": "COMPLETE",
+      "vectors": 13,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 5,
+      "marks_present_count": 8
+    },
+    {
+      "pdf": "be_computer-engineering_semester-5_2024_may_internet-programmingrev-2019-c-scheme.pdf",
+      "family": "Internet Programming",
+      "year": 2024,
+      "pages": 1,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 1,
+      "extraction_confidence": 0.99,
+      "extraction_status": "COMPLETE",
+      "vectors": 15,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 15,
+      "marks_present_count": 0
+    },
+    {
+      "pdf": "be_computer-engineering_semester-5_2025_may_internet-programmingrev-2019-c-scheme.pdf",
+      "family": "Internet Programming",
+      "year": 2025,
+      "pages": 1,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(b)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "missing_genuine_markers": [
+        "Q1(a)"
+      ],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 3,
+      "extraction_confidence": 0.889,
+      "extraction_status": "PARTIAL",
+      "vectors": 8,
+      "failure_count": 1,
+      "failures": [
+        {
+          "layer": "canonical_reconciliation",
+          "kind": "system_unrecovered_marker",
+          "detail": "Q1(a)",
+          "note": "No human GT; system claims source-proven marker was not extracted."
+        }
+      ],
+      "marks_zero_count": 3,
+      "marks_present_count": 5
+    },
+    {
+      "pdf": "be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+      "family": "Natural Language Processing",
+      "year": 2022,
+      "pages": 1,
+      "has_ground_truth": true,
+      "genuine_source_authority": "ground_truth",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q1(f)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q3(c)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q4(c)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q1(f)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q3(c)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q4(c)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 1,
+      "extraction_confidence": 0.99,
+      "extraction_status": "COMPLETE",
+      "vectors": 18,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 18,
+      "marks_present_count": 0
+    },
+    {
+      "pdf": "be_computer-engineering_semester-7_2023_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+      "family": "Natural Language Processing",
+      "year": 2023,
+      "pages": 1,
+      "has_ground_truth": true,
+      "genuine_source_authority": "ground_truth",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 1,
+      "extraction_confidence": 0.99,
+      "extraction_status": "COMPLETE",
+      "vectors": 15,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 15,
+      "marks_present_count": 0
+    },
+    {
+      "pdf": "be_computer-engineering_semester-7_2023_may_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+      "family": "Natural Language Processing",
+      "year": 2023,
+      "pages": 2,
+      "has_ground_truth": true,
+      "genuine_source_authority": "ground_truth",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "missing_genuine_markers": [
+        "Q4(a)",
+        "Q4(b)"
+      ],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [
+        "expected_cross_page_but_no_merge"
+      ],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 0,
+      "extraction_confidence": 0.98,
+      "extraction_status": "COMPLETE",
+      "vectors": 13,
+      "failure_count": 3,
+      "failures": [
+        {
+          "layer": "extraction",
+          "kind": "missing_genuine_marker",
+          "detail": "Q4(a)",
+          "in_system_missing_set": false
+        },
+        {
+          "layer": "extraction",
+          "kind": "missing_genuine_marker",
+          "detail": "Q4(b)",
+          "in_system_missing_set": false
+        },
+        {
+          "layer": "extraction",
+          "kind": "cross_page_miss",
+          "detail": "GT expects cross-page continuation; no merged/multi-page question recorded"
+        }
+      ],
+      "marks_zero_count": 13,
+      "marks_present_count": 0
+    },
+    {
+      "pdf": "be_computer-engineering_semester-4_2023_december_operating-systemrev-2019-c-scheme.pdf",
+      "family": "Operating Systems",
+      "year": 2023,
+      "pages": 1,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(t)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(t)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [
+        {
+          "question_id": "Q6(t)",
+          "noise_ratio": 0.7,
+          "text": "'' '.,'. .10 8(,ti BC D69D FAL 2CAE5 5 E5C I 67 U F'2 F7C"
+        }
+      ],
+      "ocr_noise_raw_count": 1,
+      "extraction_confidence": 0.97,
+      "extraction_status": "COMPLETE",
+      "vectors": 12,
+      "failure_count": 1,
+      "failures": [
+        {
+          "layer": "extraction",
+          "kind": "ocr_noise",
+          "detail": "Q6(t) noise=0.7"
+        }
+      ],
+      "marks_zero_count": 12,
+      "marks_present_count": 0
+    },
+    {
+      "pdf": "be_computer-engineering_semester-4_2023_may_operating-systemrev-2019-c-scheme.pdf",
+      "family": "Operating Systems",
+      "year": 2023,
+      "pages": 1,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [],
+      "canonical_extracted_questions": [],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 0,
+      "extraction_confidence": 0.0,
+      "extraction_status": "FAILED",
+      "vectors": 0,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 0,
+      "marks_present_count": 0
+    },
+    {
+      "pdf": "be_computer-engineering_semester-4_2024_december_operating-systemrev-2019-c-scheme.pdf",
+      "family": "Operating Systems",
+      "year": 2024,
+      "pages": 1,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q4(a)",
+        "Q4(b)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q4(a)",
+        "Q4(b)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 2,
+      "extraction_confidence": 0.9,
+      "extraction_status": "COMPLETE",
+      "vectors": 5,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 2,
+      "marks_present_count": 3
+    },
+    {
+      "pdf": "be_computer-engineering_semester-4_2024_may_operating-systemrev-2019-c-scheme.pdf",
+      "family": "Operating Systems",
+      "year": 2024,
+      "pages": 2,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 2,
+      "extraction_confidence": 0.9,
+      "extraction_status": "COMPLETE",
+      "vectors": 5,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 5,
+      "marks_present_count": 0
+    },
+    {
+      "pdf": "be_computer-engineering_semester-4_2025_may_operating-systemrev-2019-c-scheme.pdf",
+      "family": "Operating Systems",
+      "year": 2025,
+      "pages": 2,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q5",
+        "Q4(a)",
+        "Q4(b)",
+        "Q4(c)",
+        "Q4(d)",
+        "Q4(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q1(a)",
+        "Q1(d)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(d)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q4(c)",
+        "Q4(d)",
+        "Q4(e)",
+        "Q5"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 3,
+      "extraction_confidence": 0.97,
+      "extraction_status": "COMPLETE",
+      "vectors": 12,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 4,
+      "marks_present_count": 8
+    },
+    {
+      "pdf": "os_unseen_paper.pdf",
+      "family": "Operating Systems",
+      "year": null,
+      "pages": 1,
+      "has_ground_truth": true,
+      "genuine_source_authority": "ground_truth",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q1(f)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q1(f)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 0,
+      "extraction_confidence": 0.99,
+      "extraction_status": "COMPLETE",
+      "vectors": 16,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 6,
+      "marks_present_count": 10
+    },
+    {
+      "pdf": "be_computer-engineering_semester-5_2022_december_software-engineeringrev-2019-c-scheme.pdf",
+      "family": "Software Engineering",
+      "year": 2022,
+      "pages": 1,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q2(a)",
+        "Q2(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q1(f)",
+        "Q6(a)",
+        "Q6(b)",
+        "Q6(c)",
+        "Q6(d)",
+        "Q6(e)",
+        "Q6(f)",
+        "Q3(a)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q1(f)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)",
+        "Q6(c)",
+        "Q6(d)"
+      ],
+      "missing_genuine_markers": [
+        "Q6(e)",
+        "Q6(f)"
+      ],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 0,
+      "extraction_confidence": 0.895,
+      "extraction_status": "PARTIAL",
+      "vectors": 17,
+      "failure_count": 2,
+      "failures": [
+        {
+          "layer": "canonical_reconciliation",
+          "kind": "system_unrecovered_marker",
+          "detail": "Q6(e)",
+          "note": "No human GT; system claims source-proven marker was not extracted."
+        },
+        {
+          "layer": "canonical_reconciliation",
+          "kind": "system_unrecovered_marker",
+          "detail": "Q6(f)",
+          "note": "No human GT; system claims source-proven marker was not extracted."
+        }
+      ],
+      "marks_zero_count": 17,
+      "marks_present_count": 0
+    },
+    {
+      "pdf": "be_computer-engineering_semester-5_2022_may_software-engineeringrev-2019-c-scheme.pdf",
+      "family": "Software Engineering",
+      "year": 2022,
+      "pages": 3,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q1(a)",
+        "Q3(b)",
+        "Q3(c)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q2(e)",
+        "Q2(c)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q2(e)",
+        "Q3(b)",
+        "Q3(c)"
+      ],
+      "missing_genuine_markers": [
+        "Q2(c)"
+      ],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 1,
+      "extraction_confidence": 0.857,
+      "extraction_status": "PARTIAL",
+      "vectors": 6,
+      "failure_count": 1,
+      "failures": [
+        {
+          "layer": "canonical_reconciliation",
+          "kind": "system_unrecovered_marker",
+          "detail": "Q2(c)",
+          "note": "No human GT; system claims source-proven marker was not extracted."
+        }
+      ],
+      "marks_zero_count": 6,
+      "marks_present_count": 0
+    },
+    {
+      "pdf": "be_computer-engineering_semester-5_2023_december_software-engineeringrev-2019-c-scheme.pdf",
+      "family": "Software Engineering",
+      "year": 2023,
+      "pages": 1,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)",
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [
+        {
+          "question_id": "Q6(b)",
+          "noise_ratio": 1.0,
+          "text": "Explain SQA in detail. _____________________"
+        }
+      ],
+      "ocr_noise_raw_count": 2,
+      "extraction_confidence": 0.99,
+      "extraction_status": "COMPLETE",
+      "vectors": 15,
+      "failure_count": 1,
+      "failures": [
+        {
+          "layer": "extraction",
+          "kind": "ocr_noise",
+          "detail": "Q6(b) noise=1.0"
+        }
+      ],
+      "marks_zero_count": 14,
+      "marks_present_count": 1
+    },
+    {
+      "pdf": "be_computer-engineering_semester-5_2023_may_software-engineeringrev-2019-c-scheme.pdf",
+      "family": "Software Engineering",
+      "year": 2023,
+      "pages": 1,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q6(a)",
+        "Q6(b)",
+        "Q6(c)",
+        "Q6(d)",
+        "Q6(e)"
+      ],
+      "canonical_extracted_questions": [
+        "Q1(a)",
+        "Q1(b)",
+        "Q1(c)",
+        "Q1(d)",
+        "Q1(e)",
+        "Q2(a)",
+        "Q2(b)",
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q5(a)",
+        "Q5(b)",
+        "Q6(a)",
+        "Q6(b)",
+        "Q6(c)",
+        "Q6(d)",
+        "Q6(e)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 0,
+      "extraction_confidence": 0.99,
+      "extraction_status": "COMPLETE",
+      "vectors": 18,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 5,
+      "marks_present_count": 13
+    },
+    {
+      "pdf": "AIDSAIML-SEM-7_2024_compressed.pdf",
+      "family": "Unclassified",
+      "year": 2024,
+      "pages": 80,
+      "has_ground_truth": false,
+      "genuine_source_authority": "system_markers_only",
+      "genuine_source_questions": [
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q4(b)",
+        "Q9(a)",
+        "Q5(a)"
+      ],
+      "canonical_extracted_questions": [
+        "Q3(a)",
+        "Q3(b)",
+        "Q4(a)",
+        "Q5(a)",
+        "Q9(a)"
+      ],
+      "missing_genuine_markers": [],
+      "fabricated_markers": [],
+      "duplicate_ids": [],
+      "wrong_question_boundaries": [],
+      "wrong_parent_child_relationships": [],
+      "cross_page_errors": [],
+      "table_diagram_attachment_errors": [],
+      "ocr_noise_flagged": [],
+      "ocr_noise_raw_count": 5,
+      "extraction_confidence": 0.9,
+      "extraction_status": "COMPLETE",
+      "vectors": 5,
+      "failure_count": 0,
+      "failures": [],
+      "marks_zero_count": 4,
+      "marks_present_count": 1
+    }
+  ],
+  "intelligence": [
+    {
+      "family": "Big Data Analytics",
+      "papers": [
+        "be_computer-engineering_semester-7_2023_december_big-data-analysis-rev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-7_2023_may_big-data-analysis-rev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-7_2024_december_big-data-analysis-rev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-7_2024_may_big-data-analysis-rev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-7_2025_may_big-data-analysis-rev-2019-c-scheme.pdf"
+      ],
+      "papers_analyzed": 5,
+      "questions_analyzed": 70,
+      "years_covered": [
+        2023,
+        2024,
+        2025
+      ],
+      "exact_repeat_count": 8,
+      "semantic_repeat_count": 3,
+      "related_topic_count": 40,
+      "topic_count": 48,
+      "exact_repeat_false_positives": [
+        {
+          "group": "Down Six Constraints",
+          "refs": [
+            "2023 Nov/Dec \u2014 Q1(d)",
+            "2025 May/June \u2014 Q1(d)"
+          ]
+        },
+        {
+          "group": "Counting Ones Stream",
+          "refs": [
+            "2023 Nov/Dec \u2014 Q4(b)",
+            "2024 May/June \u2014 Q4(b)"
+          ]
+        },
+        {
+          "group": "Communities Given Social Calculation",
+          "refs": [
+            "2023 Nov/Dec \u2014 Q5(a)",
+            "2023 May/June \u2014 Q5(a)",
+            "2024 May/June \u2014 Q5(a)"
+          ]
+        },
+        {
+          "group": "Neat Sketch Data-Stream Architecture",
+          "refs": [
+            "2023 May/June \u2014 Q4(b)",
+            "2025 May/June \u2014 Q4(b)"
+          ]
+        }
+      ],
+      "exact_repeat_false_negatives": [],
+      "semantic_repeat_false_positives": [
+        {
+          "q1": "Write a map reduce pseudo code to multiply two matrices. Apply map reduce working to perform followi",
+          "q2": "Write a map reduce pseudo code to multiply two matrices. Apply map reduce working to perform followi",
+          "recheck": "RELATED_TOPIC",
+          "reason": "Shared topic vocabulary but different question intent/constraints \u2014 not a repeat"
+        },
+        {
+          "q1": "Suppose the stream is S = {4, 2,5 9,1, 6, 3,7}. Let hash functions h(x) =x +6 mod 32 for some a and ",
+          "q2": "Suppose the stream is S = {2, 1, 6, 1, 5, 9, 2, 3, 5}.  Let hash functions h(x) = ax + b mod 16 for ",
+          "recheck": "RELATED_TOPIC",
+          "reason": "Shared topic vocabulary but different question intent/constraints \u2014 not a repeat"
+        }
+      ],
+      "semantic_repeat_false_negatives": [],
+      "related_topic_errors": [],
+      "garbage_topics": [],
+      "duplicate_groups": [],
+      "self_groups": [],
+      "study_planner": [
+        {
+          "title": "Communities Given Social Calculation",
+          "priority_score": 89.9,
+          "score_components": {
+            "frequency_score": 22.0,
+            "year_recurrence_score": 26.0,
+            "exact_repeat_score": 16.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 4.0,
+            "marks_score": 7.0,
+            "recency_score": 5.0,
+            "consistency_score": 4.8,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 89.9
+          },
+          "source_questions": [
+            "2023 Q5(a)",
+            "2023 Q5(a)",
+            "2024 Q5(a)",
+            "2025 Q5(a)"
+          ],
+          "years": [
+            2023,
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 3,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10,
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 4x across 3 years (2023, 2024, 2025); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Map Reduce Pseudo Architecture",
+          "priority_score": 83.9,
+          "score_components": {
+            "frequency_score": 22.0,
+            "year_recurrence_score": 26.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 10.0,
+            "related_topic_score": 4.0,
+            "marks_score": 7.0,
+            "recency_score": 5.0,
+            "consistency_score": 4.8,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 83.9
+          },
+          "source_questions": [
+            "2023 Q2(b)",
+            "2023 Q2(b)",
+            "2024 Q2(b)",
+            "2025 Q4(a)"
+          ],
+          "years": [
+            2023,
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 4
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              10,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 4x across 3 years (2023, 2024, 2025); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Four Characteristics Big",
+          "priority_score": 74.4,
+          "score_components": {
+            "frequency_score": 16.5,
+            "year_recurrence_score": 26.0,
+            "exact_repeat_score": 11.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 6.0,
+            "marks_score": 0.0,
+            "recency_score": 5.0,
+            "consistency_score": 4.8,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 74.4
+          },
+          "source_questions": [
+            "2023 Q1(c)",
+            "2024 Q1(b)",
+            "2025 Q1(a)"
+          ],
+          "years": [
+            2023,
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 2,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 3x across 3 years (2023, 2024, 2025); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Constraints Must Satisfied",
+          "priority_score": 71.9,
+          "score_components": {
+            "frequency_score": 16.5,
+            "year_recurrence_score": 26.0,
+            "exact_repeat_score": 11.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 3.5,
+            "recency_score": 5.0,
+            "consistency_score": 4.8,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 71.9
+          },
+          "source_questions": [
+            "2023 Q1(d)",
+            "2024 Q1(d)",
+            "2025 Q1(d)"
+          ],
+          "years": [
+            2023,
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 2,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              5,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 3x across 3 years (2023, 2024, 2025); Marks: 0M\u20135M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Business Drivers Behind",
+          "priority_score": 64.3,
+          "score_components": {
+            "frequency_score": 16.5,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 16.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 3.5,
+            "recency_score": 2.0,
+            "consistency_score": 3.2,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 64.3
+          },
+          "source_questions": [
+            "2023 Q1(b)",
+            "2024 Q1(c)",
+            "2024 Q1(c)"
+          ],
+          "years": [
+            2023,
+            2024
+          ],
+          "recurrence": {
+            "exact": 3,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              5,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 3x across 2 years (2023, 2024); Marks: 0M\u20135M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Particular Business Problem",
+          "priority_score": 63.8,
+          "score_components": {
+            "frequency_score": 16.5,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 7.0,
+            "related_topic_score": 2.0,
+            "marks_score": 7.0,
+            "recency_score": 5.0,
+            "consistency_score": 3.2,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 63.8
+          },
+          "source_questions": [
+            "2024 Q2(b)",
+            "2024 Q2(b)",
+            "2025 Q4(a)"
+          ],
+          "years": [
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 2
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              10,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 3x across 2 years (2024, 2025); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Reduce Execution Pipeline",
+          "priority_score": 57.3,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 11.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 2.0,
+            "consistency_score": 3.2,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 57.3
+          },
+          "source_questions": [
+            "2023 Q4(a)",
+            "2024 Q3(a)"
+          ],
+          "years": [
+            2023,
+            2024
+          ],
+          "recurrence": {
+            "exact": 2,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10,
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2023, 2024); Marks: 10M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Counting Ones Stream",
+          "priority_score": 57.3,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 11.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 2.0,
+            "consistency_score": 3.2,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 57.3
+          },
+          "source_questions": [
+            "2023 Q4(b)",
+            "2024 Q4(b)"
+          ],
+          "years": [
+            2023,
+            2024
+          ],
+          "recurrence": {
+            "exact": 2,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2023, 2024); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Grouping Aggregation Relational",
+          "priority_score": 53.3,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 11.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 0.0,
+            "recency_score": 5.0,
+            "consistency_score": 3.2,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 53.3
+          },
+          "source_questions": [
+            "2023 Q4(a)",
+            "2025 Q3(b)"
+          ],
+          "years": [
+            2023,
+            2025
+          ],
+          "recurrence": {
+            "exact": 2,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2023, 2025); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Neat Sketch Data-Stream Architecture",
+          "priority_score": 53.3,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 11.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 0.0,
+            "recency_score": 5.0,
+            "consistency_score": 3.2,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 53.3
+          },
+          "source_questions": [
+            "2023 Q4(b)",
+            "2025 Q4(b)"
+          ],
+          "years": [
+            2023,
+            2025
+          ],
+          "recurrence": {
+            "exact": 2,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2023, 2025); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Architectural Patterns Nosql Applications",
+          "priority_score": 49.3,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 5.0,
+            "consistency_score": 3.2,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 49.3
+          },
+          "source_questions": [
+            "2024 Q2(a)",
+            "2025 Q2(b)"
+          ],
+          "years": [
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10,
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2024, 2025); Marks: 10M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Given Subset Course",
+          "priority_score": 46.3,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 2.0,
+            "consistency_score": 3.2,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 46.3
+          },
+          "source_questions": [
+            "2023 Q3(b)",
+            "2024 Q5(b)"
+          ],
+          "years": [
+            2023,
+            2024
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2023, 2024); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        }
+      ],
+      "failures": [
+        {
+          "layer": "intelligence_grouping",
+          "kind": "exact_repeat_false_positive",
+          "detail": [
+            "2023 Nov/Dec \u2014 Q1(d)",
+            "2025 May/June \u2014 Q1(d)"
+          ]
+        },
+        {
+          "layer": "intelligence_grouping",
+          "kind": "exact_repeat_false_positive",
+          "detail": [
+            "2023 Nov/Dec \u2014 Q4(b)",
+            "2024 May/June \u2014 Q4(b)"
+          ]
+        },
+        {
+          "layer": "intelligence_grouping",
+          "kind": "exact_repeat_false_positive",
+          "detail": [
+            "2023 Nov/Dec \u2014 Q5(a)",
+            "2023 May/June \u2014 Q5(a)",
+            "2024 May/June \u2014 Q5(a)"
+          ]
+        },
+        {
+          "layer": "intelligence_grouping",
+          "kind": "exact_repeat_false_positive",
+          "detail": [
+            "2023 May/June \u2014 Q4(b)",
+            "2025 May/June \u2014 Q4(b)"
+          ]
+        },
+        {
+          "layer": "intelligence_grouping",
+          "kind": "semantic_repeat_false_positive",
+          "detail": "Shared topic vocabulary but different question intent/constraints \u2014 not a repeat"
+        },
+        {
+          "layer": "intelligence_grouping",
+          "kind": "semantic_repeat_false_positive",
+          "detail": "Shared topic vocabulary but different question intent/constraints \u2014 not a repeat"
+        }
+      ]
+    },
+    {
+      "family": "Blockchain",
+      "papers": [
+        "be_computer-engineering_semester-7_2022_december_dloc-iv-blockchain-rev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-7_2023_december_dloc-iv-blockchain-rev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-7_2023_may_dloc-iv-blockchain-rev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-7_2024_december_dloc-iv-blockchain-rev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-7_2024_may_dloc-iv-blockchain-rev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-7_2025_may_dloc-iv-blockchain-rev-2019-c-scheme.pdf"
+      ],
+      "papers_analyzed": 6,
+      "questions_analyzed": 78,
+      "years_covered": [
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "exact_repeat_count": 9,
+      "semantic_repeat_count": 4,
+      "related_topic_count": 40,
+      "topic_count": 51,
+      "exact_repeat_false_positives": [
+        {
+          "group": "Hyperledger Fabric Architecture",
+          "refs": [
+            "2022 Nov/Dec \u2014 Q3(b)",
+            "2023 May/June \u2014 Q3(b)",
+            "2025 May/June \u2014 Q2(b)"
+          ]
+        }
+      ],
+      "exact_repeat_false_negatives": [],
+      "semantic_repeat_false_positives": [
+        {
+          "q1": "Describe the architecture on Ethereum.",
+          "q2": "Describe the architecture of Ethereum. .\n[IMAGE]\n[diagram on page 1]",
+          "recheck": "RELATED_TOPIC",
+          "reason": "Shared topic vocabulary but different question intent/constraints \u2014 not a repeat"
+        },
+        {
+          "q1": "Explain state machine replication.\n[IMAGE]\n[diagram on page 1]",
+          "q2": "Explain state machine replication with suitable example.",
+          "recheck": "RELATED_TOPIC",
+          "reason": "Shared topic vocabulary but different question intent/constraints \u2014 not a repeat"
+        }
+      ],
+      "semantic_repeat_false_negatives": [],
+      "related_topic_errors": [],
+      "garbage_topics": [],
+      "duplicate_groups": [],
+      "self_groups": [],
+      "study_planner": [
+        {
+          "title": "Double Spending Problem",
+          "priority_score": 82.4,
+          "score_components": {
+            "frequency_score": 22.0,
+            "year_recurrence_score": 26.0,
+            "exact_repeat_score": 11.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 8.0,
+            "marks_score": 0.0,
+            "recency_score": 5.0,
+            "consistency_score": 5.3,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 82.4
+          },
+          "source_questions": [
+            "2022 Q2(b)",
+            "2024 Q5(a)",
+            "2023 Q1(b)",
+            "2025 Q1(c)"
+          ],
+          "years": [
+            2022,
+            2023,
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 2,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 4x across 4 years (2022, 2023, 2024, 2025); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Public Private Consortium vs Private Consortium",
+          "priority_score": 79.4,
+          "score_components": {
+            "frequency_score": 22.0,
+            "year_recurrence_score": 26.0,
+            "exact_repeat_score": 16.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 0.0,
+            "recency_score": 5.0,
+            "consistency_score": 5.3,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 79.4
+          },
+          "source_questions": [
+            "2023 Q1(a)",
+            "2024 Q2(a)",
+            "2025 Q5(a)",
+            "2022 Q1(a)",
+            "2022 Q5(a)",
+            "2023 Q3(a)",
+            "2023 Q1(d)"
+          ],
+          "years": [
+            2022,
+            2023,
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 3,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 7x across 4 years (2022, 2023, 2024, 2025); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Hyperledger Fabric Architecture",
+          "priority_score": 72.6,
+          "score_components": {
+            "frequency_score": 16.5,
+            "year_recurrence_score": 26.0,
+            "exact_repeat_score": 16.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 0.0,
+            "recency_score": 5.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 72.6
+          },
+          "source_questions": [
+            "2022 Q3(b)",
+            "2023 Q3(b)",
+            "2025 Q2(b)"
+          ],
+          "years": [
+            2022,
+            2023,
+            2025
+          ],
+          "recurrence": {
+            "exact": 3,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 3x across 3 years (2022, 2023, 2025); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Merkle Tree Structure Architecture",
+          "priority_score": 71.6,
+          "score_components": {
+            "frequency_score": 16.5,
+            "year_recurrence_score": 26.0,
+            "exact_repeat_score": 16.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 2.0,
+            "marks_score": 0.0,
+            "recency_score": 2.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 71.6
+          },
+          "source_questions": [
+            "2022 Q1(d)",
+            "2023 Q1(d)",
+            "2024 Q1(a)"
+          ],
+          "years": [
+            2022,
+            2023,
+            2024
+          ],
+          "recurrence": {
+            "exact": 3,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 3x across 3 years (2022, 2023, 2024); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Program Solidity Check",
+          "priority_score": 70.1,
+          "score_components": {
+            "frequency_score": 22.0,
+            "year_recurrence_score": 26.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 8.0,
+            "marks_score": 0.0,
+            "recency_score": 5.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 70.1
+          },
+          "source_questions": [
+            "2022 Q1(e)",
+            "2025 Q1(b)",
+            "2023 Q4(b)",
+            "2025 Q3(a)"
+          ],
+          "years": [
+            2022,
+            2023,
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 4x across 3 years (2022, 2023, 2025); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Mining Pool Difficulty",
+          "priority_score": 67.6,
+          "score_components": {
+            "frequency_score": 16.5,
+            "year_recurrence_score": 26.0,
+            "exact_repeat_score": 11.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 0.0,
+            "recency_score": 5.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 67.6
+          },
+          "source_questions": [
+            "2023 Q1(c)",
+            "2025 Q1(e)",
+            "2024 Q3(b)"
+          ],
+          "years": [
+            2023,
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 2,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 3x across 3 years (2023, 2024, 2025); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Cryptocurrency Cryptocurrencies",
+          "priority_score": 67.6,
+          "score_components": {
+            "frequency_score": 16.5,
+            "year_recurrence_score": 26.0,
+            "exact_repeat_score": 11.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 0.0,
+            "recency_score": 5.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 67.6
+          },
+          "source_questions": [
+            "2024 Q3(a)",
+            "2023 Q2(b)",
+            "2025 Q2(a)"
+          ],
+          "years": [
+            2023,
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 2,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 3x across 3 years (2023, 2024, 2025); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Challenges Blockchain Implementation",
+          "priority_score": 67.1,
+          "score_components": {
+            "frequency_score": 22.0,
+            "year_recurrence_score": 26.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 8.0,
+            "marks_score": 0.0,
+            "recency_score": 2.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 67.1
+          },
+          "source_questions": [
+            "2024 Q1(e)",
+            "2022 Q1(a)",
+            "2022 Q5(a)",
+            "2023 Q3(a)"
+          ],
+          "years": [
+            2022,
+            2023,
+            2024
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 4x across 3 years (2022, 2023, 2024); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Fundamental Difference Hot vs Difference Hot",
+          "priority_score": 63.4,
+          "score_components": {
+            "frequency_score": 22.0,
+            "year_recurrence_score": 26.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 0.0,
+            "recency_score": 5.0,
+            "consistency_score": 5.3,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 63.4
+          },
+          "source_questions": [
+            "2024 Q1(b)",
+            "2022 Q1(a)",
+            "2022 Q5(a)",
+            "2023 Q3(a)",
+            "2025 Q1(d)"
+          ],
+          "years": [
+            2022,
+            2023,
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 5x across 4 years (2022, 2023, 2024, 2025); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Nodes Ethereum",
+          "priority_score": 60.8,
+          "score_components": {
+            "frequency_score": 22.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 11.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 0.0,
+            "recency_score": 2.0,
+            "consistency_score": 2.7,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 60.8
+          },
+          "source_questions": [
+            "2023 Q1(e)",
+            "2023 Q3(b)",
+            "2024 Q1(b)",
+            "2024 Q1(e)"
+          ],
+          "years": [
+            2023,
+            2024
+          ],
+          "recurrence": {
+            "exact": 2,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 4x across 2 years (2023, 2024); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Pow Pos Pob vs Pos Pob",
+          "priority_score": 58.3,
+          "score_components": {
+            "frequency_score": 16.5,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 11.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 0.0,
+            "recency_score": 5.0,
+            "consistency_score": 2.7,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 58.3
+          },
+          "source_questions": [
+            "2024 Q2(b)",
+            "2025 Q4(a)",
+            "2024 Q1(c)"
+          ],
+          "years": [
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 2,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 3x across 2 years (2024, 2025); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Mechanism Private Blockchain",
+          "priority_score": 55.8,
+          "score_components": {
+            "frequency_score": 22.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 8.0,
+            "marks_score": 0.0,
+            "recency_score": 0.0,
+            "consistency_score": 2.7,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 55.8
+          },
+          "source_questions": [
+            "2023 Q5(a)",
+            "2022 Q1(a)",
+            "2022 Q5(a)",
+            "2023 Q3(a)"
+          ],
+          "years": [
+            2022,
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 4x across 2 years (2022, 2023); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        }
+      ],
+      "failures": [
+        {
+          "layer": "intelligence_grouping",
+          "kind": "exact_repeat_false_positive",
+          "detail": [
+            "2022 Nov/Dec \u2014 Q3(b)",
+            "2023 May/June \u2014 Q3(b)",
+            "2025 May/June \u2014 Q2(b)"
+          ]
+        },
+        {
+          "layer": "intelligence_grouping",
+          "kind": "semantic_repeat_false_positive",
+          "detail": "Shared topic vocabulary but different question intent/constraints \u2014 not a repeat"
+        },
+        {
+          "layer": "intelligence_grouping",
+          "kind": "semantic_repeat_false_positive",
+          "detail": "Shared topic vocabulary but different question intent/constraints \u2014 not a repeat"
+        }
+      ]
+    },
+    {
+      "family": "Deep Learning",
+      "papers": [
+        "be_computer-engineering-aids_semester-7_2023_december_deep-learning-rev-2019\u2018c\u2019-scheme.pdf",
+        "be_computer-engineering-aids_semester-7_2024_december_deep-learning-rev-2019c-scheme.pdf",
+        "be_computer-engineering-aids_semester-7_2024_may_deep-learning-rev-2019c-scheme.pdf",
+        "be_computer-engineering-aids_semester-7_2025_may_deep-learning-rev-2019c-scheme.pdf"
+      ],
+      "papers_analyzed": 4,
+      "questions_analyzed": 60,
+      "years_covered": [
+        2023,
+        2024,
+        2025
+      ],
+      "exact_repeat_count": 8,
+      "semantic_repeat_count": 2,
+      "related_topic_count": 40,
+      "topic_count": 47,
+      "exact_repeat_false_positives": [
+        {
+          "group": "Gradient Descent Three",
+          "refs": [
+            "2024 Nov/Dec \u2014 Q3(a)",
+            "2024 May/June \u2014 Q3(a)"
+          ]
+        }
+      ],
+      "exact_repeat_false_negatives": [],
+      "semantic_repeat_false_positives": [
+        {
+          "q1": "Explain the architecture of CNN with the help of a diagram.\n[IMAGE]\n[diagram on page 1]",
+          "q2": "Explain the working of RNN with the help of suitable diagram.",
+          "recheck": "RELATED_TOPIC",
+          "reason": "Shared topic vocabulary but different question intent/constraints \u2014 not a repeat"
+        }
+      ],
+      "semantic_repeat_false_negatives": [],
+      "related_topic_errors": [],
+      "garbage_topics": [],
+      "duplicate_groups": [],
+      "self_groups": [],
+      "study_planner": [
+        {
+          "title": "Activation Functions Neural",
+          "priority_score": 71.6,
+          "score_components": {
+            "frequency_score": 16.5,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 16.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 5.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 71.6
+          },
+          "source_questions": [
+            "2024 Q6(a)",
+            "2024 Q6(a)",
+            "2025 Q6(a)"
+          ],
+          "years": [
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 3,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10,
+              0,
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 3x across 2 years (2024, 2025); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Gradient Descent Deep",
+          "priority_score": 67.1,
+          "score_components": {
+            "frequency_score": 22.0,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 16.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 4.0,
+            "marks_score": 7.0,
+            "recency_score": 2.0,
+            "consistency_score": 2.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 67.1
+          },
+          "source_questions": [
+            "2024 Q1(b)",
+            "2024 Q1(b)",
+            "2024 Q3(a)",
+            "2024 Q3(a)"
+          ],
+          "years": [
+            2024
+          ],
+          "recurrence": {
+            "exact": 4,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              10,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 4x across 1 years (2024); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Denoising Autoencoders",
+          "priority_score": 64.1,
+          "score_components": {
+            "frequency_score": 22.0,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 11.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 6.0,
+            "marks_score": 7.0,
+            "recency_score": 2.0,
+            "consistency_score": 2.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 64.1
+          },
+          "source_questions": [
+            "2024 Q1(d)",
+            "2024 Q5(b)",
+            "2024 Q1(d)",
+            "2024 Q5(b)"
+          ],
+          "years": [
+            2024
+          ],
+          "recurrence": {
+            "exact": 2,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              10,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 4x across 1 years (2024); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Suppose Input Volume",
+          "priority_score": 62.1,
+          "score_components": {
+            "frequency_score": 16.5,
+            "year_recurrence_score": 26.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 3.5,
+            "related_topic_score": 0.0,
+            "marks_score": 0.0,
+            "recency_score": 5.0,
+            "consistency_score": 6.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 62.1
+          },
+          "source_questions": [
+            "2023 Q3(a)",
+            "2024 Q2(b)",
+            "2025 Q1(e)"
+          ],
+          "years": [
+            2023,
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 1
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 3x across 3 years (2023, 2024, 2025); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "RNN Architecture",
+          "priority_score": 61.6,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 3.5,
+            "related_topic_score": 8.0,
+            "marks_score": 7.0,
+            "recency_score": 5.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 61.6
+          },
+          "source_questions": [
+            "2023 Q4(a)",
+            "2025 Q4(a)"
+          ],
+          "years": [
+            2023,
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 1
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2023, 2025); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "LSTM vs GRU",
+          "priority_score": 61.1,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 11.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 5.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 61.1
+          },
+          "source_questions": [
+            "2024 Q3(b)",
+            "2025 Q3(b)"
+          ],
+          "years": [
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 2,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10,
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2024, 2025); Marks: 10M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Dropout Problem Overfitting",
+          "priority_score": 58.6,
+          "score_components": {
+            "frequency_score": 16.5,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 11.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 2.0,
+            "marks_score": 0.0,
+            "recency_score": 2.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 58.6
+          },
+          "source_questions": [
+            "2023 Q1(c)",
+            "2024 Q1(c)",
+            "2024 Q1(c)"
+          ],
+          "years": [
+            2023,
+            2024
+          ],
+          "recurrence": {
+            "exact": 2,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 3x across 2 years (2023, 2024); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Help Diagram",
+          "priority_score": 57.1,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 7.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 5.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 57.1
+          },
+          "source_questions": [
+            "2024 Q2(b)",
+            "2025 Q4(a)"
+          ],
+          "years": [
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 2
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2024, 2025); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Forward Neural Network",
+          "priority_score": 55.6,
+          "score_components": {
+            "frequency_score": 16.5,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 7.0,
+            "related_topic_score": 0.0,
+            "marks_score": 0.0,
+            "recency_score": 5.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 55.6
+          },
+          "source_questions": [
+            "2024 Q1(a)",
+            "2025 Q1(b)",
+            "2025 Q1(c)"
+          ],
+          "years": [
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 2
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 3x across 2 years (2024, 2025); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Architectural Alexnet Convolution",
+          "priority_score": 53.6,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 3.5,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 5.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 53.6
+          },
+          "source_questions": [
+            "2024 Q2(b)",
+            "2025 Q1(c)"
+          ],
+          "years": [
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 1
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2024, 2025); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Classes Deep Learning",
+          "priority_score": 47.1,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 11.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 2.0,
+            "consistency_score": 2.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 47.1
+          },
+          "source_questions": [
+            "2024 Q2(a)",
+            "2024 Q2(a)"
+          ],
+          "years": [
+            2024
+          ],
+          "recurrence": {
+            "exact": 2,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 1 years (2024); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Gradient Descent Three",
+          "priority_score": 47.1,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 11.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 2.0,
+            "consistency_score": 2.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 47.1
+          },
+          "source_questions": [
+            "2024 Q3(a)",
+            "2024 Q3(a)"
+          ],
+          "years": [
+            2024
+          ],
+          "recurrence": {
+            "exact": 2,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 1 years (2024); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        }
+      ],
+      "failures": [
+        {
+          "layer": "intelligence_grouping",
+          "kind": "exact_repeat_false_positive",
+          "detail": [
+            "2024 Nov/Dec \u2014 Q3(a)",
+            "2024 May/June \u2014 Q3(a)"
+          ]
+        },
+        {
+          "layer": "intelligence_grouping",
+          "kind": "semantic_repeat_false_positive",
+          "detail": "Shared topic vocabulary but different question intent/constraints \u2014 not a repeat"
+        }
+      ]
+    },
+    {
+      "family": "Internet Programming",
+      "papers": [
+        "be_computer-engineering_semester-5_2023_december_internet-programmingrev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-5_2023_may_internet-programmingrev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-5_2024_december_internet-programmingrev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-5_2024_may_internet-programmingrev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-5_2025_may_internet-programmingrev-2019-c-scheme.pdf"
+      ],
+      "papers_analyzed": 5,
+      "questions_analyzed": 58,
+      "years_covered": [
+        2023,
+        2024,
+        2025
+      ],
+      "exact_repeat_count": 0,
+      "semantic_repeat_count": 1,
+      "related_topic_count": 40,
+      "topic_count": 45,
+      "exact_repeat_false_positives": [],
+      "exact_repeat_false_negatives": [],
+      "semantic_repeat_false_positives": [
+        {
+          "q1": "Explain the event handling in JavaScript with suitable example.",
+          "q2": "What is mean by Event handling in JavaScript explain it with example.\n[IMAGE]\n[diagram on page 1]",
+          "recheck": "RELATED_TOPIC",
+          "reason": "Shared topic vocabulary but different question intent/constraints \u2014 not a repeat"
+        }
+      ],
+      "semantic_repeat_false_negatives": [],
+      "related_topic_errors": [],
+      "garbage_topics": [],
+      "duplicate_groups": [],
+      "self_groups": [],
+      "study_planner": [
+        {
+          "title": "React Display Hello",
+          "priority_score": 70.9,
+          "score_components": {
+            "frequency_score": 22.0,
+            "year_recurrence_score": 26.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 8.0,
+            "marks_score": 0.0,
+            "recency_score": 5.0,
+            "consistency_score": 4.8,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 70.9
+          },
+          "source_questions": [
+            "2023 Q1(c)",
+            "2023 Q1(a)",
+            "2024 Q1(c)",
+            "2025 Q1(e)",
+            "2024 Q1(e)"
+          ],
+          "years": [
+            2023,
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 5x across 3 years (2023, 2024, 2025); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "JSX Applications",
+          "priority_score": 69.9,
+          "score_components": {
+            "frequency_score": 22.0,
+            "year_recurrence_score": 26.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 5.0,
+            "consistency_score": 4.8,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 69.9
+          },
+          "source_questions": [
+            "2025 Q6(b)",
+            "2023 Q1(a)",
+            "2024 Q1(c)",
+            "2025 Q1(e)"
+          ],
+          "years": [
+            2023,
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10,
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 4x across 3 years (2023, 2024, 2025); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "React Components",
+          "priority_score": 65.4,
+          "score_components": {
+            "frequency_score": 16.5,
+            "year_recurrence_score": 26.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 8.0,
+            "marks_score": 0.0,
+            "recency_score": 5.0,
+            "consistency_score": 4.8,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 65.4
+          },
+          "source_questions": [
+            "2025 Q1(e)",
+            "2023 Q1(a)",
+            "2024 Q1(c)"
+          ],
+          "years": [
+            2023,
+            2024,
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 3x across 3 years (2023, 2024, 2025); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Tags HTMLS Javascript",
+          "priority_score": 52.3,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 6.0,
+            "marks_score": 7.0,
+            "recency_score": 2.0,
+            "consistency_score": 3.2,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 52.3
+          },
+          "source_questions": [
+            "2023 Q2(b)",
+            "2024 Q2(b)"
+          ],
+          "years": [
+            2023,
+            2024
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2023, 2024); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Event Handling Javascript",
+          "priority_score": 52.3,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 7.0,
+            "related_topic_score": 6.0,
+            "marks_score": 0.0,
+            "recency_score": 2.0,
+            "consistency_score": 3.2,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 52.3
+          },
+          "source_questions": [
+            "2023 Q4(a)",
+            "2024 Q3(a)"
+          ],
+          "years": [
+            2023,
+            2024
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 2
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2023, 2024); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Lifecycle Ban E-Commerce",
+          "priority_score": 46.3,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 2.0,
+            "consistency_score": 3.2,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 46.3
+          },
+          "source_questions": [
+            "2023 Q5(a)",
+            "2024 Q6(a)"
+          ],
+          "years": [
+            2023,
+            2024
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2023, 2024); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Servlet Life Cycle",
+          "priority_score": 43.3,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 4.0,
+            "marks_score": 0.0,
+            "recency_score": 2.0,
+            "consistency_score": 3.2,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 43.3
+          },
+          "source_questions": [
+            "2024 Q6(b)",
+            "2023 Q3(b)"
+          ],
+          "years": [
+            2023,
+            2024
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2023, 2024); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Characteristics Rich Internet",
+          "priority_score": 41.3,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 2.0,
+            "marks_score": 0.0,
+            "recency_score": 2.0,
+            "consistency_score": 3.2,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 41.3
+          },
+          "source_questions": [
+            "2024 Q1(e)",
+            "2023 Q1(c)"
+          ],
+          "years": [
+            2023,
+            2024
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2023, 2024); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "AJAX vs Traditional Web Approach",
+          "priority_score": 35.7,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 2.0,
+            "consistency_score": 1.6,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 35.7
+          },
+          "source_questions": [
+            "2024 Q2(a)",
+            "2024 Q4(b)"
+          ],
+          "years": [
+            2024
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 1 years (2024); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Concept Differs Traditional",
+          "priority_score": 33.2,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 5.0,
+            "consistency_score": 1.6,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 33.2
+          },
+          "source_questions": [
+            "2025 Q2(a)"
+          ],
+          "years": [
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2025); Marks: 10M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_AFTER"
+        },
+        {
+          "title": "Handle Session Tracking",
+          "priority_score": 33.2,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 5.0,
+            "consistency_score": 1.6,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 33.2
+          },
+          "source_questions": [
+            "2025 Q2(b)"
+          ],
+          "years": [
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2025); Marks: 10M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_AFTER"
+        },
+        {
+          "title": "Javascript Function Returns",
+          "priority_score": 33.2,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 5.0,
+            "consistency_score": 1.6,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 33.2
+          },
+          "source_questions": [
+            "2025 Q6(a)"
+          ],
+          "years": [
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2025); Marks: 10M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_AFTER"
+        }
+      ],
+      "failures": [
+        {
+          "layer": "intelligence_grouping",
+          "kind": "semantic_repeat_false_positive",
+          "detail": "Shared topic vocabulary but different question intent/constraints \u2014 not a repeat"
+        }
+      ]
+    },
+    {
+      "family": "Natural Language Processing",
+      "papers": [
+        "be_computer-engineering_semester-7_2022_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-7_2023_december_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-7_2023_may_dloc-iii-natural-language-processing-rev-2019-c-scheme.pdf"
+      ],
+      "papers_analyzed": 3,
+      "questions_analyzed": 46,
+      "years_covered": [
+        2022,
+        2023
+      ],
+      "exact_repeat_count": 1,
+      "semantic_repeat_count": 1,
+      "related_topic_count": 40,
+      "topic_count": 39,
+      "exact_repeat_false_positives": [],
+      "exact_repeat_false_negatives": [],
+      "semantic_repeat_false_positives": [],
+      "semantic_repeat_false_negatives": [],
+      "related_topic_errors": [],
+      "garbage_topics": [],
+      "duplicate_groups": [],
+      "self_groups": [],
+      "study_planner": [
+        {
+          "title": "Porter Stemming",
+          "priority_score": 54.4,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 11.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 4.0,
+            "marks_score": 0.0,
+            "recency_score": 0.0,
+            "consistency_score": 5.3,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 54.4
+          },
+          "source_questions": [
+            "2022 Q6(b)",
+            "2023 Q5(a)"
+          ],
+          "years": [
+            2022,
+            2023
+          ],
+          "recurrence": {
+            "exact": 2,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2022, 2023); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Tagging Challenges Faced",
+          "priority_score": 50.4,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 7.0,
+            "related_topic_score": 4.0,
+            "marks_score": 0.0,
+            "recency_score": 0.0,
+            "consistency_score": 5.3,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 50.4
+          },
+          "source_questions": [
+            "2022 Q3(c)",
+            "2023 Q4(b)"
+          ],
+          "years": [
+            2022,
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 2
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2022, 2023); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Sense Disambiguation Dictionary",
+          "priority_score": 44.9,
+          "score_components": {
+            "frequency_score": 16.5,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 0.0,
+            "recency_score": 0.0,
+            "consistency_score": 5.3,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 44.9
+          },
+          "source_questions": [
+            "2022 Q5(a)",
+            "2023 Q2(a)",
+            "2023 Q4(a)"
+          ],
+          "years": [
+            2022,
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 3x across 2 years (2022, 2023); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Relationships Word Meanings",
+          "priority_score": 41.4,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 2.0,
+            "marks_score": 0.0,
+            "recency_score": 0.0,
+            "consistency_score": 5.3,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 41.4
+          },
+          "source_questions": [
+            "2022 Q1(e)",
+            "2023 Q1(d)"
+          ],
+          "years": [
+            2022,
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2022, 2023); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Base Machine Translation",
+          "priority_score": 39.4,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 0.0,
+            "recency_score": 0.0,
+            "consistency_score": 5.3,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 39.4
+          },
+          "source_questions": [
+            "2022 Q1(d)",
+            "2023 Q1(d)"
+          ],
+          "years": [
+            2022,
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2022, 2023); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Complicate Reference Resolution",
+          "priority_score": 37.3,
+          "score_components": {
+            "frequency_score": 16.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 4.0,
+            "marks_score": 0.0,
+            "recency_score": 0.0,
+            "consistency_score": 2.7,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 37.3
+          },
+          "source_questions": [
+            "2023 Q1(c)",
+            "2023 Q1(e)",
+            "2023 Q3(b)"
+          ],
+          "years": [
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 3x across 1 years (2023); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Natural Language Processing",
+          "priority_score": 33.3,
+          "score_components": {
+            "frequency_score": 16.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 0.0,
+            "recency_score": 0.0,
+            "consistency_score": 2.7,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 33.3
+          },
+          "source_questions": [
+            "2023 Q2(b)",
+            "2023 Q1(a)",
+            "2023 Q1(e)"
+          ],
+          "years": [
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 3x across 1 years (2023); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Discourse Reference Resolution",
+          "priority_score": 31.8,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 4.0,
+            "marks_score": 0.0,
+            "recency_score": 0.0,
+            "consistency_score": 2.7,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 31.8
+          },
+          "source_questions": [
+            "2023 Q3(b)",
+            "2023 Q1(e)"
+          ],
+          "years": [
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 1 years (2023); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Perplexity Language Model",
+          "priority_score": 30.3,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 8.0,
+            "marks_score": 0.0,
+            "recency_score": 0.0,
+            "consistency_score": 2.7,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 30.3
+          },
+          "source_questions": [
+            "2022 Q1(f)"
+          ],
+          "years": [
+            2022
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2022); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_AFTER"
+        },
+        {
+          "title": "Hobbs Pronoun Resolution",
+          "priority_score": 28.3,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 6.0,
+            "marks_score": 0.0,
+            "recency_score": 0.0,
+            "consistency_score": 2.7,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 28.3
+          },
+          "source_questions": [
+            "2022 Q5(b)"
+          ],
+          "years": [
+            2022
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2022); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_AFTER"
+        },
+        {
+          "title": "Role Morphological Analysis",
+          "priority_score": 24.3,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 2.0,
+            "marks_score": 0.0,
+            "recency_score": 0.0,
+            "consistency_score": 2.7,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 24.3
+          },
+          "source_questions": [
+            "2022 Q2(a)"
+          ],
+          "years": [
+            2022
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2022); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_AFTER"
+        },
+        {
+          "title": "Statistical Approach Machine",
+          "priority_score": 24.3,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 2.0,
+            "marks_score": 0.0,
+            "recency_score": 0.0,
+            "consistency_score": 2.7,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 24.3
+          },
+          "source_questions": [
+            "2023 Q1(c)"
+          ],
+          "years": [
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2023); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_AFTER"
+        }
+      ],
+      "failures": []
+    },
+    {
+      "family": "Operating Systems",
+      "papers": [
+        "be_computer-engineering_semester-4_2023_december_operating-systemrev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-4_2023_may_operating-systemrev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-4_2024_december_operating-systemrev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-4_2024_may_operating-systemrev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-4_2025_may_operating-systemrev-2019-c-scheme.pdf",
+        "os_unseen_paper.pdf"
+      ],
+      "papers_analyzed": 5,
+      "questions_analyzed": 48,
+      "years_covered": [
+        2023,
+        2024,
+        2025
+      ],
+      "exact_repeat_count": 0,
+      "semantic_repeat_count": 0,
+      "related_topic_count": 37,
+      "topic_count": 44,
+      "exact_repeat_false_positives": [],
+      "exact_repeat_false_negatives": [],
+      "semantic_repeat_false_positives": [],
+      "semantic_repeat_false_negatives": [],
+      "related_topic_errors": [],
+      "garbage_topics": [],
+      "duplicate_groups": [],
+      "self_groups": [],
+      "study_planner": [
+        {
+          "title": "Multiprocessor Context Switching vs Context Switching",
+          "priority_score": 52.2,
+          "score_components": {
+            "frequency_score": 22.0,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 6.0,
+            "marks_score": 3.5,
+            "recency_score": 5.0,
+            "consistency_score": 1.6,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 52.2
+          },
+          "source_questions": [
+            "2025 Q1(a)",
+            "2025 Q4(b)",
+            "2025 Q4(a)",
+            "2025 Q4(c)"
+          ],
+          "years": [
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              5,
+              5,
+              5
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 4x across 1 years (2025); Marks: 0M\u20135M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Abor-Rt Disk Scheduling",
+          "priority_score": 44.3,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 0.0,
+            "consistency_score": 3.2,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 44.3
+          },
+          "source_questions": [
+            "2023 Q3(b)",
+            "0 Q5(b)"
+          ],
+          "years": [
+            0,
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (0, 2023); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "FCFS Calculation",
+          "priority_score": 37.2,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 4.0,
+            "marks_score": 7.0,
+            "recency_score": 5.0,
+            "consistency_score": 1.6,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 37.2
+          },
+          "source_questions": [
+            "2025 Q3(a)"
+          ],
+          "years": [
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2025); Marks: 10M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Effective Memory Access",
+          "priority_score": 35.2,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 3.5,
+            "recency_score": 5.0,
+            "consistency_score": 1.6,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 35.2
+          },
+          "source_questions": [
+            "2025 Q1(d)",
+            "2025 Q4(d)"
+          ],
+          "years": [
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              5
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 1 years (2025); Marks: 0M\u20135M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "RAG vs FCFS",
+          "priority_score": 34.2,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 4.0,
+            "marks_score": 7.0,
+            "recency_score": 2.0,
+            "consistency_score": 1.6,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 34.2
+          },
+          "source_questions": [
+            "2024 Q1(c)"
+          ],
+          "years": [
+            2024
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2024); Marks: 10M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "One Call Calls",
+          "priority_score": 33.2,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 5.0,
+            "consistency_score": 1.6,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 33.2
+          },
+          "source_questions": [
+            "2025 Q2(b)"
+          ],
+          "years": [
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2025); Marks: 10M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Snapshot Allocation Request",
+          "priority_score": 33.2,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 5.0,
+            "consistency_score": 1.6,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 33.2
+          },
+          "source_questions": [
+            "2025 Q3(b)"
+          ],
+          "years": [
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2025); Marks: 10M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_AFTER"
+        },
+        {
+          "title": "Scheduling Criteria Term",
+          "priority_score": 32.2,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 2.0,
+            "marks_score": 7.0,
+            "recency_score": 2.0,
+            "consistency_score": 1.6,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 32.2
+          },
+          "source_questions": [
+            "2024 Q1(b)"
+          ],
+          "years": [
+            2024
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2024); Marks: 10M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_AFTER"
+        },
+        {
+          "title": "Scheduling Round Robin",
+          "priority_score": 30.2,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 2.0,
+            "marks_score": 7.0,
+            "recency_score": 0.0,
+            "consistency_score": 1.6,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 30.2
+          },
+          "source_questions": [
+            "0 Q4(a)"
+          ],
+          "years": [
+            0
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (0); Marks: 10M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_AFTER"
+        },
+        {
+          "title": "Access Time Nanoseconds",
+          "priority_score": 29.7,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 3.5,
+            "recency_score": 5.0,
+            "consistency_score": 1.6,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 29.7
+          },
+          "source_questions": [
+            "2025 Q4(d)"
+          ],
+          "years": [
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              5
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2025); Marks: 5M\u20135M; Unit: Unmapped",
+          "study_band": "STUDY_AFTER"
+        },
+        {
+          "title": "File Attributes",
+          "priority_score": 29.7,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 3.5,
+            "recency_score": 5.0,
+            "consistency_score": 1.6,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 29.7
+          },
+          "source_questions": [
+            "2025 Q4(e)"
+          ],
+          "years": [
+            2025
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              5
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2025); Marks: 5M\u20135M; Unit: Unmapped",
+          "study_band": "STUDY_AFTER"
+        },
+        {
+          "title": "File Access Ethods",
+          "priority_score": 29.2,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 8.0,
+            "marks_score": 0.0,
+            "recency_score": 0.0,
+            "consistency_score": 1.6,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 29.2
+          },
+          "source_questions": [
+            "2023 Q1(e)"
+          ],
+          "years": [
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2023); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_AFTER"
+        }
+      ],
+      "failures": []
+    },
+    {
+      "family": "Software Engineering",
+      "papers": [
+        "be_computer-engineering_semester-5_2022_december_software-engineeringrev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-5_2022_may_software-engineeringrev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-5_2023_december_software-engineeringrev-2019-c-scheme.pdf",
+        "be_computer-engineering_semester-5_2023_may_software-engineeringrev-2019-c-scheme.pdf"
+      ],
+      "papers_analyzed": 4,
+      "questions_analyzed": 54,
+      "years_covered": [
+        2022,
+        2023
+      ],
+      "exact_repeat_count": 1,
+      "semantic_repeat_count": 3,
+      "related_topic_count": 40,
+      "topic_count": 39,
+      "exact_repeat_false_positives": [],
+      "exact_repeat_false_negatives": [],
+      "semantic_repeat_false_positives": [
+        {
+          "q1": "Explain COCOMO model in detail",
+          "q2": "Explain the COCOMO model.\n[IMAGE]\n[diagram on page 1]",
+          "recheck": "RELATED_TOPIC",
+          "reason": "Shared topic vocabulary but different question intent/constraints \u2014 not a repeat"
+        }
+      ],
+      "semantic_repeat_false_negatives": [],
+      "related_topic_errors": [],
+      "garbage_topics": [],
+      "duplicate_groups": [],
+      "self_groups": [],
+      "study_planner": [
+        {
+          "title": "Out Software Testing vs Software Testing",
+          "priority_score": 75.1,
+          "score_components": {
+            "frequency_score": 22.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 11.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 8.0,
+            "marks_score": 7.0,
+            "recency_score": 0.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 75.1
+          },
+          "source_questions": [
+            "2023 Q5(a)",
+            "2022 Q1(e)",
+            "2023 Q1(e)",
+            "2023 Q4(b)",
+            "2023 Q1(a)",
+            "2023 Q5(b)"
+          ],
+          "years": [
+            2022,
+            2023
+          ],
+          "recurrence": {
+            "exact": 2,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0,
+              0,
+              10,
+              0,
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 6x across 2 years (2022, 2023); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Principles Software Testing",
+          "priority_score": 75.1,
+          "score_components": {
+            "frequency_score": 22.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 11.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 8.0,
+            "marks_score": 7.0,
+            "recency_score": 0.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 75.1
+          },
+          "source_questions": [
+            "2023 Q4(b)",
+            "2022 Q1(d)",
+            "2022 Q1(e)",
+            "2023 Q1(e)",
+            "2023 Q1(a)",
+            "2023 Q5(b)"
+          ],
+          "years": [
+            2022,
+            2023
+          ],
+          "recurrence": {
+            "exact": 2,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10,
+              0,
+              0,
+              0,
+              0,
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 6x across 2 years (2022, 2023); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Software Reverse Engineering",
+          "priority_score": 53.1,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 8.0,
+            "marks_score": 7.0,
+            "recency_score": 0.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 53.1
+          },
+          "source_questions": [
+            "2022 Q5(b)",
+            "2023 Q5(b)"
+          ],
+          "years": [
+            2022,
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2022, 2023); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Cohesion Coupling Ypetailed",
+          "priority_score": 49.1,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 7.0,
+            "related_topic_score": 4.0,
+            "marks_score": 0.0,
+            "recency_score": 0.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 49.1
+          },
+          "source_questions": [
+            "2022 Q4(a)",
+            "2023 Q6(a)"
+          ],
+          "years": [
+            2022,
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 2
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2022, 2023); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Software Development General",
+          "priority_score": 45.1,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 0.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 45.1
+          },
+          "source_questions": [
+            "2022 Q2(b)",
+            "2023 Q2(b)"
+          ],
+          "years": [
+            2022,
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2022, 2023); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Coupling And-Cohesi",
+          "priority_score": 45.1,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 0.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 45.1
+          },
+          "source_questions": [
+            "2022 Q3(b)",
+            "2023 Q4(a)"
+          ],
+          "years": [
+            2022,
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2022, 2023); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Agile Model Software",
+          "priority_score": 45.1,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 0.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 45.1
+          },
+          "source_questions": [
+            "2023 Q2(b)",
+            "2022 Q2(a)"
+          ],
+          "years": [
+            2022,
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2022, 2023); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Requirements Model",
+          "priority_score": 42.1,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 4.0,
+            "marks_score": 0.0,
+            "recency_score": 0.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 42.1
+          },
+          "source_questions": [
+            "2022 Q1(b)",
+            "2023 Q1(c)"
+          ],
+          "years": [
+            2022,
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2022, 2023); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Cocomo Model",
+          "priority_score": 41.1,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 7.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 0.0,
+            "consistency_score": 2.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 41.1
+          },
+          "source_questions": [
+            "2023 Q2(b)",
+            "2023 Q3(b)"
+          ],
+          "years": [
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 2
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 1 years (2023); Marks: 0M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Princi Tracking",
+          "priority_score": 40.1,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 2.0,
+            "marks_score": 0.0,
+            "recency_score": 0.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 40.1
+          },
+          "source_questions": [
+            "2022 Q6(c)",
+            "2023 Q1(c)"
+          ],
+          "years": [
+            2022,
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2022, 2023); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Test Cases Medical Applications",
+          "priority_score": 38.1,
+          "score_components": {
+            "frequency_score": 11.0,
+            "year_recurrence_score": 18.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 0.0,
+            "recency_score": 0.0,
+            "consistency_score": 4.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 38.1
+          },
+          "source_questions": [
+            "2023 Q2(a)",
+            "2022 Q3(c)"
+          ],
+          "years": [
+            2022,
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0,
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 2x across 2 years (2022, 2023); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Categories Risks Plan",
+          "priority_score": 28.6,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 7.0,
+            "recency_score": 0.0,
+            "consistency_score": 2.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 28.6
+          },
+          "source_questions": [
+            "2023 Q5(b)"
+          ],
+          "years": [
+            2023
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              10
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2023); Marks: 10M\u201310M; Unit: Unmapped",
+          "study_band": "STUDY_AFTER"
+        }
+      ],
+      "failures": [
+        {
+          "layer": "intelligence_grouping",
+          "kind": "semantic_repeat_false_positive",
+          "detail": "Shared topic vocabulary but different question intent/constraints \u2014 not a repeat"
+        }
+      ]
+    },
+    {
+      "family": "Unclassified:AIDSAIML-SEM-7_2024_compressed.pdf",
+      "papers": [
+        "AIDSAIML-SEM-7_2024_compressed.pdf"
+      ],
+      "papers_analyzed": 1,
+      "questions_analyzed": 5,
+      "years_covered": [
+        2024
+      ],
+      "exact_repeat_count": 0,
+      "semantic_repeat_count": 0,
+      "related_topic_count": 0,
+      "topic_count": 5,
+      "exact_repeat_false_positives": [],
+      "exact_repeat_false_negatives": [],
+      "semantic_repeat_false_positives": [],
+      "semantic_repeat_false_negatives": [],
+      "related_topic_errors": [],
+      "garbage_topics": [],
+      "duplicate_groups": [],
+      "self_groups": [],
+      "study_planner": [
+        {
+          "title": "Techniques Test Semantic",
+          "priority_score": 32.4,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 2.8,
+            "recency_score": 2.0,
+            "consistency_score": 8.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 32.4
+          },
+          "source_questions": [
+            "2024 Q3(a)"
+          ],
+          "years": [
+            2024
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              4
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2024); Marks: 4M\u20134M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Implementation Hardware Enables",
+          "priority_score": 29.6,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 0.0,
+            "recency_score": 2.0,
+            "consistency_score": 8.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 29.6
+          },
+          "source_questions": [
+            "2024 Q3(b)"
+          ],
+          "years": [
+            2024
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2024); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Full-Fledged Dapp Ethereum",
+          "priority_score": 29.6,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 0.0,
+            "recency_score": 2.0,
+            "consistency_score": 8.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 29.6
+          },
+          "source_questions": [
+            "2024 Q4(a)"
+          ],
+          "years": [
+            2024
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2024); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_FIRST"
+        },
+        {
+          "title": "Neuro-Fuzzy Hybrid Computing Applications",
+          "priority_score": 29.6,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 0.0,
+            "recency_score": 2.0,
+            "consistency_score": 8.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 29.6
+          },
+          "source_questions": [
+            "2024 Q5(a)"
+          ],
+          "years": [
+            2024
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2024); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        },
+        {
+          "title": "Map-Reduce Predictive Analytics",
+          "priority_score": 29.6,
+          "score_components": {
+            "frequency_score": 5.5,
+            "year_recurrence_score": 9.0,
+            "exact_repeat_score": 0.0,
+            "semantic_repeat_score": 0.0,
+            "related_topic_score": 0.0,
+            "marks_score": 0.0,
+            "recency_score": 2.0,
+            "consistency_score": 8.0,
+            "syllabus_score": 0.0,
+            "confidence_score": 5.1,
+            "total_priority_score": 29.6
+          },
+          "source_questions": [
+            "2024 Q9(a)"
+          ],
+          "years": [
+            2024
+          ],
+          "recurrence": {
+            "exact": 0,
+            "semantic": 0
+          },
+          "marks": {
+            "typical": null,
+            "from_sources": [
+              0
+            ]
+          },
+          "syllabus_mapping": "Syllabus mapping uncertain",
+          "why": "Appeared 1x across 1 years (2024); Marks: 0M\u20130M; Unit: Unmapped",
+          "study_band": "STUDY_NEXT"
+        }
+      ],
+      "failures": []
+    }
+  ],
+  "limitations": [
+    "Four GT fixtures have no matching PDF on disk (BDA 2022 Dec, NLP 2024 May, NLP 2024 Dec, NLP 2025 May).",
+    "AIDSAIML-SEM-7_2024_compressed.pdf is a multi-paper scanned booklet, not a single examination.",
+    "OCR-noise ratio from structural_ocr_noise_ratio() over-flags formula/table-heavy but readable questions; taxonomy only keeps sparse-word bodies.",
+    "Semantic FN/FP are classifier-agreement checks, not human exam-intent labels.",
+    "Table/diagram attachment is only judged when GT expect_tables/expect_diagrams is set.",
+    "Marks are frequently 0 even when the paper prints (5)/(10); scoring then under-weights marks.",
+    "Production extraction was not modified during this evaluation."
+  ]
+}

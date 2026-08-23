@@ -86,6 +86,9 @@ def require_workspace(workspace_id: str) -> Dict[str, Any]:
     return ws
 
 
+import time
+START_TIME = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+
 @app.get("/health", summary="Check system & vector store status")
 def health_check():
     try:
@@ -97,7 +100,10 @@ def health_check():
     return {
         "status": "ok",
         "service": "University Academic AI RAG Backend",
-        "version": "3.6.0",
+        "version": "3.6.0-universal-reconciliation",
+        "extraction_pipeline": "universal_9_stage_reconciliation_v2",
+        "git_commit": "914f07d3e54714e78d0dbb93a190e2a6ae8baeca",
+        "started_at": START_TIME,
         "vector_store_stats": stats,
         # Provider names and models only — credentials never leave the server.
         "llm": llm_status(),
@@ -213,9 +219,13 @@ async def ingest_document(workspace_id: str, file: UploadFile = File(...), doc_t
         if metas:
             rejected_count = metas[0].get("rejected_count", 0)
         ingestion_status = audit.get("ingestion_status", "ready")
+        raw_audit = audit.get("extraction_audit") or {}
         extraction_audit = {
-            "page_extraction_audit": audit.get("page_extraction_audit", []),
-            "rejected_candidates": [
+            "representations": raw_audit.get("representations", {}),
+            "marker_candidates": raw_audit.get("marker_candidates", []),
+            "reconciled_questions": raw_audit.get("reconciled_questions", [q.get("question_id") for q in (audit.get("accepted_questions") or [])]),
+            "ambiguous_markers": raw_audit.get("ambiguous_markers", []),
+            "rejected_markers": raw_audit.get("rejected_markers", [
                 {
                     "question_id": r.get("question_id"),
                     "reason": r.get("reason") or r.get("rejection_reason"),
@@ -223,7 +233,11 @@ async def ingest_document(workspace_id: str, file: UploadFile = File(...), doc_t
                     "candidate_text": (r.get("raw_text") or r.get("exact_text") or "")[:240],
                 }
                 for r in (audit.get("rejected_candidates") or [])[:80]
-            ],
+            ]),
+            "missing_genuine_questions": raw_audit.get("missing_genuine_questions", (audit.get("quality_summary") or {}).get("missing_questions") or []),
+            "cross_page_merges": raw_audit.get("cross_page_merges", []),
+            "representation_sources": raw_audit.get("representation_sources", {}),
+            "page_extraction_audit": audit.get("page_extraction_audit", []),
             "accepted_question_ids": [q.get("question_id") for q in (audit.get("accepted_questions") or [])],
             "detected_markers": audit.get("source_markers") or [],
             "reconciled_markers": [q.get("question_id") for q in (audit.get("accepted_questions") or [])],
@@ -249,7 +263,7 @@ async def ingest_document(workspace_id: str, file: UploadFile = File(...), doc_t
             raise HTTPException(
                 status_code=422,
                 detail={
-                    "status": "extraction_incomplete" if ingestion_status == "INGESTION_PARTIAL" else "ingestion_failed",
+                    "status": "ingestion_failed",
                     "document_id": f"doc-{safe_name}",
                     "source_file": safe_name,
                     "workspace_id": workspace_id,
@@ -266,7 +280,7 @@ async def ingest_document(workspace_id: str, file: UploadFile = File(...), doc_t
                     "ingestion_status": ingestion_status,
                     "extraction_audit": extraction_audit,
                     "error": audit.get("incomplete_reason")
-                    or "Question extraction is incomplete. Please review the extraction audit.",
+                    or "Question extraction failed. Please review the extraction audit.",
                 },
             )
 
@@ -288,24 +302,15 @@ async def ingest_document(workspace_id: str, file: UploadFile = File(...), doc_t
             pass
 
     status_out = "success"
-    if doc_type == "pyq" and ingestion_status in (
-        "extraction_incomplete",
-        "INGESTION_PARTIAL",
-        "INGESTION_FAILED",
-        "ingestion_failed_no_valid_questions",
-    ):
-        status_out = "extraction_incomplete" if "PARTIAL" in ingestion_status or "incomplete" in ingestion_status else "ingestion_failed"
-        if ingestion_status == "INGESTION_FAILED":
-            status_out = "ingestion_failed"
-        elif ingestion_status == "INGESTION_PARTIAL":
-            status_out = "extraction_incomplete"
+    if doc_type == "pyq" and ingestion_status == "INGESTION_FAILED":
+        status_out = "ingestion_failed"
 
     # Surface quality block at top level for frontend
     quality_block = {}
     if doc_type == "pyq":
         audit = dynamic_ingest.last_pyq_questions_audit or {}
         quality_block = audit.get("quality_summary") or {}
-        if not metas and ingestion_status in ("INGESTION_PARTIAL", "INGESTION_FAILED", "ingestion_failed_no_valid_questions"):
+        if not metas and ingestion_status == "INGESTION_FAILED":
             # Return structured failure instead of empty success
             raise HTTPException(
                 status_code=422,
@@ -327,7 +332,7 @@ async def ingest_document(workspace_id: str, file: UploadFile = File(...), doc_t
                     "ingestion_status": ingestion_status,
                     "extraction_audit": extraction_audit,
                     "error": audit.get("incomplete_reason")
-                    or "Question extraction is incomplete. Please review the extraction audit.",
+                    or "Question extraction failed. Please review the extraction audit.",
                 },
             )
 
@@ -449,19 +454,15 @@ def _pyq_analysis_payload(ws_id: str, subject: str, semester: str):
     if analysis.get("available") and qcount > 0 and qcount < 3 and (analysis.get("total_papers") or 0) <= 1:
         return {
             **analysis,
-            "available": False,
             "extraction_incomplete": True,
+            "prediction_notice": (
+                "Priority analysis limited because question extraction is incomplete. "
+                + str(analysis.get("prediction_notice") or "")
+            ).strip(),
             "message": (
                 f"PYQ extraction incomplete: {qcount} questions extracted. "
-                "Review PDF/OCR extraction before trusting intelligence."
+                "Valid grounded questions remain visible with reduced confidence."
             ),
-            "most_repeated_questions": [],
-            "exact_repeats": [],
-            "semantic_repeats": [],
-            "related_topics": [],
-            "topic_recurrence": [],
-            "study_priorities": [],
-            "topics": [],
         }
     return analysis
 

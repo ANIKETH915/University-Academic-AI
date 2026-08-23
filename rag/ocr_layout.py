@@ -25,6 +25,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from rag.question_extractor import (
     ACADEMIC_QUESTION_VERBS,
     _PARENT_NUM,
+    _ROMAN_SUBS,
     _SUB_DELIMITED,
     _SUB_LETTER,
     _SUB_TOKEN,
@@ -38,6 +39,10 @@ from rag.question_extractor import (
 # "1 Attempt any four" never parses as parent 1 + sub "a".
 _MARKER_ONLY = re.compile(rf"^[qQ]?\(?({_SUB_TOKEN})\)?\s*[\.\)]?$", re.I)
 _MARKER_LEAD = re.compile(rf"^[qQ]?{_SUB_DELIMITED}[\.\)]*\s+(.*)$", re.I)
+# OCR glues the body straight onto the marker ("d.Blockchain for DeFi").
+# Only an uppercase / bracketed continuation counts, so "e.g. text" and
+# "i.e. text" abbreviations are never mistaken for markers.
+_MARKER_LEAD_GLUED = re.compile(rf"^[qQ]?({_SUB_TOKEN})[.\)]([A-Z(\[].*)$", re.I)
 _PARENT_SUB_LEAD = re.compile(
     rf"^({_PARENT_NUM})[\s\.\):]*{_SUB_DELIMITED}[\.\)]*\s*(.*)$", re.I
 )
@@ -182,6 +187,8 @@ def _classify(text: str) -> Tuple[str, Optional[str], Optional[str], str]:
 
     m = re.match(rf"^Q\s*({_PARENT_NUM})[\s\.\):]+(\S.*)$", t, re.I)
     if m and not re.match(rf"^{_SUB_DELIMITED}", m.group(2) or "", re.I):
+        # Q-numbered leads are structural even when they carry choice text
+        # ("Q.1 Solve any Four out of Five …").
         return "parent_lead", f"Q{m.group(1)}", None, (m.group(2) or "").strip()
 
     if not re.match(r"^\d+\s*[x*×]\s*\d+", t):
@@ -194,24 +201,41 @@ def _classify(text: str) -> Tuple[str, Optional[str], Optional[str], str]:
     if m:
         return "parent_only", f"Q{m.group(1)}", None, ""
 
+    m = _PARENT_LEAD.match(t)
+    if m:
+        rest = (m.group(2) or "").strip()
+        # Bare digit-led furniture ("2. Answer any three out of the remaining
+        # questions.") is an N.B.-list item, not a question parent — unless it
+        # is a genuine choice-parent lead ("1 Attempt any four").
+        if (
+            is_header_or_instruction(rest)
+            and not re.match(r"^(?:attempt|solve|answer)\b", t, re.I)
+        ):
+            return "text", None, None, t
+        return "parent_lead", f"Q{m.group(1)}", None, rest
+
     m = _MARKER_ONLY.match(t)
     if m:
-        return "marker_only", None, _normalize_subtoken(m.group(1)), ""
+        sub = _normalize_subtoken(m.group(1))
+        has_delim = bool(re.search(r"[.\)]", t))
+        # Undelimited letters past the usual a–h column are wrap fragments
+        # ("n" from n-gram), not marker-only cells.
+        if has_delim or len(sub) > 1 or sub in set("abcdefghi"):
+            return "marker_only", None, sub, ""
 
     m = _MARKER_LEAD.match(t)
     if m:
         sub = _first_group(m, 1, 2)
         return "marker_lead", None, _normalize_subtoken(sub), (m.group(3) or "").strip()
 
+    m = _MARKER_LEAD_GLUED.match(t)
+    if m and len((m.group(2) or "").strip()) >= 2:
+        return "marker_lead", None, _normalize_subtoken(m.group(1)), (m.group(2) or "").strip()
+
     # Bare "b Consider ..." — marker letter lost its bracket during OCR
     m = re.match(rf"^({_SUB_LETTER})\s+([A-Z].*)$", t)
     if m:
         return "marker_lead", None, _normalize_subtoken(m.group(1)), m.group(2).strip()
-
-    # Gutter parent line carrying instruction/statement text ("1 Attempt any four")
-    m = _PARENT_LEAD.match(t)
-    if m:
-        return "parent_lead", f"Q{m.group(1)}", None, (m.group(2) or "").strip()
 
     return "text", None, None, t
 
@@ -276,11 +300,9 @@ def reconstruct_questions_from_layout(lines: List[Dict[str, Any]]) -> str:
     Rebuild "Qn(sub) text" lines from OCR geometry.
 
     Returns "" when positional evidence is too weak (caller keeps plain text).
+    Never mints IDs for unlabelled bodies.
     """
-    marked = _reconstruct_from_markers(lines)
-    if marked:
-        return marked
-    return _reconstruct_unlabelled_bodies(lines)
+    return _reconstruct_from_markers(lines)
 
 
 _STRONG_ITEM_START = re.compile(
@@ -315,102 +337,13 @@ def _remaining_parent_count(lines: List[Dict[str, Any]]) -> Optional[int]:
 
 def _reconstruct_unlabelled_bodies(lines: List[Dict[str, Any]]) -> str:
     """
-    OCR sometimes drops every Q/a) glyph but leaves academic question bodies
-    and marks tags. Recover items from instruction + marks + verb evidence.
-    Do not invent wording; IDs come from document order and remaining-N pairing.
+    Unlabelled bodies have no source-proven question IDs.
+
+    Document order and "remaining N" pairing would mint Q1(a)/Q2(a) without a
+    printed marker. That is fabrication. Return empty so the caller falls back
+    to marker-based reconstruction or plain text rather than invented IDs.
     """
-    if len(lines) < 5:
-        return ""
-
-    started = False
-    items: List[Tuple[str, bool]] = []
-    buf: List[str] = []
-    in_marked = False
-
-    def flush_item(marked: bool):
-        nonlocal buf
-        if buf:
-            joined = _retain_marks(" ".join(x.strip() for x in buf if x.strip()))
-            if joined and not is_header_or_instruction(joined):
-                items.append((joined, marked or bool(_MARKS_TAG.search(joined))))
-        buf = []
-
-    for ln in lines:
-        raw = (ln.get("text") or "").strip()
-        if not raw or _is_page_artifact(raw) or re.fullmatch(r"[\W_]+", raw):
-            continue
-        if is_header_or_instruction(raw):
-            if re.search(r"attempt\s+any", raw, re.I) or re.search(
-                r"question\s+no\.?\s*1\b", raw, re.I
-            ):
-                started = True
-            continue
-        marked = bool(_MARKS_TAG.search(raw))
-        like = _is_question_like(raw)
-        if not started:
-            if like:
-                started = True
-            else:
-                continue
-        # Left-gutter OCR junk ("acre", lone glyphs) sitting between questions
-        if (
-            not marked
-            and not like
-            and len(raw.split()) <= 2
-            and len(raw) <= 12
-            and (not buf or buf[-1].rstrip().endswith(("?", ".", ":", "]")))
-        ):
-            continue
-        if marked:
-            flush_item(in_marked)
-            in_marked = True
-            buf = [raw]
-            continue
-        if in_marked:
-            buf.append(raw)
-            continue
-        if like and not _is_continuation(raw):
-            flush_item(False)
-            buf = [raw]
-            continue
-        if buf:
-            buf.append(raw)
-
-    flush_item(in_marked)
-    if len(items) < 3:
-        return ""
-
-    shorts = [t for t, m in items if not m]
-    longs = [t for t, m in items if m]
-    if not longs and len(shorts) < 3:
-        return ""
-
-    slots: List[Tuple[str, str, str]] = []
-    if shorts:
-        for i, text in enumerate(shorts):
-            slots.append(("Q1", _SUB_ORDER[i] if i < len(_SUB_ORDER) else "a", text))
-        parent_start = 2
-    else:
-        parent_start = 1
-
-    remaining = _remaining_parent_count(lines)
-    pair = bool(remaining and remaining >= 2 and len(longs) == remaining * 2)
-    if pair:
-        for i, text in enumerate(longs):
-            parent = parent_start + (i // 2)
-            sub = "a" if i % 2 == 0 else "b"
-            slots.append((f"Q{parent}", sub, text))
-    else:
-        for i, text in enumerate(longs):
-            slots.append((f"Q{parent_start + i}", "a", text))
-
-    parents = {s[0] for s in slots}
-    if len(slots) < 3 or len(parents) < 2:
-        return ""
-    ids = [f"{p}({s})" for p, s, _t in slots]
-    if len(set(ids)) != len(ids):
-        return ""
-    return "\n".join(f"{p}({s}) {t}" for p, s, t in slots)
+    return ""
 
 
 def _reconstruct_from_markers(lines: List[Dict[str, Any]]) -> str:
@@ -435,13 +368,24 @@ def _reconstruct_from_markers(lines: List[Dict[str, Any]]) -> str:
     # The sub-marker column is defined by markers that stand alone or lead a
     # line ("a)", "b. Explain ..."). Lines that carry their own parent number
     # sit further left in the gutter and must not skew this measurement.
-    marker_x = _modal_x(
-        [
-            ln["x0"]
-            for ln in body
-            if _classify(ln["text"])[0] in ("marker_only", "marker_lead")
-        ]
-    )
+    marker_x = None
+    letter_marker_x_vals = [
+        ln["x0"]
+        for ln in body
+        if _classify(ln["text"])[0] in ("marker_only", "marker_lead")
+        and _classify(ln["text"])[2]
+        and _classify(ln["text"])[2] not in _ROMAN_SUBS
+    ]
+    if letter_marker_x_vals:
+        marker_x = _modal_x(letter_marker_x_vals)
+    if marker_x is None:
+        marker_x = _modal_x(
+            [
+                ln["x0"]
+                for ln in body
+                if _classify(ln["text"])[0] in ("marker_only", "marker_lead")
+            ]
+        )
     if marker_x is None:
         marker_x = _modal_x(
             [ln["x0"] for ln in body if _classify(ln["text"])[0] == "parent_sub"]
@@ -472,14 +416,28 @@ def _reconstruct_from_markers(lines: List[Dict[str, Any]]) -> str:
     buf: List[str] = []
     seen_any_marker = False
     parent_uses_letter_markers = False
+    seen_parent_nums: set = set()
+    parent_expects_subs = False
+    # Tagged bodies stashed across an OCR row-scramble until their printed
+    # marker appears (see starts_new_item handling below).
+    pending_tagged_body: List[str] = []
+
+    import os as _os
+
+    _trace = _os.environ.get("PYQRAG_LAYOUT_TRACE") == "1"
 
     def flush():
         nonlocal buf
-        if parent_num >= 1 and current_sub and buf:
+        if parent_num >= 1 and buf:
             joined = " ".join(x.strip() for x in buf if x.strip()).strip()
             joined = _retain_marks(joined)
             if joined:
-                slots.append((f"Q{parent_num}", current_sub, joined))
+                slots.append((f"Q{parent_num}", current_sub or "", joined))
+                if _trace:
+                    print(
+                        f"[LAYOUT_SLOT] Q{parent_num}({current_sub}) <- {joined[:80]}",
+                        flush=True,
+                    )
         buf = []
 
     def next_marker_sub(start: int) -> Optional[str]:
@@ -499,6 +457,7 @@ def _reconstruct_from_markers(lines: List[Dict[str, Any]]) -> str:
         if kind == "parent_sub":
             flush()
             parent_num = int(re.search(r"\d+", parent).group(0))
+            seen_parent_nums.add(parent_num)
             current_sub = sub
             seen_any_marker = True
             parent_uses_letter_markers = True
@@ -506,34 +465,74 @@ def _reconstruct_from_markers(lines: List[Dict[str, Any]]) -> str:
             continue
 
         if kind in ("parent_only", "parent_lead"):
+            if kind == "parent_only" and current_sub and not rest:
+                next_sub = next_marker_sub(idx)
+                if next_sub and _next_letter(current_sub) == next_sub:
+                    # Isolated number noise sitting between contiguous letter siblings (a -> b)
+                    continue
             flush()
             parent_num = int(re.search(r"\d+", parent).group(0))
+            seen_parent_nums.add(parent_num)
             current_sub = None
             seen_any_marker = True
             parent_uses_letter_markers = False
-            buf = []
+            parent_expects_subs = bool(
+                re.search(
+                    r"marks each|out of \w+|any (?:four|five|three|two)|any\s+\d+|short\s+notes?",
+                    rest or raw,
+                    re.I,
+                )
+            )
+            # Preserve instruction-frame leads ("Write short notes on…",
+            # "Attempt any four") as a parent-only line so terse sub items
+            # keep their interrogative context after reconstruction.
+            buf = (
+                [rest]
+                if rest and re.search(r"writ\w*\s+short|short\s+n\w{0,3}|attempt|solve\b", rest, re.I)
+                else []
+            )
             continue
 
         if kind in ("marker_only", "marker_lead") and abs(ln["x0"] - marker_x) <= 24:
             if parent_num == 0:
                 if sub not in ("a", "i", "l"):
                     continue
+                flush()
                 parent_num = 1
+                seen_parent_nums.add(1)
                 sub = "a"
             elif current_sub is None and sub in ("i", "l") and not _is_question_like(rest or ""):
+                flush()
                 sub = "a"
             elif current_sub and sub == "a":
+                # Letter-run restart at the marker column is structural evidence
+                # of the next parent (gutter papers drop the Qn glyph). Flush
+                # FIRST so the pending item is emitted under its OWN parent —
+                # flushing after the increment mislabels it with the new one.
+                flush()
                 parent_num += 1
+                seen_parent_nums.add(parent_num)
                 parent_uses_letter_markers = True
+            elif current_sub == sub:
+                # Same sub-letter marker repeated on continuation line
+                if rest:
+                    buf.append(rest)
+                continue
             else:
+                flush()
                 parent_uses_letter_markers = True
-            flush()
-            current_sub = sub
             seen_any_marker = True
-            buf = [rest] if rest else []
+            current_sub = sub
+            if pending_tagged_body:
+                # Adopt the stashed row-scrambled body as this item's lead.
+                buf = pending_tagged_body + ([rest] if rest else [])
+                pending_tagged_body = []
+            else:
+                buf = [rest] if rest else []
             continue
 
-        # First body after "Q.n 10 marks each" with no a) glyph is (a).
+        # First body after a parent. Invent (a) only when later letter markers
+        # prove this parent is subdivided.
         if (
             parent_num >= 1
             and current_sub is None
@@ -541,10 +540,41 @@ def _reconstruct_from_markers(lines: List[Dict[str, Any]]) -> str:
             and not _is_page_artifact(raw)
             and not is_header_or_instruction(raw)
         ):
-            current_sub = "a"
+            later_letter = next_marker_sub(idx)
+            current_sub = "a" if (later_letter or parent_expects_subs) else None
             seen_any_marker = True
             buf = [raw]
             continue
+
+        # Stem line starting with academic verb preceding a misplaced b) marker
+        if (
+            parent_num >= 1
+            and current_sub == "a"
+            and kind == "text"
+            and _is_question_like(raw)
+            and not _is_page_artifact(raw)
+            and not is_header_or_instruction(raw)
+        ):
+            later_letter = next_marker_sub(idx)
+            if later_letter == "b":
+                # Only split when the b-marker is ADJACENT — an intervening
+                # non-continuation text line means OCR merely scrambled row
+                # order, and the verb line continues the current item.
+                adjacent = True
+                for ln3, (k3, _p3, _s3, _r3) in classified[idx + 1 : idx + 6]:
+                    if k3 in ("marker_only", "marker_lead"):
+                        break
+                    if k3 == "parent_sub" or k3 in ("parent_only", "parent_lead"):
+                        adjacent = False
+                        break
+                    if k3 == "text" and not _is_continuation(ln3["text"]):
+                        adjacent = False
+                        break
+                if adjacent:
+                    flush()
+                    current_sub = "b"
+                    buf = [raw]
+                    continue
 
         # New academic-verb line at the body column is the next sub, not a wrap.
         # New academic-verb line is the next sub only when OCR dropped a)/b)
@@ -577,35 +607,52 @@ def _reconstruct_from_markers(lines: List[Dict[str, Any]]) -> str:
         )
         if starts_new_item:
             following = next_marker_sub(idx)
+            # Discriminate the two meanings of "tagged body + upcoming b)":
+            #   (1) plain body -> b) starts the NEXT parent (bump);
+            #   (2) the body is a COMPOUND item (nested roman i./ii. list)
+            #       and b) is its own same-parent sibling (row-scrambled OCR
+            #       emitted the body before its printed marker).
+            roman_nest = bool(
+                re.search(rf"(?m)^\s*({'|'.join(_ROMAN_SUBS)})\s*[\.\)]", "\n".join(buf))
+            )
             flush()
-            if following == "b" or parent_num == 0:
+            if following == "b" and current_sub == "a" and roman_nest:
+                current_sub = "b"
+            elif following == "b":
                 parent_num += 1
+                seen_parent_nums.add(parent_num)
                 current_sub = "a"
-            else:
+            elif current_sub:
                 current_sub = _next_letter(current_sub)
             buf = [raw]
             continue
 
-        if parent_num >= 1 and current_sub and not _is_page_artifact(raw):
+        if parent_num >= 1 and not _is_page_artifact(raw):
             if is_header_or_instruction(raw):
                 continue
             buf.append(raw)
 
     flush()
 
-    if len(slots) < 3:
+    if not slots:
         return ""
     parents = {s[0] for s in slots}
-    if len(parents) < 2:
+    # Weak geometry (one stray marker + prose) is not a paper structure.
+    if len(slots) < 2 or len(parents) < 1:
+        return ""
+    if len(slots) < 3 and len(parents) < 2:
         return ""
 
     # Duplicate ids mean the positional evidence contradicted itself; refuse
     # rather than emit a structure we cannot justify.
-    ids = [f"{p}({s})" for p, s, _t in slots]
+    ids = [f"{p}({s})" if s else p for p, s, _t in slots]
     if len(set(ids)) != len(ids):
         return ""
 
-    return "\n".join(f"{p}({s}) {t}" for p, s, t in slots)
+    return "\n".join(
+        f"{p}({s}) {t}" if s else f"{p} {t}"
+        for p, s, t in slots
+    )
 
 
 def ocr_layout_text(page, dpi: int = 150) -> str:

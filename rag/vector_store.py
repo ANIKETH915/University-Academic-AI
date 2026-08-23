@@ -91,10 +91,16 @@ class VectorStore:
                 res = self.collection.get(where={"source_file": {"$eq": source_file}})
             old_ids = list(res.get("ids") or [])
         except Exception as e:
-            print(f"[VECTOR_REPLACE] warn listing old ids: {e}")
+            raise RuntimeError(
+                f"refusing replace for '{source_file}'; cannot list existing vectors: {e}"
+            ) from e
 
         new_ids = [str(i) for i in ids]
-        self.add_documents(documents, metadatas, new_ids, batch_size=batch_size)
+        try:
+            self.add_documents(documents, metadatas, new_ids, batch_size=batch_size)
+        except Exception:
+            print(f"[VECTOR_REPLACE] insert failed for '{source_file}'; previous vectors left intact")
+            raise
 
         stale = [oid for oid in old_ids if oid not in set(new_ids)]
         if stale:

@@ -300,18 +300,8 @@ class TestUnlabelledBodiesLayout(unittest.TestCase):
             L("Explain indexed allocation in detail. 10]", 236, 660),
         ]
         text = reconstruct_questions_from_layout(lines)
-        self.assertTrue(text)
-        recon_ids = [ln.split()[0] for ln in text.splitlines() if ln.startswith("Q")]
-        self.assertEqual(len(recon_ids), 15, text)
-        ids = ids_from(text)
-        self.assertIn("Q1(a)", ids)
-        self.assertIn("Q1(e)", ids)
-        self.assertNotIn("acre", text.lower())
-        self.assertIn("Q2(a)", ids)
-        self.assertIn("Q6(b)", ids)
-        q3a = next(line for line in text.splitlines() if line.startswith("Q3(a)"))
-        self.assertIn("LRU", q3a)
-        self.assertGreaterEqual(len(ids), 12)
+        # No genuine markers → do not mint Q1(a)..Q6(b)
+        self.assertEqual(text, "")
 
     def test_prose_without_instruction_or_marks_not_promoted(self):
         lines = [
@@ -393,5 +383,34 @@ class TestParentLeadUnlabelledSubs(unittest.TestCase):
         self.assertNotIn("stemming", q5a.lower())
 
 
+class TestMultiColumnOCRLayoutWithRomanSubs(unittest.TestCase):
+    """
+    Test papers where sub-letter markers (b) are indented relative to parent_sub (Q5 a),
+    and sub-questions contain roman sub-items (i, ii) that must not pollute marker_x.
+    """
+
+    def test_indented_b_and_roman_sub_items(self):
+        lines = [
+            L("Paper / Subject Code: 42172 / BIG DATA ANALYTICS", 390, 14),
+            L("Q5 a) Write an algorithm for the Clique Percolation Method [10]", 210, 113),
+            L("the given below graph using Clique Percolation Method with clique k=3.", 309, 140),
+            L("b) i. List and explain the functions provided by R to combine data. [10]", 267, 451),
+            L("ii. Write the script to sort the values contained in vector.", 326, 475),
+            L("Q.6 a) The project manager at ABC Corp needs to track projects: [10]", 211, 615),
+            L("i) Create a Data frame in R for the above project data.", 313, 921),
+            L("ii) Show the structure and summary statistics.", 313, 972),
+            L("Justify the use of a Content-Based Recommendation System [10]", 312, 1039),
+        ]
+        text = reconstruct_questions_from_layout(lines)
+        recon = [ln.split()[0] for ln in text.splitlines() if ln.startswith("Q")]
+        self.assertEqual(recon, ["Q5(a)", "Q5(b)", "Q6(a)", "Q6(b)"])
+        q6a = next(ln for ln in text.splitlines() if ln.startswith("Q6(a)"))
+        self.assertIn("project manager", q6a.lower())
+        self.assertIn("data frame", q6a.lower())
+        q6b = next(ln for ln in text.splitlines() if ln.startswith("Q6(b)"))
+        self.assertIn("content-based", q6b.lower())
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+

@@ -9,6 +9,7 @@ from rag.question_extractor import (
     detect_suspicious_alphanumeric_noise,
     calculate_entropy,
     is_header_or_instruction,
+    normalize_question_text,
     question_structure_score,
 )
 from rag.syllabus_index import (
@@ -52,6 +53,13 @@ def perform_ocr_page(page: fitz.Page, dpi: int = 150) -> str:
     except Exception as e:
         print(f"[OCR_FALLBACK_INFO] Pytesseract/Tesseract unavailable: {e}")
         return ""
+
+
+# Resolutions used for scanned pages. Different engines/DPIs read different
+# glyph regions reliably, so both passes are kept as reconciliation evidence
+# instead of betting the page on one raster.
+OCR_DPI_BASE = 150
+OCR_DPI_HD = 250
 
 
 def get_subject_syllabus_index(subject: str, workspace_id: str = "", vector_store=None) -> Dict[str, Any]:
@@ -396,10 +404,28 @@ class DynamicIngestPipeline:
             except Exception:
                 pass
 
-        from rag.question_extractor import detect_exam_year_and_session
+        from rag.question_extractor import (
+            detect_exam_year_and_session,
+            extract_paper_metadata,
+            merge_paper_metadata,
+        )
 
         year, session = detect_exam_year_and_session(
             filename, header_blob[len(filename) + 1 :]
+        )
+        pdf_meta = extract_paper_metadata(header_blob, filename)
+        paper_meta = merge_paper_metadata(pdf_meta, workspace_info)
+        if paper_meta["university"]["confidence"] >= 0.6:
+            university = paper_meta["university"]["value"] or university
+        if paper_meta["subject"]["confidence"] >= 0.6:
+            subject = paper_meta["subject"]["value"] or subject
+        if paper_meta["semester"]["confidence"] >= 0.6:
+            semester = paper_meta["semester"]["value"] or semester
+        if paper_meta["paper_code"]["confidence"] >= 0.6:
+            course_code = paper_meta["paper_code"]["value"] or course_code
+        metadata_uncertain = any(
+            paper_meta[k]["uncertain"]
+            for k in ("university", "subject", "semester", "paper_code")
         )
 
         # Syllabus index from THIS workspace's uploaded syllabus only
@@ -443,8 +469,9 @@ class DynamicIngestPipeline:
                 metrics = {**(metrics or {}), "raw_chars": len(raw_native), "filtered_chars": len(filtered_native)}
 
             page_text = filtered_native
+            ocr_raw_hd = ""
             if not is_valid:
-                ocr_raw = perform_ocr_page(page, dpi=150) or ""
+                ocr_raw = perform_ocr_page(page, dpi=OCR_DPI_BASE) or ""
                 if ocr_raw:
                     ocr_text = filter_noise_lines(ocr_raw)
                     ocr_valid, ocr_reason, ocr_metrics = self.validate_text_quality(ocr_text)
@@ -466,13 +493,23 @@ class DynamicIngestPipeline:
                         else:
                             reason = ocr_reason or reason
                             metrics = ocr_metrics or metrics
+                # Second, higher-resolution pass. Different rasters recover
+                # different glyph regions; both are kept as evidence for the
+                # reconciliation stage instead of betting on one raster.
+                try:
+                    ocr_raw_hd = perform_ocr_page(page, dpi=OCR_DPI_HD) or ""
+                except Exception:
+                    ocr_raw_hd = ""
+                if ocr_raw_hd and ocr_raw_hd == ocr_raw:
+                    ocr_raw_hd = ""
 
             # Choose the representation with the strongest valid-question evidence.
             # Candidates: filtered native text, plain OCR text, layout-aware OCR.
             from rag.question_extractor import prepare_page_text_for_extraction
             from rag.question_extractor import extract_questions_from_page_text as _ex_qs
+            from rag.hybrid_question_extraction import score_page_representation
 
-            def _evaluate(name: str, text_repr: str, *, is_ocr: bool, evidence: int):
+            def _evaluate(name: str, text_repr: str, *, is_ocr: bool, geometry_support: float = 0.0):
                 prepared = prepare_page_text_for_extraction(text_repr) if text_repr else ""
                 if not prepared.strip():
                     return None
@@ -480,79 +517,120 @@ class DynamicIngestPipeline:
                     prepared, page_num + 1, filename, ws_id, subject=subject, year=year or 0
                 )
                 _v, _r, q_metrics = self.validate_text_quality(text_repr)
+                card = score_page_representation(
+                    text_repr,
+                    acc,
+                    rej,
+                    word_quality_ratio=q_metrics.get("word_quality_ratio", 0.0),
+                    geometry_support=geometry_support,
+                )
                 return {
                     "name": name,
-                    "accepted": len(acc),
-                    "rejected": len(rej),
+                    "accepted": card["grounded_accepted"],
+                    "rejected": card["rejected_count"],
                     "structure_score": question_structure_score(
                         [q["question_id"] for q in acc]
                     ),
                     "text_quality": q_metrics.get("word_quality_ratio", 0.0),
                     "prepared": prepared,
                     "source_text": text_repr,
-                    "chars": len(text_repr),
                     "ocr": is_ocr,
-                    "evidence": evidence,
+                    "score": card["score"],
+                    "association_rate": card["association_rate"],
+                    "inferred_id_count": card["inferred_id_count"],
+                    "genuine_marker_count": card["genuine_marker_count"],
+                    "grounded_accepted": card["grounded_accepted"],
                 }
 
             candidates: List[Dict[str, Any]] = []
             native_eval = None
             if filtered_native.strip():
-                native_eval = _evaluate("native", filtered_native, is_ocr=False, evidence=1)
+                native_eval = _evaluate("native", filtered_native, is_ocr=False)
                 if native_eval:
                     candidates.append(native_eval)
             if is_valid and page_text.strip() and page_text is not filtered_native:
                 candidates.append(
-                    _evaluate("ocr_text", page_text, is_ocr=True, evidence=0)
+                    _evaluate("ocr_text", page_text, is_ocr=True)
                 )
-            # Always try geometry-preserving OCR when native structure is incomplete
-            # or the page already required OCR. Do not skip it merely because
-            # native text passed a character-quality gate.
             native_incomplete = bool(
                 native_eval
                 and (
-                    native_eval["structure_score"] < 0.99
-                    or native_eval["rejected"] > 0
-                    or native_eval["accepted"] < 3
+                    native_eval["genuine_marker_count"] == 0
+                    or native_eval["grounded_accepted"] == 0
+                    or native_eval["association_rate"] < 0.5
+                    or native_eval["text_quality"] < 0.70
                 )
             )
             if ocr_used or not is_valid or not filtered_native.strip() or native_incomplete:
-                layout_lines = ocr_page_lines(page, dpi=150)
+                layout_lines = ocr_page_lines(page, dpi=OCR_DPI_BASE)
                 for ln in layout_lines:
                     all_layout_lines.append({**ln, "top": ln["top"] + page_num * 12000})
                 layout_text = reconstruct_questions_from_layout(layout_lines)
                 if layout_text.strip():
                     candidates.append(
-                        _evaluate("ocr_layout", layout_text, is_ocr=True, evidence=2)
+                        _evaluate(
+                            "ocr_layout",
+                            layout_text,
+                            is_ocr=True,
+                            geometry_support=1.0,
+                        )
                     )
+                if ocr_raw_hd.strip():
+                    hd_eval = _evaluate("ocr_text_hd", ocr_raw_hd, is_ocr=True)
+                    if hd_eval:
+                        candidates.append(hd_eval)
+            elif ocr_raw_hd.strip():
+                # Native page forced no OCR, but keep the HD pass as extra evidence
+                hd_eval = _evaluate("ocr_text_hd", ocr_raw_hd, is_ocr=True)
+                if hd_eval and (hd_eval.get("accepted") or 0) > 0:
+                    candidates.append(hd_eval)
+                    ocr_used = True
             candidates = [c for c in candidates if c]
 
             representation_audit = [
                 {
                     "representation": c["name"],
-                    "chars": c["chars"],
                     "accepted_questions": c["accepted"],
                     "rejected_candidates": c["rejected"],
                     "structure_score": round(c["structure_score"], 3),
                     "text_quality": c["text_quality"],
+                    "score": c.get("score"),
+                    "association_rate": c.get("association_rate"),
+                    "inferred_id_count": c.get("inferred_id_count"),
                 }
                 for c in candidates
             ]
 
             if candidates:
-                # Rank by recovered-question evidence, weighted by internal
-                # structure. A representation that invents extra regex markers
-                # but cannot accept them must not beat a coherent layout.
                 def _rank(c):
-                    structural = c["accepted"] * (0.5 + 0.5 * (c["structure_score"] or 0.0))
-                    return (structural, c["evidence"], c["accepted"], c["text_quality"], c["chars"])
+                    return (
+                        c.get("accepted") or 0,
+                        c.get("score") or 0.0,
+                        -(c.get("inferred_id_count") or 0),
+                        c.get("association_rate") or 0.0,
+                        c.get("text_quality") or 0.0,
+                    )
 
-                best_structural = max(c["accepted"] * (0.5 + 0.5 * (c["structure_score"] or 0)) for c in candidates)
+                with_questions = [c for c in candidates if (c.get("accepted") or 0) > 0]
+                pool = with_questions or candidates
+                native_c = next((c for c in pool if c.get("name") == "native"), None)
+                if native_c and (native_c.get("accepted") or 0) > 0:
+                    ocr_pool = [
+                        c for c in pool
+                        if c.get("name") != "native"
+                        and (
+                            (c.get("accepted") or 0) > (native_c.get("accepted") or 0)
+                            and (c.get("inferred_id_count") or 0) <= (native_c.get("inferred_id_count") or 0)
+                        )
+                    ]
+                    pool = ([native_c] + ocr_pool) if ocr_pool or native_c else pool
+                    if not ocr_pool:
+                        pool = [native_c]
+                best_score = max(c.get("score") or 0.0 for c in pool)
                 contenders = [
-                    c for c in candidates
-                    if (c["accepted"] * (0.5 + 0.5 * (c["structure_score"] or 0)))
-                    >= max(0.5, 0.55 * best_structural)
-                ] or candidates
+                    c for c in pool
+                    if (c.get("score") or 0.0) >= max(-10.0, 0.55 * best_score if best_score > 0 else best_score)
+                ] or pool
                 best = max(contenders, key=_rank)
                 reconstructed = best["prepared"]
                 page_text = best["source_text"]
@@ -614,6 +692,7 @@ class DynamicIngestPipeline:
                     "page": page_num + 1,
                     "raw_native_text": raw_native,
                     "raw_ocr_text": ocr_raw,
+                    "raw_ocr_hd_text": ocr_raw_hd or "",
                     "reconstructed_text": "",
                     "ocr_used": ocr_used,
                 })
@@ -621,7 +700,7 @@ class DynamicIngestPipeline:
 
             # OCR rescue if reconstructed looks empty of questions later handled in hybrid
             if not ocr_used and len(raw_native) >= 400 and len(reconstructed) < 80:
-                ocr_raw = perform_ocr_page(page, dpi=150) or ""
+                ocr_raw = perform_ocr_page(page, dpi=OCR_DPI_BASE) or ""
                 if ocr_raw:
                     ocr_text = filter_noise_lines(ocr_raw)
                     ocr_valid, _, ocr_metrics = self.validate_text_quality(ocr_text)
@@ -640,6 +719,7 @@ class DynamicIngestPipeline:
                 "page": page_num + 1,
                 "raw_native_text": raw_native,
                 "raw_ocr_text": ocr_raw,
+                "raw_ocr_hd_text": ocr_raw_hd or "",
                 "reconstructed_text": reconstructed,
                 "ocr_used": ocr_used,
             })
@@ -658,17 +738,17 @@ class DynamicIngestPipeline:
         # at the bottom of page N is not truncated until page N+1 is included.
         if total_pages > 1 and all_layout_lines:
             doc_layout = reconstruct_questions_from_layout(all_layout_lines)
-            n_doc = sum(1 for ln in (doc_layout or "").splitlines() if ln.startswith("Q"))
-            n_pages = sum(
-                1
-                for p in pages_payload
-                for ln in (p.get("reconstructed_text") or "").splitlines()
-                if ln.startswith("Q")
-            )
-            if n_doc >= max(3, n_pages):
-                from rag.question_extractor import prepare_page_text_for_extraction as _prep
+            from rag.question_extractor import prepare_page_text_for_extraction as _prep
+            from rag.hybrid_question_extraction import detect_markers_in_text
 
-                pages_payload[0]["reconstructed_text"] = _prep(doc_layout)
+            stitched = _prep(doc_layout) if doc_layout else ""
+            current_blob = "\n".join(p.get("reconstructed_text") or "" for p in pages_payload)
+            stitch_ids = set(detect_markers_in_text(stitched))
+            current_ids = set(detect_markers_in_text(current_blob))
+            # Only replace per-page text when stitch is a strict superset.
+            # A longer Q-line count that drops page-1 IDs is a regression.
+            if stitch_ids and (current_ids < stitch_ids or len(stitch_ids) > len(current_ids)):
+                pages_payload[0]["reconstructed_text"] = stitched
                 for p in pages_payload[1:]:
                     p["reconstructed_text"] = ""
 
@@ -684,9 +764,36 @@ class DynamicIngestPipeline:
             syllabus_topics=syl_topics,
         )
         all_accepted_questions = hybrid.get("accepted_questions") or []
+
+        # Finalize item text: trailing runs of marks-column tokens ("… (10)",
+        # "… [10] [5]") are margin furniture. Stripping happens here — AFTER
+        # duplicate-body analysis, whose fuzzy comparison relies on the raw
+        # source line — and before any vector text is built.
+        from rag.question_extractor import strip_trailing_marks_tail
+        for _q in all_accepted_questions:
+            _clean = strip_trailing_marks_tail(_q.get("exact_text") or "")
+            if _clean and _clean != _q.get("exact_text"):
+                _q["exact_text"] = _clean
+                _q["normalized_text"] = normalize_question_text(_clean)
         all_rejected_candidates.extend(hybrid.get("rejected_candidates") or [])
         quality = hybrid.get("quality") or {}
         extraction_quality = quality.get("extraction_quality", "FAILED")
+
+        visual_regions: List[Dict[str, Any]] = []
+        try:
+            from rag.visual_regions import attach_regions_to_questions, extract_visual_regions
+
+            doc2 = fitz.open(file_path)
+            page_h = float(doc2[0].rect.height) if len(doc2) else 842.0
+            for pi in range(len(doc2)):
+                visual_regions.extend(extract_visual_regions(doc2[pi]))
+            doc2.close()
+            if visual_regions:
+                attach_regions_to_questions(
+                    all_accepted_questions, visual_regions, page_height=page_h
+                )
+        except Exception as _vis_err:
+            print(f"[VISUAL_REGIONS] skip: {_vis_err}")
 
         for q_obj in all_accepted_questions:
             syl_map, confidence = map_subquestion_to_syllabus_index(
@@ -706,7 +813,12 @@ class DynamicIngestPipeline:
             year_label = str(year) if year else "Unknown"
             pages = q_obj.get("source_pages") or [q_obj.get("source_page") or 1]
             page_label = pages[0]
-            c_id = f"pyq_{ws_id}_{filename}_{page_label}_{q_obj['question_number']}"
+            q_obj["document_id"] = f"doc-{filename}"
+            q_obj["university"] = university
+            q_obj["semester"] = semester
+            q_obj["course_code"] = course_code
+            q_obj["metadata_uncertain"] = metadata_uncertain
+            c_id = f"pyq_{ws_id}_{filename}_{q_obj['question_number']}"
             chunk_text = (
                 f"PYQ Question Item {q_obj['question_number']} "
                 f"[{year_label} {session} | {q_obj['marks']} Marks | {subject} ({course_code}) | {filename}]\n"
@@ -726,7 +838,7 @@ class DynamicIngestPipeline:
                 "marks": str(q_obj["marks"]),
                 "question_id": q_obj["question_id"],
                 "question_number": q_obj["question_number"],
-                "parent_question": q_obj.get("parent_question", "Q1"),
+                "parent_question": q_obj.get("parent_question") or q_obj.get("parent_id") or "",
                 "subquestion": q_obj.get("subquestion") or "",
                 "exact_text": q_obj["exact_text"],
                 "normalized_text": q_obj.get("normalized_text", ""),
@@ -749,7 +861,11 @@ class DynamicIngestPipeline:
                 "source_page_end": q_obj.get("source_page_end", pages[-1]),
                 "cross_page_merged": bool(q_obj.get("cross_page_merged", False)),
                 "grounding_score": str(q_obj.get("grounding_score", "")),
+                "grounding_status": q_obj.get("grounding_status") or "grounded",
+                "source_span": q_obj.get("source_span") if isinstance(q_obj.get("source_span"), str) else "",
+                "parent_id": q_obj.get("parent_id") or q_obj.get("parent_question") or "",
                 "extraction_method": q_obj.get("extraction_method", "hybrid"),
+                "paper_extraction_quality": extraction_quality,
                 "extraction_quality": extraction_quality,
                 "rejected_count": rejected_count,
             })
@@ -760,28 +876,85 @@ class DynamicIngestPipeline:
         if not is_valid_paper:
             print(f"[PYQ_VALIDATION_WARNING] Validation issues detected in {filename}: {validation_errors}")
 
-        extraction_incomplete = extraction_quality in ("PARTIAL", "FAILED")
+        # -------------------------------------------------------------
+        # Vector-count safety gate: every genuine extracted question must
+        # become exactly one vector record. Any mismatch is silent loss or
+        # duplication — refuse ingestion rather than store a broken index.
+        # -------------------------------------------------------------
+        extracted_ids_list = [q.get("question_id") for q in all_accepted_questions]
+        duplicate_question_ids = sorted({
+            qid for qid in extracted_ids_list
+            if qid and extracted_ids_list.count(qid) > 1
+        })
+        vector_count_check = {
+            "extracted_count": len(all_accepted_questions),
+            "chunk_count": len(chunks),
+            "metadata_count": len(metadatas),
+            "id_count": len(ids),
+            "counts_consistent": (
+                len(chunks) == len(metadatas) == len(ids) == len(all_accepted_questions)
+                and not duplicate_question_ids
+            ),
+        }
+        if not vector_count_check["counts_consistent"]:
+            print(
+                f"[VECTOR_COUNT_MISMATCH] {filename}: {vector_count_check} "
+                f"dupes={duplicate_question_ids}; refusing vector insertion."
+            )
+            self.last_audit_log = audit_records
+            self.last_pyq_questions_audit = {
+                "accepted_questions": all_accepted_questions,
+                "rejected_candidates": all_rejected_candidates,
+                "validation_errors": validation_errors + [
+                    f"Vector count mismatch: {vector_count_check}"
+                ],
+                "ingestion_status": "INGESTION_FAILED",
+                "extraction_incomplete": True,
+                "incomplete_reason": (
+                    "Extracted questions and generated vectors diverged "
+                    f"({vector_count_check}); ingestion refused."
+                ),
+                "page_extraction_audit": page_extraction_audit,
+                "source_markers": hybrid.get("source_markers") or [],
+                "extraction_quality": extraction_quality,
+                "question_extraction_confidence": quality.get("confidence"),
+                "extraction_audit": hybrid.get("extraction_audit") or {},
+                "quality_summary": {
+                    **quality,
+                    "accepted_count": len(all_accepted_questions),
+                    "rejected_count": len(all_rejected_candidates),
+                    "total_pages": total_pages,
+                    "exam_year": year if year else None,
+                    "exam_session": session,
+                    "ocr_pages": sum(1 for p in page_extraction_audit if p.get("ocr_used")),
+                    "vector_count_check": vector_count_check,
+                    "duplicate_question_ids": duplicate_question_ids,
+                },
+            }
+            return []
+
+        ocr_pages_count = sum(1 for p in page_extraction_audit if p.get("ocr_used"))
+        native_pages_count = total_pages - ocr_pages_count
+        cross_page_merged_ids = [
+            q.get("question_id") for q in all_accepted_questions if q.get("cross_page_merged")
+        ]
+
+        extraction_incomplete = extraction_quality in ("FAILED",)
         incomplete_reason = None
-        if extraction_quality == "FAILED":
+        if extraction_quality == "FAILED" or len(all_accepted_questions) == 0:
             ingestion_status = "INGESTION_FAILED"
             incomplete_reason = (
-                "Question extraction failed. Please review the extraction audit."
+                "Question extraction failed. No valid grounded questions could be extracted."
             )
-        elif extraction_quality == "PARTIAL":
-            ingestion_status = "INGESTION_PARTIAL"
-            incomplete_reason = (
-                f"Question extraction is incomplete. "
-                f"Extracted {quality.get('questions_extracted')} of "
-                f"{quality.get('source_markers_detected')} detected markers. "
-                f"Missing: {quality.get('missing_questions')}. "
-                "Please review the extraction audit."
-            )
-        elif len(all_accepted_questions) == 0:
-            ingestion_status = "ingestion_failed_no_valid_questions"
             extraction_incomplete = True
-            incomplete_reason = "No valid questions could be extracted."
         else:
             ingestion_status = "ready"
+            if extraction_quality in ("PARTIAL", "RECOVERED") or quality.get("missing_questions"):
+                incomplete_reason = (
+                    f"Extraction reconciled with review required. "
+                    f"Extracted {quality.get('questions_extracted')} grounded questions. "
+                    f"Unrecovered markers: {quality.get('missing_questions')}."
+                )
 
         self.last_audit_log = audit_records
         self.last_pyq_questions_audit = {
@@ -795,18 +968,45 @@ class DynamicIngestPipeline:
             "source_markers": hybrid.get("source_markers") or [],
             "extraction_quality": extraction_quality,
             "question_extraction_confidence": quality.get("confidence"),
+            "extraction_audit": hybrid.get("extraction_audit") or {},
             "quality_summary": {
                 **quality,
                 "accepted_count": len(all_accepted_questions),
                 "rejected_count": len(all_rejected_candidates),
                 "total_pages": total_pages,
+                "native_text_pages": native_pages_count,
+                "ocr_pages": ocr_pages_count,
                 "exam_year": year if year else None,
                 "exam_session": session,
-                "ocr_pages": sum(1 for p in page_extraction_audit if p.get("ocr_used")),
                 "llm_used": hybrid.get("llm_used", False),
                 "llm_candidates": hybrid.get("llm_candidates", 0),
                 "llm_rejected_for_truncation": hybrid.get("llm_rejected_for_truncation", 0),
                 "cross_page_merges": hybrid.get("cross_page_merges", 0),
+                "cross_page_merged_question_ids": cross_page_merged_ids,
+                "merged_cross_page_questions": len(cross_page_merged_ids),
+                "rejected_false_markers": sum(
+                    1 for r in all_rejected_candidates
+                    if (r.get("reason") or "") in (
+                        "lacks_academic_question_structure",
+                        "isolated_sequence_leap_ocr_artifact",
+                        "invented_or_ungrounded_text",
+                        "invalid_question_id",
+                        "header_or_instruction",
+                        "administrative_instruction_or_header",
+                        "exam_datetime_footer",
+                        "garbled_ocr_alphanumeric_noise",
+                    )
+                ),
+                "suspicious_boundaries": [
+                    a.get("question_id")
+                    for a in ((hybrid.get("extraction_audit") or {}).get("ambiguous_markers") or [])
+                    if isinstance(a, dict)
+                ],
+                "duplicate_question_ids": duplicate_question_ids,
+                "missing_question_candidates": quality.get("missing_questions") or [],
+                # Meaningful status alias: COMPLETE | RECOVERED | PARTIAL | FAILED
+                "extraction_status": extraction_quality,
+                "vector_count_check": vector_count_check,
                 "grounding_coverage": hybrid.get("grounding_coverage", 0.0),
                 "selected_representations": [
                     {"page": p.get("page"), "selected": p.get("selected_representation")}
@@ -837,14 +1037,7 @@ class DynamicIngestPipeline:
 
         # Do not silently create incomplete vectors as "ready"
         if extraction_quality in ("FAILED",) or not chunks:
-            print(f"[INGESTION_FAILURE] No complete extraction for {filename}; not inserting vectors.")
-            return []
-
-        if extraction_quality == "PARTIAL":
-            print(
-                f"[INGESTION_PARTIAL] Incomplete extraction for {filename}; "
-                "vectors NOT inserted. Review extraction audit."
-            )
+            print(f"[INGESTION_FAILURE] Extraction failed for {filename}; not inserting vectors.")
             return []
 
         self.store.replace_documents_for_source(

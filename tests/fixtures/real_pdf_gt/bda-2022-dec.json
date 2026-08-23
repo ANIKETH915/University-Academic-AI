@@ -1,0 +1,30 @@
+{
+  "filename": "be_computer-engineering_semester-7_2022_december_big-data-analysis-rev-2019-c-scheme.pdf",
+  "subject": "Big Data Analytics",
+  "university": "University of Mumbai",
+  "semester": "7",
+  "exam_year": 2022,
+  "exam_session": "December",
+  "pages": 2,
+  "genuine_question_ids": [
+    "Q1(a)",
+    "Q1(b)",
+    "Q1(c)",
+    "Q1(d)",
+    "Q2(a)",
+    "Q2(b)",
+    "Q3(a)",
+    "Q3(b)",
+    "Q4(a)",
+    "Q4(b)",
+    "Q5(a)",
+    "Q5(b)",
+    "Q6(a)",
+    "Q6(b)"
+  ],
+  "expect_cross_page": true,
+  "expect_tables": true,
+  "expect_diagrams": true,
+  "source_kind": "native",
+  "notes": "inspected 2026-08-22; Q5(a) graph p1, Q5(b) salary table p2; Q3(b) dataframe table"
+}

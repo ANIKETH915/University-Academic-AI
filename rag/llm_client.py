@@ -60,6 +60,21 @@ _MODEL_ENV = {
 
 _DEFAULT_FALLBACK_ORDER = ("openai", "gemini", "groq", "openrouter")
 
+_PERMANENT_MARKERS = (
+    "invalid_api_key",
+    "invalid api key",
+    "authentication",
+    "unauthorized",
+    "401",
+    "403",
+    "permission",
+    "invalid_request",
+    "bad_request",
+    "model_not_found",
+    "does not exist",
+    "not supported",
+)
+
 _TRANSIENT_MARKERS = (
     "timeout",
     "timed out",
@@ -128,7 +143,7 @@ def provider_chain() -> List[str]:
     if primary in SUPPORTED_PROVIDERS:
         order.append(primary)
 
-    configured = _env("LLM_FALLBACK_PROVIDERS")
+    configured = _env("LLM_FALLBACK_CHAIN") or _env("LLM_FALLBACK_PROVIDERS")
     if configured:
         for part in configured.split(","):
             name = part.strip().lower()
@@ -163,7 +178,10 @@ def llm_status() -> Dict[str, Any]:
 
 def _is_transient(exc: Exception) -> bool:
     msg = str(exc).lower()
+    if any(marker in msg for marker in _PERMANENT_MARKERS):
+        return False
     return any(marker in msg for marker in _TRANSIENT_MARKERS)
+
 
 
 def _call_openai_compatible(

@@ -207,15 +207,17 @@ class TestRebuiltPYQIntelligence(unittest.TestCase):
             semantic_repeat_count=1,
             recurrence_consistency=0.5,
         )
-        # Evidence-sensitive formula: scores must be deterministic and non-flat
-        self.assertEqual(comps["frequency_score"], 28.0)
-        self.assertEqual(comps["year_recurrence_score"], 16.0)
-        self.assertEqual(comps["exact_repeat_score"], 6.0)
-        self.assertEqual(comps["semantic_repeat_score"], 4.0)
-        self.assertEqual(comps["marks_score"], 9.0)
-        self.assertEqual(comps["recency_score"], 3.0)
-        self.assertEqual(comps["consistency_score"], 5.0)
-        self.assertEqual(total, 71.0)
+        # Evidence-sensitive formula: distinct years outweigh same-year frequency.
+        self.assertEqual(comps["frequency_score"], 22.0)
+        self.assertEqual(comps["year_recurrence_score"], 18.0)
+        self.assertEqual(comps["exact_repeat_score"], 5.5)
+        self.assertEqual(comps["semantic_repeat_score"], 3.5)
+        self.assertEqual(comps["marks_score"], 7.0)
+        self.assertEqual(comps["recency_score"], 2.0)
+        self.assertEqual(comps["consistency_score"], 4.0)
+        self.assertEqual(comps["syllabus_score"], 6.0)
+        self.assertEqual(comps["confidence_score"], 6.0)
+        self.assertEqual(total, 74.0)
 
     # 5. Verification of 2 Papers Evidence Language
     def test_05_two_papers_evidence_language(self):

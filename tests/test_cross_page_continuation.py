@@ -108,6 +108,18 @@ class TestMergeAcrossPages(unittest.TestCase):
         self.assertEqual(count, 0)
         self.assertEqual(len(merged), 1)
 
+    def test_leading_letter_sub_inherits_previous_parent(self):
+        pages = [
+            page(1, "Q5 a)\nDetermine communities for the given social network graph.\n"),
+            page(2, "Page 2 of 2\nb)\nList and discuss various types of data structures.\nQ6 a)\nExplain collaborative filtering with an example.\n"),
+        ]
+        with patch("rag.hybrid_question_extraction.llm_configured", return_value=False):
+            result = hybrid_extract_document(
+                pages, filename="x.pdf", workspace_id="ws", year=0
+            )
+        ids = [q["question_id"] for q in result["accepted_questions"]]
+        self.assertEqual(ids, ["Q5(a)", "Q5(b)", "Q6(a)"])
+
 
 class TestMultiPagePaper(unittest.TestCase):
     def test_three_page_paper_all_questions_kept(self):

@@ -230,9 +230,9 @@ class TestRecurrenceLabels(unittest.TestCase):
             {"question_type": "explain", "entities": ["cnn", "architecture"], "constraints": []},
             {"question_type": "explain", "entities": ["rnn", "architecture"], "constraints": []},
         )
-        self.assertIn(rel, ("RELATED_TOPIC", "DIFFERENT", "SEMANTIC_REPEAT"))
-        # Prefer not treating as exact
+        self.assertIn(rel, ("RELATED_TOPIC", "DIFFERENT"))
         self.assertNotEqual(rel, "EXACT_REPEAT")
+        self.assertNotEqual(rel, "SEMANTIC_REPEAT")
 
 
 if __name__ == "__main__":
