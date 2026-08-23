@@ -3,6 +3,7 @@ import { useWorkspace } from '../context/WorkspaceContext';
 import PageHeader from '../components/PageHeader';
 import UploadDropzone from '../components/UploadDropzone';
 import FileCard from '../components/FileCard';
+import DeleteConfirmModal from '../components/DeleteConfirmModal';
 import { 
   Database, 
   BookOpen, 
@@ -100,8 +101,54 @@ export default function UploadWorkspacePage({ setActiveTab }) {
   const [processingStep, setProcessingStep] = useState(0);
   const [isReady, setIsReady] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [successMsg, setSuccessMsg] = useState(null);
   const [errorDiagnostics, setErrorDiagnostics] = useState(null);
   const [lastIngestSummary, setLastIngestSummary] = useState(null);
+
+  // Document Delete Confirmation State
+  const [deleteTarget, setDeleteTarget] = useState(null); // { file, docType }
+  const [isDeletingDoc, setIsDeletingDoc] = useState(false);
+
+  const promptDeleteFile = (file, docType) => {
+    setDeleteTarget({ file, docType });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget || !activeWorkspaceId) return;
+    const { file, docType } = deleteTarget;
+    setIsDeletingDoc(true);
+    setErrorMsg(null);
+    setSuccessMsg(null);
+
+    const targetId = file.id || file.name || file.filename;
+    const targetName = file.name || file.filename || file.id;
+
+    // Filter out of local pending queues if present
+    setPendingSyllabusFiles((prev) => prev.filter((f) => f.name !== targetName && f.id !== targetId));
+    setPendingPyqFiles((prev) => prev.filter((f) => f.name !== targetName && f.id !== targetId));
+
+    // If file is in backend workspace file list (or persisted), invoke delete API
+    const inSyllabus = (activeWorkspace.syllabusFiles || []).some((f) => f.id === targetId || f.name === targetName || f.filename === targetName);
+    const inPyq = (activeWorkspace.pyqFiles || []).some((f) => f.id === targetId || f.name === targetName || f.filename === targetName);
+
+    if (!file.isPending || inSyllabus || inPyq) {
+      try {
+        await removeFileFromWorkspace(activeWorkspaceId, targetId, docType, targetName);
+        setSuccessMsg(`Document "${targetName}" deleted successfully.`);
+      } catch (err) {
+        console.error('[DELETE_DOC_ERROR]', err);
+        setErrorMsg(err.message || 'Unable to delete document. Document cannot be deleted after processing has started.');
+        setIsDeletingDoc(false);
+        setDeleteTarget(null);
+        return;
+      }
+    } else {
+      setSuccessMsg(`Document "${targetName}" deleted successfully.`);
+    }
+
+    setIsDeletingDoc(false);
+    setDeleteTarget(null);
+  };
 
   const syllabusFiles = activeWorkspace.syllabusFiles || [];
   const pyqFiles = activeWorkspace.pyqFiles || [];
@@ -248,28 +295,24 @@ export default function UploadWorkspacePage({ setActiveTab }) {
         badge="Document Ingestion"
       />
 
-      <div className="p-4 rounded-xl bg-[#0B1020] border border-[#1F2937] text-slate-300 text-xs flex items-center justify-between gap-3">
+      <div className="p-4 rounded-xl bg-white dark:bg-[#0B1020] border border-slate-200 dark:border-[#1F2937] text-slate-700 dark:text-slate-300 text-xs flex items-center justify-between gap-3 shadow-xs">
         <div className="flex items-center space-x-2">
-          <BookOpen className="w-4 h-4 text-purple-400" />
+          <BookOpen className="w-4 h-4 text-purple-600 dark:text-purple-400" />
           <span>
             Active Target:{' '}
-            <strong className="text-white">
+            <strong className="text-slate-900 dark:text-white">
               {activeWorkspace.university || 'Workspace'} / {activeWorkspace.subject || 'Subject'} ({activeWorkspace.semester || 'Sem'})
             </strong>
             {activeWorkspaceId ? (
               <span className="ml-2 text-slate-500 font-mono">[{activeWorkspaceId}]</span>
-            ) : (
-              <span className="ml-2 text-rose-400">No workspace selected</span>
-            )}
+            ) : null}
           </span>
         </div>
-
         <button
           onClick={() => setIsSelectorOpen(true)}
-          className="px-3 py-1.5 rounded-lg bg-[#111827] hover:bg-[#1F2937] border border-[#1F2937] text-purple-300 text-xs font-semibold flex items-center space-x-1 transition-colors flex-shrink-0"
+          className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-[#111827] hover:bg-slate-200 dark:hover:bg-[#1F2937] border border-slate-200 dark:border-[#1F2937] text-purple-600 dark:text-purple-300 text-xs font-semibold flex-shrink-0 transition-colors"
         >
-          <Layers className="w-3.5 h-3.5" />
-          <span>Switch Workspace</span>
+          Switch Workspace
         </button>
       </div>
 
@@ -335,18 +378,26 @@ export default function UploadWorkspacePage({ setActiveTab }) {
               {syllabusFiles.map((f, idx) => (
                 <FileCard
                   key={`${f.id || f.name}-${idx}`}
-                  file={f}
-                  onDelete={() => removeFileFromWorkspace(activeWorkspaceId, f.id, 'syllabus')}
+                  filename={f.name || f.filename || f.id}
+                  size={f.size || 'PDF Document'}
+                  metadata={f.extracted_questions ? `${f.extracted_questions} Questions` : 'Syllabus'}
+                  status={f.status || 'Ready'}
+                  buildStarted={f.build_started ?? true}
+                  isPending={String(f.status).toUpperCase() === 'PENDING' && !f.build_started}
+                  onRemove={String(f.status).toUpperCase() === 'PENDING' && !f.build_started ? () => promptDeleteFile(f, 'syllabus') : null}
                 />
               ))}
               {pendingSyllabusFiles.map((f, i) => (
-                <div key={`pending-syl-${f.name}-${i}`} className="p-2.5 rounded-xl bg-[#0B1020] border border-amber-500/30 text-amber-300 text-xs flex items-center justify-between">
-                  <div className="flex items-center space-x-2 truncate">
-                    <FileText className="w-4 h-4 text-amber-400" />
-                    <span className="truncate">{f.name}</span>
-                  </div>
-                  <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-amber-500/20">Pending Ingestion</span>
-                </div>
+                <FileCard
+                  key={`pending-syl-${f.name}-${i}`}
+                  filename={f.name}
+                  size={`${(f.size / 1024).toFixed(1)} KB`}
+                  metadata="Pending Build"
+                  status="PENDING"
+                  isPending={true}
+                  buildStarted={false}
+                  onRemove={() => promptDeleteFile({ ...f, isPending: true }, 'syllabus')}
+                />
               ))}
             </div>
           )}
@@ -360,11 +411,11 @@ export default function UploadWorkspacePage({ setActiveTab }) {
                   📝
                 </div>
                 <div>
-                  <h3 className="font-heading font-bold text-sm text-white">Upload Previous-Year Papers</h3>
-                  <p className="text-[11px] text-slate-400">Past exam question papers for topic frequency analysis</p>
+                  <h3 className="font-heading font-bold text-sm text-slate-900 dark:text-white">Upload Previous-Year Papers</h3>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Past exam question papers for topic frequency analysis</p>
                 </div>
               </div>
-              <span className="px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 text-[10px] font-bold uppercase">Optional Multi-PDF</span>
+              <span className="px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 text-[10px] font-bold uppercase">Optional Multi-PDF</span>
             </div>
 
             <UploadDropzone
@@ -377,25 +428,33 @@ export default function UploadWorkspacePage({ setActiveTab }) {
           </div>
 
           {(pyqFiles.length > 0 || pendingPyqFiles.length > 0) && (
-            <div className="space-y-2 pt-2 border-t border-[#1F2937]">
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+            <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-[#1F2937]">
+              <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 Indexed PYQ Papers ({pyqFiles.length + pendingPyqFiles.length})
               </div>
               {pyqFiles.map((f, idx) => (
                 <FileCard
                   key={`${f.id || f.name}-${idx}`}
-                  file={f}
-                  onDelete={() => removeFileFromWorkspace(activeWorkspaceId, f.id, 'pyq')}
+                  filename={f.name || f.filename || f.id}
+                  size={f.size || 'PDF Document'}
+                  metadata={f.questions_extracted || f.extracted_questions ? `${f.questions_extracted || f.extracted_questions} Questions` : 'PYQ Paper'}
+                  status={f.status || 'Ready'}
+                  buildStarted={f.build_started ?? true}
+                  isPending={String(f.status).toUpperCase() === 'PENDING' && !f.build_started}
+                  onRemove={String(f.status).toUpperCase() === 'PENDING' && !f.build_started ? () => promptDeleteFile(f, 'pyq') : null}
                 />
               ))}
               {pendingPyqFiles.map((f, i) => (
-                <div key={`pending-pyq-${f.name}-${i}`} className="p-2.5 rounded-xl bg-[#0B1020] border border-amber-500/30 text-amber-300 text-xs flex items-center justify-between">
-                  <div className="flex items-center space-x-2 truncate">
-                    <FileText className="w-4 h-4 text-amber-400" />
-                    <span className="truncate">{f.name}</span>
-                  </div>
-                  <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-amber-500/20">Pending Ingestion</span>
-                </div>
+                <FileCard
+                  key={`pending-pyq-${f.name}-${i}`}
+                  filename={f.name}
+                  size={`${(f.size / 1024).toFixed(1)} KB`}
+                  metadata="Pending Build"
+                  status="PENDING"
+                  isPending={true}
+                  buildStarted={false}
+                  onRemove={() => promptDeleteFile({ ...f, isPending: true }, 'pyq')}
+                />
               ))}
             </div>
           )}
@@ -434,8 +493,8 @@ export default function UploadWorkspacePage({ setActiveTab }) {
         {isProcessing && (
           <div className="py-6 max-w-md mx-auto space-y-4">
             <Loader2 className="w-8 h-8 animate-spin mx-auto text-purple-400" />
-            <h3 className="font-heading font-bold text-sm text-white">Preparing your academic assistant...</h3>
-            <div className="space-y-2 text-left text-xs bg-[#0B1020] p-4 rounded-xl border border-[#1F2937]">
+            <h3 className="font-heading font-bold text-sm text-slate-900 dark:text-white">Preparing your academic assistant...</h3>
+            <div className="space-y-2 text-left text-xs bg-slate-50 dark:bg-[#0B1020] p-4 rounded-xl border border-slate-200 dark:border-[#1F2937]">
               <div className={`flex items-center space-x-2 ${processingStep >= 1 ? 'text-emerald-400' : 'text-slate-500'}`}>
                 <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
                 <span>Reading syllabus structure and course units</span>
@@ -479,6 +538,28 @@ export default function UploadWorkspacePage({ setActiveTab }) {
           </div>
         )}
       </div>
+
+      {/* Success Notification Banner */}
+      {successMsg && (
+        <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs flex items-center justify-between animate-in fade-in duration-200">
+          <div className="flex items-center space-x-2">
+            <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+            <span className="font-semibold">{successMsg}</span>
+          </div>
+          <button onClick={() => setSuccessMsg(null)} className="text-emerald-400 hover:text-emerald-200 text-xs">
+            ✕
+          </button>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmModal
+        isOpen={Boolean(deleteTarget)}
+        filename={deleteTarget?.file?.name || deleteTarget?.file?.filename || deleteTarget?.file?.id || 'document'}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+        isDeleting={isDeletingDoc}
+      />
     </div>
   );
 }

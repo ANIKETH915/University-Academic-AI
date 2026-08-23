@@ -58,13 +58,8 @@ def clean_chunk_text(text: str) -> str:
 # ---------------------------------------------------------------------------
 
 def _call_llm(system_prompt: str, user_prompt: str) -> Optional[str]:
-    """Delegate to unified llm_client (LLM_* / OPENAI_* / GEMINI_* env)."""
-    try:
-        from rag.llm_client import call_llm
-        return call_llm(system_prompt, user_prompt, max_tokens=1024, temperature=0.2)
-    except Exception as exc:
-        print(f"[LLM_ERROR] {exc}")
-        return None
+    """Deterministic grounded synthesis without external LLM dependencies."""
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -426,24 +421,37 @@ class GroundedAnswerEngine:
 
     # ── PYQ frequency helper ────────────────────────────────────────────────
 
-    def analyze_pyq_frequency(self, pyq_chunks: List[Dict]) -> Dict[str, Any]:
-        """Count appearances of the retrieved topic across distinct source files."""
+    def analyze_pyq_frequency(self, pyq_chunks: List[Dict], workspace_id: str = "") -> Dict[str, Any]:
+        """Count appearances across distinct canonical source papers, not raw files."""
         if not pyq_chunks:
             return {"times_asked": 0, "years": [], "frequency_summary": "Not found in PYQs."}
 
-        years = []
-        files = set()
+        from rag.source_identity import (
+            attach_source_identity,
+            unique_occurrence_count,
+            unique_years,
+        )
+
+        records = []
         for c in pyq_chunks:
             meta = c.get("metadata", {})
-            y = meta.get("year", "")
-            if y and str(y).isdigit():
-                years.append(int(y))
-            sf = meta.get("source_file", "")
-            if sf:
-                files.add(sf)
-
-        times = len(files)
-        distinct_years = sorted(set(years))
+            records.append(
+                {
+                    "source_file": meta.get("source_file", ""),
+                    "year": int(meta.get("year")) if str(meta.get("year", "")).isdigit() else 0,
+                    "exam_session": meta.get("exam_session"),
+                    "university": meta.get("university"),
+                    "subject": meta.get("subject"),
+                    "course_code": meta.get("course_code"),
+                    "exact_text": meta.get("exact_text") or c.get("text", ""),
+                    "normalized_text": meta.get("normalized_text") or "",
+                    "canonical_paper_id": meta.get("canonical_paper_id"),
+                    "source_bytes_hash": meta.get("source_bytes_hash") or meta.get("file_sha256"),
+                }
+            )
+        attach_source_identity(records, workspace_id=workspace_id)
+        times = unique_occurrence_count([r for r in records if r.get("source_file") or r.get("canonical_paper_id")])
+        distinct_years = unique_years(records)
         if times == 0:
             return {"times_asked": 0, "years": [], "frequency_summary": "Not found in PYQs."}
 
@@ -612,7 +620,7 @@ class GroundedAnswerEngine:
         print(f"[ANSWER_ENGINE] syllabus_chunks={len(syllabus_chunks)}, pyq_chunks={len(pyq_chunks)}")
 
         # ── 5. PYQ frequency (structured analytics) ────────────────────────
-        pyq_freq = self.analyze_pyq_frequency(pyq_chunks)
+        pyq_freq = self.analyze_pyq_frequency(pyq_chunks, workspace_id=ws_id)
 
         pyq_evidence = {
             "matched": pyq_freq["times_asked"] > 0,

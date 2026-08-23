@@ -157,15 +157,22 @@ class WorkspaceDB:
             self._write_all(data)
         return target
 
-    def remove_file(self, workspace_id: str, file_id: str, doc_type: str) -> Optional[Dict[str, Any]]:
+    def remove_file(self, workspace_id: str, file_id: str, doc_type: str, filename: Optional[str] = None) -> Optional[Dict[str, Any]]:
         data = self._read_all()
         target = None
+        target_keys = {k for k in [file_id, filename] if k}
         for ws in data:
             if ws["id"] == workspace_id:
                 if doc_type == "syllabus":
-                    ws["syllabus_files"] = [f for f in ws["syllabus_files"] if f["id"] != file_id]
+                    ws["syllabus_files"] = [
+                        f for f in ws.get("syllabus_files", [])
+                        if not ({f.get("id"), f.get("name"), f.get("filename")} & target_keys)
+                    ]
                 else:
-                    ws["pyq_files"] = [f for f in ws["pyq_files"] if f["id"] != file_id]
+                    ws["pyq_files"] = [
+                        f for f in ws.get("pyq_files", [])
+                        if not ({f.get("id"), f.get("name"), f.get("filename")} & target_keys)
+                    ]
                 target = ws
                 break
         if target:
@@ -179,3 +186,5 @@ class WorkspaceDB:
             self._write_all(filtered)
             return True
         return False
+
+workspace_db = WorkspaceDB()

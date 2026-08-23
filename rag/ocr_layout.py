@@ -209,7 +209,8 @@ def _classify(text: str) -> Tuple[str, Optional[str], Optional[str], str]:
         # is a genuine choice-parent lead ("1 Attempt any four").
         if (
             is_header_or_instruction(rest)
-            and not re.match(r"^(?:attempt|solve|answer)\b", t, re.I)
+            and not re.match(r"^(?:attempt|solve|answer|[a-z0-9]\s+\d+)\b", t, re.I)
+            and not re.match(r"^[1-9]\d?\s+[A-Za-z0-9]\s+\d+$", t)
         ):
             return "text", None, None, t
         return "parent_lead", f"Q{m.group(1)}", None, rest

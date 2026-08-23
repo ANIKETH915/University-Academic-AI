@@ -1,9 +1,11 @@
 import React from 'react';
 import { useWorkspace } from '../context/WorkspaceContext';
-import { Menu, ChevronRight, Layers, Plus } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
+import { Menu, ChevronRight, Layers, Plus, Sun, Moon } from 'lucide-react';
 
 export default function Header({ activeTab, onOpenMobileSidebar }) {
   const { activeWorkspace, setIsSelectorOpen, setIsCreateOpen } = useWorkspace();
+  const { theme, toggleTheme } = useTheme();
 
   const getTabTitles = () => {
     switch (activeTab) {
@@ -29,25 +31,25 @@ export default function Header({ activeTab, onOpenMobileSidebar }) {
   const { breadcrumb, title, subtitle } = getTabTitles();
 
   return (
-    <header className="sticky top-0 z-30 bg-[#080B14]/95 backdrop-blur-md border-b border-[#1F2937] px-4 sm:px-8 py-3.5">
+    <header className="sticky top-0 z-30 bg-white/95 dark:bg-[#080B14]/95 backdrop-blur-md border-b border-slate-200 dark:border-[#1F2937] px-4 sm:px-8 py-3.5 transition-colors">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         
         {/* Left: Mobile Drawer Trigger + Breadcrumb + Heading */}
         <div className="flex items-center space-x-3">
           <button
             onClick={onOpenMobileSidebar}
-            className="p-2 rounded-lg bg-[#111827] border border-[#1F2937] text-slate-300 hover:text-white lg:hidden"
+            className="p-2 rounded-lg bg-slate-100 dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white lg:hidden"
           >
             <Menu className="w-5 h-5" />
           </button>
 
           <div>
-            <div className="flex items-center space-x-1.5 text-xs text-slate-400">
-              <span className="font-medium text-slate-400">University Academic AI</span>
-              <ChevronRight className="w-3 h-3 text-slate-600" />
-              <span className="text-purple-400 font-semibold">{breadcrumb}</span>
+            <div className="flex items-center space-x-1.5 text-xs text-slate-500 dark:text-slate-400">
+              <span className="font-medium">University Academic AI</span>
+              <ChevronRight className="w-3 h-3 text-slate-400 dark:text-slate-600" />
+              <span className="text-purple-600 dark:text-purple-400 font-semibold">{breadcrumb}</span>
             </div>
-            <h2 className="font-heading font-extrabold text-lg sm:text-xl text-white tracking-tight leading-tight mt-0.5">
+            <h2 className="font-heading font-extrabold text-lg sm:text-xl text-slate-900 dark:text-white tracking-tight leading-tight mt-0.5">
               {title}
             </h2>
           </div>
@@ -60,17 +62,17 @@ export default function Header({ activeTab, onOpenMobileSidebar }) {
           <button
             type="button"
             onClick={() => setIsSelectorOpen(true)}
-            className="bg-[#0B1020] hover:bg-[#111827] border border-purple-500/40 hover:border-purple-500 rounded-xl px-3.5 py-2 text-xs flex items-center space-x-2.5 transition-all text-left group shadow-sm"
+            className="bg-white dark:bg-[#0B1020] hover:bg-slate-50 dark:hover:bg-[#111827] border border-purple-500/40 hover:border-purple-600 dark:hover:border-purple-500 rounded-xl px-3.5 py-2 text-xs flex items-center space-x-2.5 transition-all text-left group shadow-xs"
           >
-            <div className="p-1 rounded-lg bg-purple-500/20 text-purple-300 group-hover:scale-105 transition-transform">
+            <div className="p-1 rounded-lg bg-purple-500/15 text-purple-600 dark:text-purple-300 group-hover:scale-105 transition-transform">
               <Layers className="w-3.5 h-3.5" />
             </div>
             <div>
-              <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider flex items-center space-x-1">
+              <div className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider flex items-center space-x-1">
                 <span>Current Workspace</span>
-                <span className="text-purple-400">▼</span>
+                <span className="text-purple-600 dark:text-purple-400">▼</span>
               </div>
-              <div className="font-heading font-bold text-white text-xs truncate max-w-[180px] sm:max-w-[220px]">
+              <div className="font-heading font-bold text-slate-900 dark:text-white text-xs truncate max-w-[180px] sm:max-w-[220px]">
                 {activeWorkspace?.university || 'No workspace'} / {activeWorkspace?.subject || 'Select or create'}
               </div>
             </div>
@@ -80,10 +82,20 @@ export default function Header({ activeTab, onOpenMobileSidebar }) {
           <button
             type="button"
             onClick={() => setIsCreateOpen(true)}
-            className="p-2.5 rounded-xl bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white border border-purple-500/30 transition-all flex items-center justify-center"
+            className="p-2.5 rounded-xl bg-purple-500/10 dark:bg-purple-600/20 hover:bg-purple-600 text-purple-600 dark:text-purple-300 hover:text-white border border-purple-500/30 transition-all flex items-center justify-center"
             title="Create New Workspace"
           >
             <Plus className="w-4 h-4" />
+          </button>
+
+          {/* Light / Dark Mode Toggle */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/60 hover:bg-slate-200 dark:hover:bg-slate-700 text-amber-500 dark:text-amber-400 border border-slate-200 dark:border-slate-700 transition-all flex items-center justify-center"
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+          >
+            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-600" />}
           </button>
 
         </div>

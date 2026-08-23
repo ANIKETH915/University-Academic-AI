@@ -50,30 +50,30 @@ export default function PriorityCard({ rank, item, onWhy, onViewEvidence, onStud
           </span>
         </div>
 
-        <h4 className="font-heading font-bold text-base text-white">{title}</h4>
+        <h4 className="font-heading font-bold text-base text-slate-900 dark:text-white">{title}</h4>
         {(item.original_question || item.sample_question) && (
-          <p className="text-[11px] text-slate-300 leading-relaxed">
+          <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
             <span className="text-slate-500 font-semibold uppercase tracking-wide">Original question: </span>
             {item.original_question || item.sample_question}
           </p>
         )}
         
         {whySummary && (
-          <p className="text-xs text-slate-300 font-medium leading-relaxed bg-[#0B1020] p-2 rounded-lg border border-[#1F2937]">
-            💡 <strong className="text-purple-300">Why ranked here:</strong> {whySummary}
+          <p className="text-xs text-slate-700 dark:text-slate-300 font-medium leading-relaxed bg-slate-50 dark:bg-[#0B1020] p-2 rounded-lg border border-slate-200 dark:border-[#1F2937]">
+            💡 <strong className="text-purple-600 dark:text-purple-300">Why ranked here:</strong> {whySummary}
           </p>
         )}
 
         {/* Explainability bullets */}
         {explanation.length > 0 && (
-          <div className="bg-[#080B14] p-2.5 rounded-lg border border-[#1F2937] text-[11px] space-y-1">
-            <div className="font-semibold text-purple-300 flex items-center space-x-1">
-              <TrendingUp className="w-3 h-3 text-purple-400" />
+          <div className="bg-slate-50 dark:bg-[#080B14] p-2.5 rounded-lg border border-slate-200 dark:border-[#1F2937] text-[11px] space-y-1">
+            <div className="font-semibold text-purple-600 dark:text-purple-300 flex items-center space-x-1">
+              <TrendingUp className="w-3 h-3 text-purple-600 dark:text-purple-400" />
               <span>Evidence Breakdown</span>
             </div>
             {explanation.slice(0, 3).map((exp, i) => (
-              <div key={i} className="text-slate-300 flex items-center space-x-1.5">
-                <CheckCircle2 className="w-3 h-3 text-emerald-400 flex-shrink-0" />
+              <div key={i} className="text-slate-700 dark:text-slate-300 flex items-center space-x-1.5">
+                <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
                 <span>{exp}</span>
               </div>
             ))}
@@ -81,17 +81,17 @@ export default function PriorityCard({ rank, item, onWhy, onViewEvidence, onStud
         )}
 
         {/* Grounding count */}
-        <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-400 pt-1">
+        <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400 pt-1">
           <span className="flex items-center space-x-1">
-            <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
-            <span>Grounded Evidence: <strong className="text-white">{sourceQuestions.length} question record(s)</strong></span>
+            <ShieldCheck className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+            <span>Grounded Evidence: <strong className="text-slate-900 dark:text-white">{sourceQuestions.length} question record(s)</strong></span>
           </span>
           {item.typical_marks && (
             <>
               <span>•</span>
               <span className="flex items-center space-x-1">
-                <Award className="w-3.5 h-3.5 text-amber-400" />
-                <span>Marks: <strong className="text-amber-300">{item.typical_marks}M</strong></span>
+                <Award className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
+                <span>Marks: <strong className="text-amber-600 dark:text-amber-300">{item.typical_marks}M</strong></span>
               </span>
             </>
           )}
@@ -102,10 +102,10 @@ export default function PriorityCard({ rank, item, onWhy, onViewEvidence, onStud
         {onWhy && (
           <button
             onClick={() => onWhy(item)}
-            className="px-3 py-2 rounded-xl bg-[#0B1020] hover:bg-[#1F2937] border border-[#1F2937] text-slate-300 text-xs font-semibold flex items-center space-x-1.5 transition-colors"
+            className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-[#0B1020] hover:bg-slate-200 dark:hover:bg-[#1F2937] border border-slate-200 dark:border-[#1F2937] text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center space-x-1.5 transition-colors"
             title="View detailed score signals breakdown"
           >
-            <HelpCircle className="w-3.5 h-3.5 text-purple-400" />
+            <HelpCircle className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
             <span>Signals</span>
           </button>
         )}
@@ -113,10 +113,10 @@ export default function PriorityCard({ rank, item, onWhy, onViewEvidence, onStud
         {onViewEvidence && (
           <button
             onClick={() => onViewEvidence(item)}
-            className="px-3 py-2 rounded-xl bg-[#0B1020] hover:bg-[#1F2937] border border-[#1F2937] text-indigo-300 text-xs font-semibold flex items-center space-x-1.5 transition-colors"
+            className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-[#0B1020] hover:bg-slate-200 dark:hover:bg-[#1F2937] border border-slate-200 dark:border-[#1F2937] text-indigo-600 dark:text-indigo-300 text-xs font-semibold flex items-center space-x-1.5 transition-colors"
             title="View original PDF question text & paper source"
           >
-            <FileText className="w-3.5 h-3.5 text-indigo-400" />
+            <FileText className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
             <span>View Evidence ({sourceQuestions.length})</span>
           </button>
         )}

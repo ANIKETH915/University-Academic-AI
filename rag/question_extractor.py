@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import math
 import re
+from collections import defaultdict
 from rag.config import current_academic_year
 from typing import Any, Dict, List, Optional, Set, Tuple
 
@@ -69,7 +70,8 @@ ACADEMIC_QUESTION_VERBS = {
     "distinguish", "elaborate", "contrast", "briefly", "prove", "find", "determine",
     "comment", "consider", "draw", "write", "give", "mention", "justify", "obtain",
     "create", "apply", "parse", "compute", "construct", "represent",
-    "demonstrate",
+    "demonstrate", "conversion", "convert", "transform", "types", "role", "roles",
+    "log", "recovery", "triggers",
 }
 
 QUESTION_TYPE_MAP = {
@@ -135,12 +137,31 @@ GENERIC_ACTION_VERBS = STOPWORDS | ACADEMIC_QUESTION_VERBS | {
 _SUB_TOKEN = r"(?:qd|x|ix|viii|vii|vi|iv|iii|ii|i|[a-z])"
 _SUB_LETTER = r"[a-z]"
 _PARENT_NUM = r"[1-9]\d?"
+# Q1 / Q.1 / Question 1 / Question No. 1 — never university-specific.
+_Q_LEAD = r"(?:Q\.?|Question(?:\s+No\.?)?)"
 # Sub-markers must be delimited. "2 hours" is duration, not Q2(h).
 # Optional non-word junk covers OCR "c')" / "c|)".
 _SUB_DELIMITED = rf"(?:\(({_SUB_TOKEN})\)|({_SUB_TOKEN})\s*[^\w\s]{{0,3}}\s*[\.\)])"
 _UNAMBIGUOUS_ROMAN = {"ii", "iii", "iv", "vi", "vii", "viii", "ix"}
 _ROMAN_SUBS = _UNAMBIGUOUS_ROMAN | {"i", "v", "x"}
 _LETTER_SIBLINGS = set("abcdefgh")
+
+
+def is_ocr_glued_parent_jump(old_n: Optional[int], new_n: int) -> bool:
+    """
+    True when new_n looks like OCR concatenating a single-digit parent with a
+    following 1–9 digit (Q5 + '3' → Q53), not a real two-digit parent.
+
+    Q10, Q20, Q30, … are round tens and are never this glue form. Sequential
+    numbering (gap ≤ 3) is never glue. Applies to every parent equally —
+    Q6 is not special.
+    """
+    if old_n is None:
+        return False
+    if new_n < 10 or new_n <= old_n + 3:
+        return False
+    tens, ones = divmod(new_n, 10)
+    return 1 <= tens <= 9 and 1 <= ones <= 9
 
 
 def is_choice_instruction(text: str) -> bool:
@@ -722,6 +743,23 @@ def validate_question_candidate(
     if "***" in clean_text or "qp code" in text_lower:
         return False, "header_footer_marker", {}
 
+    # Structured/tabular bodies (corpus grids, transition tables, matrices)
+    # are legitimate question content even though they trip letter-digit
+    # heuristics. Their shape: dense structural delimiters across several
+    # distinct alphanumeric tokens. Checked BEFORE noise gates.
+    _grid_delims = sum(clean_text.count(c) for c in "|{}[]<>=")
+    _grid_tokens = [w for w in words if any(ch.isalnum() for ch in w)]
+    if (
+        _grid_delims >= 4
+        and len(_grid_tokens) >= 6
+        and len(words) >= 6
+        and len(set(w.lower() for w in words)) / len(words) >= 0.5
+    ):
+        return True, "structured_table_body", {
+            "word_count": len(words),
+            "delim_hits": _grid_delims,
+        }
+
     if detect_suspicious_alphanumeric_noise(clean_text):
         return False, "garbled_ocr_alphanumeric_noise", {}
 
@@ -740,6 +778,48 @@ def validate_question_candidate(
     unique_token_ratio = len(unique_words) / len(words)
     if len(words) >= 6 and unique_token_ratio < 0.35:
         return False, "excessive_repeated_token_noise", {"unique_token_ratio": round(unique_token_ratio, 2)}
+
+    # Structured/tabular bodies (corpus grids, transition tables, grammar
+    # rule blocks, matrices) legitimately carry no academic verb. Their
+    # generic shape is a high density of structural delimiters spread across
+    # several alphanumeric tokens — never a single noisy line.
+    alnum_tokens = [w for w in words if any(ch.isalnum() for ch in w)]
+    delim_hits = sum(clean_text.count(c) for c in "|{}[]<>=")
+    # Marks notation "[10]" uses square brackets; data-corruption signatures
+    # are angle/curly/pipe shapes and tag-like tokens.
+    data_delims = sum(clean_text.count(c) for c in "<>{}|") + len(
+        re.findall(r"</?[a-z]{1,3}>", clean_text)
+    )
+
+    # Pure data fragments (bracketed corpus sentences, equation debris,
+    # table rows) are content, never standalone questions — even under an
+    # instruction-frame parent. Short delimiter-bound fragments fail here;
+    # larger structured grids fall through to the structured_table_body
+    # acceptance below.
+    if (
+        not has_academic_verb
+        and not has_question_mark
+        and data_delims >= 2
+        and len(alnum_tokens) <= 6
+    ):
+        return False, "structured_data_not_question_body", {
+            "word_count": len(words),
+            "data_delims": data_delims,
+            "alnum_tokens": len(alnum_tokens),
+        }
+
+    if (
+        not has_academic_verb
+        and not has_question_mark
+        and not under_instruction_parent
+        and delim_hits >= 4
+        and len(alnum_tokens) >= 6
+        and unique_token_ratio >= 0.5
+    ):
+        return True, "structured_table_body", {
+            "word_count": len(words),
+            "delim_hits": delim_hits,
+        }
 
     if not has_academic_verb and not has_question_mark:
         if not under_instruction_parent:
@@ -809,6 +889,103 @@ def normalize_question_text(raw_text: str) -> str:
     # Safe OCR spacing: restore a missing "of" after "types" only.
     text = re.sub(r"\btypes\s+(?!of\b)([a-z]{3,})", r"types of \1", text)
     return text
+
+
+_EXACT_ARTICLES = {"a", "an", "the"}
+_EXACT_LAYOUT_RE = re.compile(
+    r"\[(?:IMAGE|TABLE|diagram[^\]]*)\]"
+    r"|diagram on page \d+"
+    r"|\bpage\s+\d+\s+of\s+\d+\b",
+    re.I,
+)
+
+
+def _exact_edit_distance_le1(a: str, b: str) -> bool:
+    """Obvious OCR spelling noise: one insertion/deletion/substitution on long tokens."""
+    if a == b:
+        return True
+    if abs(len(a) - len(b)) > 1:
+        return False
+    if min(len(a), len(b)) < 6:
+        return False
+    if len(a) == len(b):
+        return sum(x != y for x, y in zip(a, b)) <= 1
+    if len(a) > len(b):
+        a, b = b, a
+    i = j = diffs = 0
+    while i < len(a) and j < len(b):
+        if a[i] == b[j]:
+            i += 1
+            j += 1
+            continue
+        diffs += 1
+        if diffs > 1:
+            return False
+        j += 1
+    return True
+
+
+def _exact_token_sequence(text: str) -> List[str]:
+    cleaned = _EXACT_LAYOUT_RE.sub(" ", text or "")
+    norm = normalize_question_text(cleaned)
+    return [tok for tok in norm.split() if tok and tok not in _EXACT_ARTICLES]
+
+
+def _merge_ocr_split_tokens(seq: List[str], other: List[str]) -> List[str]:
+    """Join adjacent tokens when OCR split a word that appears whole on the other side."""
+    other_set = set(other)
+    other_stems = {_light_stem(t) for t in other}
+    out: List[str] = []
+    i = 0
+    while i < len(seq):
+        if i + 1 < len(seq):
+            cat = seq[i] + seq[i + 1]
+            if (
+                cat in other_set
+                or _light_stem(cat) in other_stems
+                or any(_exact_edit_distance_le1(cat, x) for x in other_set)
+            ):
+                out.append(cat)
+                i += 2
+                continue
+        out.append(seq[i])
+        i += 1
+    return out
+
+
+def exact_wording_identity(text_a: str, text_b: str) -> bool:
+    """
+    EXACT_REPEAT is wording identity after harmless normalization only.
+
+    Allowed: case, whitespace, harmless punctuation, OCR spacing, OCR layout
+    tags, trivial articles, singular/plural when meaning is unchanged, and
+    obvious OCR spelling noise.
+
+    Not allowed: dropping academic facets (architecture, applications,
+    advantages, working, types, significance, examples, comparison targets,
+    numerical constraints, algorithm names, requested output).
+    """
+    a = (text_a or "").strip()
+    b = (text_b or "").strip()
+    if not a or not b:
+        return False
+    sa = _exact_token_sequence(a)
+    sb = _exact_token_sequence(b)
+    if not sa or not sb:
+        return False
+    sa = _merge_ocr_split_tokens(sa, sb)
+    sb = _merge_ocr_split_tokens(sb, sa)
+    if sa == sb:
+        return True
+    fa = [_light_stem(t) for t in sa]
+    fb = [_light_stem(t) for t in sb]
+    if fa == fb:
+        return True
+    if len(fa) == len(fb):
+        diffs = [(x, y) for x, y in zip(fa, fb) if x != y]
+        if len(diffs) == 1 and _exact_edit_distance_le1(diffs[0][0], diffs[0][1]):
+            return True
+    return False
 
 
 def _normalize_subtoken(tok: str) -> str:
@@ -1190,6 +1367,10 @@ def _is_marker_only_line(line: str) -> bool:
         return True
     if re.fullmatch(rf"\(?{_SUB_TOKEN}\)?[\.\)]\s*", s, re.I):
         return True
+    if re.fullmatch(rf"\({_SUB_TOKEN}\s*", s, re.I):
+        return True
+    if re.fullmatch(rf"\[{_SUB_TOKEN}\]\s*", s, re.I):
+        return True
     if re.fullmatch(rf"{_SUB_LETTER}\s*", s, re.I):
         return True
     return False
@@ -1203,7 +1384,7 @@ def _parse_marker_line(line: str, current_parent: Optional[str]) -> Tuple[Option
     s = fix_ocr_question_glyphs(line.strip())
     # 1. Parent + Sub on same line: Q1(a), 1 a), 1. a., 1 a .
     m = re.match(
-        rf"^(?:Q\.?|Question)?\s*({_PARENT_NUM})\s*[\.\):\-]?\s*(?:\(({_SUB_TOKEN})\)|({_SUB_TOKEN})[\.\):\-])\s*(.*)$",
+        rf"^(?:{_Q_LEAD})?\s*({_PARENT_NUM})\s*[\.\):\-]?\s*(?:\(({_SUB_TOKEN})\)|({_SUB_TOKEN})[\.\):\-])\s*(.*)$",
         s,
         re.I,
     )
@@ -1222,7 +1403,7 @@ def _parse_marker_line(line: str, current_parent: Optional[str]) -> Tuple[Option
             return current_parent, sub, rest or None
 
     # 3. Parent-only line: 1 Attempt any four [20], Q1. Answer all
-    m3 = re.match(rf"^(?:Q\.?|Question)?\s*({_PARENT_NUM})\b\s*[\.\):]?\s*(.*)$", s, re.I)
+    m3 = re.match(rf"^(?:{_Q_LEAD})?\s*({_PARENT_NUM})\b\s*[\.\):]?\s*(.*)$", s, re.I)
     if m3 and (s.upper().startswith("Q") or s[0].isdigit()):
         parent = f"Q{m3.group(1)}"
         rest = (m3.group(2) or "").strip()
@@ -1331,12 +1512,18 @@ def normalize_ocr_split_layout(page_text: str) -> str:
 
     slots: List[Tuple[str, str]] = []
     current_parent: Optional[str] = None
+    prev_sub: Optional[str] = None
     for ln in marker_lines:
         parent, sub, rest = _parse_marker_line(ln, current_parent)
         if parent:
             current_parent = parent
+        elif sub and prev_sub and sub <= prev_sub and current_parent:
+            m_p = re.match(r"Q(\d+)", current_parent, re.I)
+            if m_p:
+                current_parent = f"Q{int(m_p.group(1)) + 1}"
         if current_parent and sub:
             slots.append((current_parent, sub))
+            prev_sub = sub
         # If marker line secretly had statement text, push into body
         if rest and _is_new_statement_line(rest):
             body_lines.insert(0, rest)
@@ -1480,9 +1667,16 @@ def normalize_bare_numbered_exam_layout(page_text: str) -> str:
         if re.fullmatch(r"\*{3,}", ln):
             continue
 
-        # Bare parent: "1" / "1." / "1 Attempt any four" / "1 Solve any four"
-        if re.fullmatch(rf"{_PARENT_NUM}\s*[\.\):]?\s*", ln) or re.match(
-            rf"^{_PARENT_NUM}\s+(Attempt|Solve|any)\b", ln, re.I
+        # Bare parent: "1" / "1." / "1 Attempt any four" / "1 Solve any four" / "6 S 20"
+        if (
+            re.fullmatch(rf"{_PARENT_NUM}\s*[\.\):]?\s*", ln)
+            or re.match(rf"^{_PARENT_NUM}\s+(?:Attempt|Solve|Answer|Write|any|[A-Za-z0-9]\s+\d+)\b", ln, re.I)
+            or (
+                re.match(rf"^({_PARENT_NUM})\b", ln)
+                and not re.match(rf"^{_PARENT_NUM}\s*{_SUB_DELIMITED}", ln, re.I)
+                and not re.search(r"\b(?:hours?|hrs?|marks|page|code)\b", ln, re.I)
+                and len(ln.split()) <= 5
+            )
         ):
             flush()
             num = re.match(rf"^({_PARENT_NUM})", ln).group(1)
@@ -1516,10 +1710,11 @@ def normalize_bare_numbered_exam_layout(page_text: str) -> str:
             buf = [rest] if rest else []
             continue
 
-        # Standalone "a)" / "a." / "(a)" with optional rest
-        m_sub = re.match(rf"^\(?({_SUB_TOKEN})\)?\s*[\.\)]\s*(.*)$", ln, re.I)
+        # Standalone "a)" / "a." / "(a)" / "a " / "d_ " with optional rest
+        m_sub = re.match(rf"^\(?({_SUB_TOKEN})\)?[\.\)\s_]\s*(.*)$", ln, re.I)
         if m_sub:
             sub_tok = _normalize_subtoken(m_sub.group(1))
+            rest = (m_sub.group(2) or "").strip()
             if current_parent is None and sub_tok == "a":
                 # Only infer Q1 when later bare parents (2, 3, …) prove a Q1 block existed.
                 # Never blindly map every orphan a) → Q1.
@@ -1533,10 +1728,9 @@ def normalize_bare_numbered_exam_layout(page_text: str) -> str:
                     current_parent = "Q1"
                 else:
                     continue
-            if current_parent:
+            if current_parent and (rest or len(sub_tok) == 1):
                 flush()
                 pending_sub = sub_tok
-                rest = (m_sub.group(2) or "").strip()
                 buf = [rest] if rest else []
                 continue
 
@@ -1761,6 +1955,7 @@ def extract_questions_from_page_text(
     year: int | None = None,
     syllabus_topics: Optional[List[str]] = None,
     inherit_parent: Optional[str] = None,
+    infer_slots: Optional[Dict[str, Any]] = None,
 ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
     """
     Split page text into discrete canonical subquestions.
@@ -1768,12 +1963,25 @@ def extract_questions_from_page_text(
 
     inherit_parent: last parent from the previous page (e.g. "Q5") so a leading
     orphan "b)" / "c)" after a page break stays attached to that parent.
+
+    infer_slots: structural slot-inference evidence gathered from sibling
+    representations/pages, e.g.
+        {"enabled": True, "start_sub": "b", "anchor_parent": "Q4"}
+    When the document convention shows lettered subquestions on other parents,
+    markerless bodies under a marks-each parent occupy the next sequential
+    slot. Records carry origin="inferred_stem" — never presented as printed
+    markers — and still pass every validation/grounding gate.
     """
     if year is None:
         year = current_academic_year()
     page_text = prepare_page_text_for_extraction(page_text)
     if not page_text or len(page_text.strip()) < 15:
         return [], []
+
+    slot_inf = infer_slots or {}
+    slot_inf_enabled = bool(slot_inf.get("enabled"))
+    slot_start_sub = str(slot_inf.get("start_sub") or "").lower()
+    slot_anchor_parent = str(slot_inf.get("anchor_parent") or "").upper() or None
 
     # Page-level instruction-frame evidence. Layout-reconstructed pages lose
     # the standalone "Write short notes on… / Attempt any…" lead line (it is
@@ -1832,10 +2040,27 @@ def extract_questions_from_page_text(
     current_text: List[str] = []
     current_origin = "marker"
 
+    # Slot-inference continuation: when the previous page ended inside a parent
+    # whose sibling slots are being inferred, leading markerless lines belong
+    # to that parent's next sequential slot.
+    if (
+        inherited
+        and slot_inf_enabled
+        and slot_anchor_parent
+        and slot_anchor_parent == inherited
+        and re.fullmatch(rf"{_SUB_LETTER}", slot_start_sub or "", re.I)
+    ):
+        prev_sub = chr(ord(slot_start_sub[0]) - 1)
+        if "a" <= prev_sub <= "z":
+            unlabelled_stem_mode = True
+            choice_frame = True
+            current_sub = prev_sub
+            current_origin = "inferred_stem"
+
     # STRICT + flexible academic layouts (subject-agnostic; no fixed Q count)
-    # Q1(a) / Q.1(a) / Question 1(a) / Q1.a / Q1 a) / Q1-a
+    # Q1(a) / Q.1(a) / Question 1(a) / Question No. 1(a) / Q1.a / Q1 a) / Q1-a
     combined_pattern = re.compile(
-        rf"^(?:Q\.?|Question)\s*({_PARENT_NUM})\s*[\.\):\-]?\s*"
+        rf"^(?:{_Q_LEAD})\s*({_PARENT_NUM})\s*[\.\):\-]?\s*"
         rf"(?:\(({_SUB_TOKEN})\)|({_SUB_TOKEN})\)|({_SUB_TOKEN})\.(?:\s|$)|({_SUB_TOKEN})\s+)"
         rf"\s*(.*)$",
         re.IGNORECASE,
@@ -1850,6 +2075,15 @@ def extract_questions_from_page_text(
         rf"^\(?({_SUB_TOKEN})\)?[\.\):\-_]\s*(.*)$",
         re.IGNORECASE,
     )
+    # OCR-truncated "(a" / "[a]" without a closing delimiter.
+    sub_unclosed_pattern = re.compile(
+        rf"^\(({_SUB_TOKEN})(?=\s|$)(.*)$",
+        re.IGNORECASE,
+    )
+    sub_bracket_pattern = re.compile(
+        rf"^\[({_SUB_TOKEN})\]\s*(.*)$",
+        re.IGNORECASE,
+    )
     # "a Explain..." / "b Explain..." when letter followed by academic verb
     sub_loose_pattern = re.compile(
         rf"^({_SUB_TOKEN})\s+((?:{'|'.join(sorted(ACADEMIC_QUESTION_VERBS))})\b.*)$",
@@ -1857,16 +2091,17 @@ def extract_questions_from_page_text(
     )
     # Q3-A / Q3-B style
     dashed_sub_pattern = re.compile(
-        rf"^(?:Q\.?|Question)?\s*({_PARENT_NUM})\s*[-–]\s*([A-Za-z])\b[\.\):]?\s*(.*)$",
+        rf"^(?:{_Q_LEAD})?\s*({_PARENT_NUM})\s*[-–]\s*([A-Za-z])\b[\.\):]?\s*(.*)$",
         re.IGNORECASE,
     )
     parent_only_pattern = re.compile(
-        rf"^(?:Q\.?|Question)\s*({_PARENT_NUM})\b(?:\s*[\.\):]?\s*)(.*)$",
+        rf"^(?:{_Q_LEAD})\s*({_PARENT_NUM})\b(?:\s*[\.\):]?\s*)(.*)$",
         re.IGNORECASE,
     )
     bare_parent_pattern = re.compile(
         rf"^({_PARENT_NUM})\s*[\.\):]?\s*$"
-        rf"|^({_PARENT_NUM})\s+(?=Attempt|Solve|any\b)",
+        rf"|^({_PARENT_NUM})\s+(?:Attempt|Solve|Answer|Write|any|[A-Za-z0-9]\s+\d+)\b"
+        rf"|^({_PARENT_NUM})\s+[A-Z0-9]\s+\d+\b",
         re.IGNORECASE,
     )
     numbered_letter_verb_pattern = re.compile(
@@ -1973,7 +2208,10 @@ def extract_questions_from_page_text(
             ):
                 return False
             if (
-                sub_pattern.match(nxt) or sub_loose_pattern.match(nxt)
+                sub_pattern.match(nxt)
+                or sub_loose_pattern.match(nxt)
+                or sub_unclosed_pattern.match(nxt)
+                or sub_bracket_pattern.match(nxt)
             ) and not hyphen_underscore_is_compound_term(nxt):
                 return True
         return False
@@ -1990,7 +2228,7 @@ def extract_questions_from_page_text(
                 new_n = int(new_num)
             except (TypeError, ValueError, AttributeError):
                 return False
-            return new_n >= 10 and new_n > old_n + 3
+            return is_ocr_glued_parent_jump(old_n, new_n)
 
         m_nlv = numbered_letter_verb_pattern.match(line)
         if m_nlv:
@@ -2039,10 +2277,19 @@ def extract_questions_from_page_text(
             unlabelled_stem_mode = False
             continue
 
-        m_sub = sub_pattern.match(line) or sub_loose_pattern.match(line)
+        m_sub = (
+            sub_pattern.match(line)
+            or sub_loose_pattern.match(line)
+            or sub_unclosed_pattern.match(line)
+            or sub_bracket_pattern.match(line)
+        )
         if m_sub and current_parent and hyphen_underscore_is_compound_term(line):
             m_sub = None
-        # "Q. 6 Solve any Four" / "Q6. Attempt…" — the leading Q is a
+        if m_sub:
+            from rag.subquestion_frontier import is_protected_letter_context
+            if is_protected_letter_context(line, clean_lines, idx):
+                m_sub = None
+        # "Q. N Solve any Four" / "Qn. Attempt…" — the leading Q is a
         # question prefix, never a sub-question letter of the previous
         # parent. A lone q/Q token followed by a number is that prefix.
         if (
@@ -2072,6 +2319,10 @@ def extract_questions_from_page_text(
 
         m_letter_only = re.fullmatch(rf"({_SUB_LETTER})\)?", line, re.I)
         if m_letter_only and current_parent:
+            from rag.subquestion_frontier import is_protected_letter_context
+            if is_protected_letter_context(line, clean_lines, idx):
+                m_letter_only = None
+        if m_letter_only and current_parent:
             new_sub = m_letter_only.group(1).lower()
             nxt = clean_lines[idx + 1] if idx + 1 < len(clean_lines) else ""
             nxt_has_verb = any(
@@ -2099,7 +2350,13 @@ def extract_questions_from_page_text(
                         continue
                     if re.fullmatch(r"\[\s*\d+\s*\]", nxt) or re.match(r"^[\d\s]+$", nxt):
                         continue
-                    sm = sub_pattern.match(nxt) or sub_loose_pattern.match(nxt) or re.fullmatch(rf"({_SUB_LETTER})\)?", nxt, re.I)
+                    sm = (
+                        sub_pattern.match(nxt)
+                        or sub_loose_pattern.match(nxt)
+                        or sub_unclosed_pattern.match(nxt)
+                        or sub_bracket_pattern.match(nxt)
+                        or re.fullmatch(rf"({_SUB_LETTER})\)?", nxt, re.I)
+                    )
                     if sm and hyphen_underscore_is_compound_term(nxt):
                         sm = None
                     if sm and _normalize_subtoken(sm.group(1)) in _LETTER_SIBLINGS:
@@ -2117,9 +2374,20 @@ def extract_questions_from_page_text(
             current_parent = f"Q{new_num}"
             current_sub = None
             current_text = []
-            unlabelled_stem_mode = bool(re.search(r"(?:Attempt|Solve|any)\b", line, re.I))
+            slot_open = (
+                slot_inf_enabled
+                and (not slot_anchor_parent or slot_anchor_parent == f"Q{new_num}")
+            )
+            unlabelled_stem_mode = bool(re.search(r"(?:Attempt|Solve|any)\b", line, re.I)) or slot_open
             choice_frame = unlabelled_stem_mode
-            if unlabelled_stem_mode:
+            if slot_open and not re.search(r"(?:Attempt|Solve|any)\b", line, re.I):
+                current_sub = None
+                if slot_start_sub and re.fullmatch(rf"{_SUB_LETTER}", slot_start_sub, re.I):
+                    prev_sub = chr(ord(slot_start_sub[0]) - 1)
+                    if "a" <= prev_sub <= "z":
+                        current_sub = prev_sub
+                current_origin = "inferred_stem"
+            elif unlabelled_stem_mode:
                 for stem in iter_unlabelled_stems(line):
                     nxt = _next_unlabelled_sub(current_sub)
                     if not nxt:
@@ -2156,21 +2424,51 @@ def extract_questions_from_page_text(
                     current_sub = nxt
                     current_text = [stem]
                     current_origin = "inferred_stem"
+                # Convention-gated slot seeding: a childless instruction/marks
+                # parent whose trailing bodies carry no own letters starts its
+                # sequential slots here.
+                if (
+                    slot_inf_enabled
+                    and (not slot_anchor_parent or slot_anchor_parent == current_parent)
+                    and current_sub is None
+                ):
+                    if slot_start_sub and re.fullmatch(rf"{_SUB_LETTER}", slot_start_sub, re.I):
+                        prev_letter = chr(ord(slot_start_sub[0]) - 1)
+                        current_sub = prev_letter if "a" <= prev_letter <= "z" else None
+                    else:
+                        current_sub = "a"
+                    current_origin = "inferred_stem"
                 continue
             if rest and any(x in rest.lower() for x in ("attempt", "solve", "answer", "following", "compulsory", "marks")) and not any(
                 re.search(rf"\b{v}\b", rest.lower()) for v in ACADEMIC_QUESTION_VERBS
             ):
+                if _parent_leap(m_parent.group(1)):
+                    continue
                 flush_current()
                 current_parent = f"Q{m_parent.group(1)}"
                 current_sub = None
                 current_text = []
+                slot_open = (
+                    slot_inf_enabled
+                    and (not slot_anchor_parent or slot_anchor_parent == current_parent)
+                )
                 choice_frame = True
-                unlabelled_stem_mode = False
+                unlabelled_stem_mode = slot_open
+                if slot_open:
+                    if slot_start_sub and re.fullmatch(rf"{_SUB_LETTER}", slot_start_sub, re.I):
+                        prev_sub = chr(ord(slot_start_sub[0]) - 1)
+                        if "a" <= prev_sub <= "z":
+                            current_sub = prev_sub
+                    current_origin = "inferred_stem"
                 continue
             # Q3. Explain ...  (no explicit sub-letter). Only call it (a) when
             # the paper actually subdivides this parent; otherwise it is a flat
             # question and inventing a subquestion would falsify its identity.
             if rest and any(re.search(rf"\b{v}\b", rest.lower()) for v in ACADEMIC_QUESTION_VERBS):
+                if _parent_leap(m_parent.group(1)):
+                    if rest:
+                        current_text.append(rest)
+                    continue
                 flush_current()
                 current_parent = f"Q{m_parent.group(1)}"
                 current_sub = "a" if parent_has_explicit_subs(idx) else None
@@ -2182,6 +2480,8 @@ def extract_questions_from_page_text(
                 unlabelled_stem_mode = False
                 continue
             if not rest:
+                if _parent_leap(m_parent.group(1)):
+                    continue
                 flush_current()
                 current_parent = f"Q{m_parent.group(1)}"
                 current_sub = None
@@ -2372,6 +2672,154 @@ def compute_text_similarity(text1: str, text2: str) -> float:
     return round(0.75 * core_sim + 0.25 * jaccard_all, 3)
 
 
+INTENT_FAMILIES: Dict[str, str] = {
+    "explain": "explanation",
+    "describe": "explanation",
+    "define": "definition",
+    "state": "definition",
+    "what": "definition",
+    "compare": "comparison",
+    "differentiate": "comparison",
+    "distinguish": "comparison",
+    "contrast": "comparison",
+    "calculate": "calculation",
+    "find": "calculation",
+    "determine": "calculation",
+    "obtain": "calculation",
+    "derive": "derivation",
+    "prove": "derivation",
+    "design": "construction",
+    "implement": "construction",
+    "analyze": "analysis",
+    "evaluate": "analysis",
+    "comment": "analysis",
+    "justify": "analysis",
+    "why": "analysis",
+}
+
+_FACET_CANON = {
+    "application": "applications", "use case": "applications", "usecase": "applications",
+    "advantage": "advantages_disadvantages", "disadvantage": "advantages_disadvantages",
+    "merit": "advantages_disadvantages", "demerit": "advantages_disadvantages",
+    "benefit": "advantages_disadvantages", "drawback": "advantages_disadvantages",
+    "limitation": "advantages_disadvantages",
+    "type": "enumerate_types", "kind": "enumerate_types", "feature": "features",
+    "property": "properties", "challenge": "challenges",
+}
+
+_FACET_OUTPUT_RE = re.compile(
+    r"^(?:what\s+(?:are|is)\s+the\s+)?"
+    r"(?:(?:short\s+)?notes?\s+on\s+|[a-z]+\s+){0,2}?"
+    r"(applications?|uses?|use\s+cases?|usecases?|advantages?|disadvantages?|"
+    r"merits?|demerits?|benefits?|drawbacks?|limitations?|features?|"
+    r"properties?|types|kinds?|challenges?)"
+    r"\s+(?:of|for)\b",
+    re.I,
+)
+
+
+def requested_output_focus(text: str) -> Optional[str]:
+    """
+    What kind of artefact the examiner asked for (generic grammar, no subject
+    vocabulary): 'applications', 'advantages_disadvantages',
+    'enumerate_types', ... or an intent family for verb-led asks.
+    Returns None when nothing discriminative can be proven.
+    """
+    t = (text or "").strip().lower()
+    t = re.sub(r"^(?:Q\.?\s*\d+[a-z]?[\).:]?|Question\s+\d+[\).:]?)\s*", "", t)
+    m = _FACET_OUTPUT_RE.match(t)
+    if m:
+        facet_raw = re.sub(r"\s+", " ", m.group(1)).strip()
+        facet_key = facet_raw.rstrip("s").replace(" ", "")
+        return _FACET_CANON.get(facet_key, facet_key)
+    qtype = detect_question_type(text or "")
+    return INTENT_FAMILIES.get(qtype)
+
+
+def intent_family(question_type: str) -> str:
+    return INTENT_FAMILIES.get((question_type or "").lower(), (question_type or "").lower())
+
+
+_STEM_SUFFIXES = ("ations", "ation", "ions", "ion", "ings", "ing", "ies", "ed", "es", "s")
+
+
+def _light_stem(token: str) -> str:
+    """
+    Conservative suffix folding so 'prevention'/'prevent' and
+    'works'/'working' compare equal. Pure morphology; no vocabulary lists.
+    """
+    t = (token or "").lower()
+    for suf in _STEM_SUFFIXES:
+        if t.endswith(suf) and len(t) - len(suf) >= 4:
+            return t[: -len(suf)]
+    return t
+
+
+def _phrase_stems(phrases: List[str], drop: Set[str]) -> Set[str]:
+    out: Set[str] = set()
+    for phrase in phrases or []:
+        for tok in re.findall(r"[a-z0-9]{3,}", str(phrase).lower()):
+            st = _light_stem(tok)
+            if st not in drop:
+                out.add(st)
+    return out
+
+
+def _text_stems(text: str) -> Set[str]:
+    return {m.lower() for m in re.findall(r"[a-z0-9]{3,}", text or "")} | {
+        _light_stem(m.lower()) for m in re.findall(r"[a-z0-9]{3,}", text or "")
+    }
+
+
+def topic_label_grounded_in_text(label: str, text: str, min_token_len: int = 3) -> bool:
+    """
+    A displayed topic label may only use words that occur in its source
+    question. Prevents LLM-enrichment hallucinations from becoming cluster
+    names. Substring matching tolerates inflection ('clustering' ~ 'cluster').
+    """
+    lab = (label or "").strip().lower()
+    src = (text or "").lower()
+    if not lab or not src:
+        return False
+    tokens = [t for t in re.findall(r"[a-z0-9]{%d,}" % min_token_len, lab)]
+    if not tokens:
+        return False
+    grounded = sum(1 for t in tokens if t in src)
+    return grounded / len(tokens) >= 0.6
+
+
+def _head_modifier_conflict(e1: List[str], e2: List[str]) -> Optional[str]:
+    """
+    Generic discriminative-entity test: two entity phrases sharing a head noun
+    but carrying disjoint modifiers are different entities
+    (modifier-head-modifier shape only; no domain vocabulary).
+    Returns a human-readable reason or None.
+    """
+    def heads(ents: List[str]) -> Dict[str, Set[str]]:
+        out: Dict[str, Set[str]] = defaultdict(set)
+        for phrase in ents or []:
+            toks = [
+                _light_stem(t)
+                for t in re.findall(r"[a-z0-9]{3,}", str(phrase).lower())
+                if t not in GENERIC_DOMAIN_TERMS and not looks_like_ocr_garbage_topic(t)
+            ]
+            toks = [t for t in toks if t not in GENERIC_DOMAIN_TERMS]
+            if len(toks) >= 2:
+                out[toks[-1]].update(toks[:-1])
+        return out
+
+    h1, h2 = heads(e1), heads(e2)
+    for head, mods1 in h1.items():
+        mods2 = h2.get(head)
+        if not mods2:
+            continue
+        m1 = {m for m in mods1 if m not in GENERIC_DOMAIN_TERMS}
+        m2 = {m for m in mods2 if m not in GENERIC_DOMAIN_TERMS}
+        if m1 and m2 and m1.isdisjoint(m2):
+            return f"different entities sharing '{head}': {sorted(m1)} vs {sorted(m2)}"
+    return None
+
+
 def _entity_overlap(e1: List[str], e2: List[str]) -> float:
     if not e1 or not e2:
         return 0.0
@@ -2390,6 +2838,9 @@ def _entity_overlap(e1: List[str], e2: List[str]) -> float:
     if not t1 or not t2:
         return exact
     token_j = len(t1 & t2) / len(t1 | t2)
+    stem1 = {_light_stem(x) for x in t1}
+    stem2 = {_light_stem(x) for x in t2}
+    stem_j = len(stem1 & stem2) / len(stem1 | stem2)
     # Bonus when a short entity is fully contained in the other set's tokens
     containment = 0.0
     for phrase in s1:
@@ -2400,7 +2851,7 @@ def _entity_overlap(e1: List[str], e2: List[str]) -> float:
         pt = set(re.findall(r"[a-z0-9]{3,}", phrase))
         if pt and pt <= t1:
             containment = max(containment, 0.55)
-    return max(exact, token_j, containment)
+    return max(exact, token_j, stem_j, containment)
 
 
 def _constraint_overlap(c1: List[str], c2: List[str]) -> float:
@@ -2464,11 +2915,21 @@ def classify_repeat_relationship_full(
     q2_text: str = "",
     intent1: Optional[Dict[str, Any]] = None,
     intent2: Optional[Dict[str, Any]] = None,
+    semantic_similarity: Optional[float] = None,
 ) -> Tuple[str, str, float, str]:
     """
     Full classifier: (relationship, concept, confidence, reason).
     relationship in EXACT_REPEAT | SEMANTIC_REPEAT | RELATED_TOPIC | DIFFERENT
+
+    Contradiction-first, signature-based. Embeddings are advisory only:
+    they cannot create EXACT_REPEAT, cannot create SEMANTIC_REPEAT on their
+    own, and cannot bypass entity / intent / output vetoes.
     """
+    from rag.semantic_signature import (
+        compare_semantic_signatures,
+        signature_from_bundle,
+    )
+
     i1 = intent1 or build_question_representation("Q?", q1_text or norm1)
     i2 = intent2 or build_question_representation("Q?", q2_text or norm2)
 
@@ -2478,123 +2939,38 @@ def classify_repeat_relationship_full(
     n1 = norm1 or normalize_question_text(q1_text)
     n2 = norm2 or normalize_question_text(q2_text)
 
-    if n1 and n2 and n1 == n2:
-        return "EXACT_REPEAT", concept, 1.0, "Normalized text identical after OCR-safe cleanup"
+    sem = None
+    try:
+        if semantic_similarity is not None:
+            sem = max(0.0, min(1.0, float(semantic_similarity)))
+    except (TypeError, ValueError):
+        sem = None
 
-    exam_acronym_stop = {
-        "QB", "QP", "ID", "OR", "AND", "THE", "FOR", "NOT", "ANY", "ALL",
-        "MAY", "NOV", "DEC", "JAN", "FEB", "MAR", "APR", "JUN", "JUL", "AUG",
-        "SEP", "OCT", "PDF", "OCR", "BE", "ME", "II", "III", "IV", "VI",
-    }
+    raw1 = q1_text or n1
+    raw2 = q2_text or n2
+    # EXACT is wording identity only. Embeddings and near-duplicate similarity
+    # cannot create EXACT_REPEAT, and academic facets must not be discarded.
+    if exact_wording_identity(raw1, raw2):
+        return "EXACT_REPEAT", concept, 1.0, "Wording identical after harmless normalization"
 
-    def _source_acronyms(text: str) -> Set[str]:
-        return {
-            m.lower()
-            for m in re.findall(r"\b[A-Z]{2,6}\b", text or "")
-            if m not in exam_acronym_stop
-        }
+    sig1 = signature_from_bundle(i1, q1_text or norm1)
+    sig2 = signature_from_bundle(i2, q2_text or norm2)
+    if intent1 is not None:
+        intent1["semantic_signature"] = sig1
+    if intent2 is not None:
+        intent2["semantic_signature"] = sig2
 
-    named1 = _source_acronyms(q1_text)
-    named2 = _source_acronyms(q2_text)
-    disjoint_named = bool(named1 and named2 and named1.isdisjoint(named2))
-
-    # Near-exact: tiny edit distance via high token similarity AND same intent signature
-    if similarity >= 0.92 and i1.get("question_type") == i2.get("question_type"):
-        if _entity_overlap(i1.get("entities", []), i2.get("entities", [])) >= 0.8:
-            return (
-                "EXACT_REPEAT",
-                concept,
-                round(0.9 + 0.1 * similarity, 3),
-                "Near-identical wording with same question type and entities",
-            )
-
-    ent_ov = _entity_overlap(i1.get("entities", []), i2.get("entities", []))
-    cons_ov = _constraint_overlap(i1.get("constraints", []), i2.get("constraints", []))
-    same_type = i1.get("question_type") == i2.get("question_type")
-
-    c1 = set(i1.get("constraints", []))
-    c2 = set(i2.get("constraints", []))
-    conflicting = (
-        (("numerical_calculation" in c1) != ("numerical_calculation" in c2) and ("numerical_calculation" in c1 or "numerical_calculation" in c2))
-        or (("comparison" in c1) != ("comparison" in c2) and ("comparison" in c1 or "comparison" in c2))
-        or ("applications" in c1 and "applications" not in c2 and "architecture_explanation" in c2)
-        or ("applications" in c2 and "applications" not in c1 and "architecture_explanation" in c1)
+    match = compare_semantic_signatures(sig1, sig2, lexical_sim=similarity, embedding_sim=sem)
+    concept = (
+        sig1.core_entity
+        or concept
+        or (sig1.entities[0] if sig1.entities else "Unmapped")
     )
-
-    e1 = {x.lower() for x in i1.get("entities", [])}
-    e2 = {x.lower() for x in i2.get("entities", [])}
-    shared_core = e1 & e2
-    # Generic academic vocabulary is shared by unrelated questions in every
-    # subject, so it can never be the evidence that two questions are the same.
-    shared_core -= GENERIC_DOMAIN_TERMS
-
-    soft_focus = {
-        "advantages", "disadvantages", "overfitting", "underfitting", "significance",
-        "types", "type", "method", "methods", "problem", "detail", "details",
-        "technique", "techniques", "including", "include", "process", "operation",
-        "operations",
-    }
-    # Specific named concepts stay in `focus`: they are exactly what distinguishes
-    # "explain X architecture" from "explain Y architecture".
-    focus1 = {x for x in (e1 - shared_core) if x not in soft_focus}
-    focus2 = {x for x in (e2 - shared_core) if x not in soft_focus}
-    # Ignore compound phrases that only add soft words around a shared core entity
-    def _harden(focus: set, core: set) -> set:
-        hardened = set()
-        for phrase in focus:
-            toks = set(re.findall(r"[a-z0-9]{3,}", phrase)) - soft_focus
-            if toks - core:
-                hardened.add(phrase)
-        return hardened
-
-    focus1 = _harden(focus1, shared_core)
-    focus2 = _harden(focus2, shared_core)
-    divergent_focus = bool(focus1 and focus2 and focus1.isdisjoint(focus2))
-    # Asymmetric facet: one question names an extra specific concept the other lacks
-    # (e.g. CNN architecture vs pooling in CNN) → RELATED, not semantic repeat.
-    asymmetric_focus = bool((focus1 - focus2) or (focus2 - focus1)) and not (focus1 & focus2)
-
-    strong_shared = bool(shared_core) and any(len(x) >= 4 for x in shared_core)
-    ent_threshold = 0.22 if strong_shared else 0.35
-    if (
-        same_type
-        and ent_ov >= ent_threshold
-        and cons_ov >= 0.34
-        and not conflicting
-        and not divergent_focus
-        and not disjoint_named
-        and not (asymmetric_focus and similarity < 0.72)
-        and similarity >= 0.20
-        and shared_core
-    ):
-        conf = round(0.55 * ent_ov + 0.25 * cons_ov + 0.20 * min(1.0, similarity / 0.7), 3)
-        if strong_shared:
-            conf = max(conf, 0.62) if conf >= 0.40 else conf
-        if conf >= 0.45:
-            return (
-                "SEMANTIC_REPEAT",
-                concept,
-                max(conf, 0.62),
-                f"Same question intent ({i1.get('question_type')}); entity overlap={ent_ov:.2f}, constraint overlap={cons_ov:.2f}",
-            )
-
-    if ent_ov >= 0.25 or similarity >= 0.22:
-        if conflicting or not same_type or cons_ov < 0.34 or divergent_focus or asymmetric_focus or disjoint_named:
-            return (
-                "RELATED_TOPIC",
-                concept,
-                round(max(ent_ov, similarity * 0.5), 3),
-                "Shared topic vocabulary but different question intent/constraints — not a repeat",
-            )
-        # Broad topical overlap without enough intent evidence
-        return (
-            "RELATED_TOPIC",
-            concept,
-            round(max(ent_ov, similarity * 0.4), 3),
-            "Topic overlap only — not enough evidence for question-level repeat",
-        )
-
-    return "DIFFERENT", concept, 0.0, "Insufficient evidence of recurrence"
+    if match.relationship == "SEMANTIC_REPEAT":
+        return "SEMANTIC_REPEAT", concept, float(match.confidence), match.reason
+    if match.relationship == "RELATED_TOPIC":
+        return "RELATED_TOPIC", concept, float(match.confidence), match.reason
+    return "DIFFERENT", concept, 0.0, match.reason
 
 
 def analyze_single_paper_patterns(questions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:

@@ -67,15 +67,15 @@ export default function DashboardPage({ stats, setActiveTab }) {
       />
 
       {/* Active Workspace Banner */}
-      <div className="saas-card p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-purple-950/30 via-indigo-950/20 to-[#111827]">
+      <div className="saas-card p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-purple-100/80 via-indigo-50/80 to-slate-100 dark:from-purple-950/30 dark:via-indigo-950/20 dark:to-[#111827] border-slate-200 dark:border-[#1F2937]">
         <div>
-          <div className="text-[10px] text-purple-400 font-extrabold uppercase tracking-wider">
+          <div className="text-[10px] text-purple-600 dark:text-purple-400 font-extrabold uppercase tracking-wider">
             Current Workspace Scope
           </div>
-          <h2 className="font-heading font-extrabold text-xl text-white mt-0.5">
+          <h2 className="font-heading font-extrabold text-xl text-slate-900 dark:text-white mt-0.5">
             {activeWorkspace.subject || 'My Academic Subject'} ({activeWorkspace.subjectCode || 'SUB'})
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
             {activeWorkspace.university || 'University'} • {activeWorkspace.branch || 'Branch'} • {activeWorkspace.semester || 'Semester'}
           </p>
         </div>
@@ -83,9 +83,9 @@ export default function DashboardPage({ stats, setActiveTab }) {
         <div className="flex items-center space-x-2 flex-shrink-0">
           <button
             onClick={() => setIsSelectorOpen(true)}
-            className="px-4 py-2 rounded-xl bg-[#0B1020] hover:bg-[#1F2937] border border-[#1F2937] text-slate-200 text-xs font-semibold flex items-center space-x-1.5 transition-colors"
+            className="px-4 py-2 rounded-xl bg-white dark:bg-[#0B1020] hover:bg-slate-100 dark:hover:bg-[#1F2937] border border-slate-200 dark:border-[#1F2937] text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center space-x-1.5 transition-colors"
           >
-            <Layers className="w-3.5 h-3.5 text-purple-400" />
+            <Layers className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
             <span>Switch Workspace</span>
           </button>
 
@@ -101,14 +101,14 @@ export default function DashboardPage({ stats, setActiveTab }) {
 
       {/* EMPTY STATE BANNER IF ZERO FILES */}
       {!hasDocuments && (
-        <div className="p-4 rounded-xl bg-purple-950/20 border border-purple-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+        <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
           <div className="flex items-center space-x-3">
-            <div className="p-2 rounded-lg bg-purple-500/20 text-purple-300">
+            <div className="p-2 rounded-lg bg-purple-500/20 text-purple-700 dark:text-purple-300">
               <Database className="w-5 h-5" />
             </div>
             <div>
-              <div className="font-bold text-white">Your Knowledge Base is Empty</div>
-              <div className="text-slate-400">Upload a syllabus or previous-year papers for {activeWorkspace.subject || 'your subject'} to start building academic intelligence.</div>
+              <div className="font-bold text-slate-900 dark:text-white">Your Knowledge Base is Empty</div>
+              <div className="text-slate-600 dark:text-slate-400">Upload a syllabus or previous-year papers for {activeWorkspace.subject || 'your subject'} to start building academic intelligence.</div>
             </div>
           </div>
           <button
@@ -156,8 +156,8 @@ export default function DashboardPage({ stats, setActiveTab }) {
       {/* Quick Actions Grid */}
       <div className="saas-card p-6 space-y-4">
         <div>
-          <h3 className="font-heading font-bold text-sm text-white">Academic Actions for {activeWorkspace.subject || 'Your Subject'}</h3>
-          <p className="text-xs text-slate-400">Select an isolated workflow tool.</p>
+          <h3 className="font-heading font-bold text-sm text-slate-900 dark:text-white">Academic Actions for {activeWorkspace.subject || 'Your Subject'}</h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400">Select an isolated workflow tool.</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -174,12 +174,12 @@ export default function DashboardPage({ stats, setActiveTab }) {
                     <div className={`p-2 rounded-xl border ${act.accent}`}>
                       <Icon className="w-4 h-4" />
                     </div>
-                    <ArrowRight className="w-3.5 h-3.5 text-slate-600 group-hover:text-purple-400 transition-colors" />
+                    <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors" />
                   </div>
-                  <h4 className="font-heading font-bold text-xs text-white group-hover:text-purple-300 transition-colors">
+                  <h4 className="font-heading font-bold text-xs text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
                     {act.title}
                   </h4>
-                  <p className="text-[11px] text-slate-400 mt-1 leading-normal">
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-normal">
                     {act.desc}
                   </p>
                 </div>

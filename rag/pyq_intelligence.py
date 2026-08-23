@@ -7,10 +7,17 @@ and evidence-based study priority ONLY from canonical active-workspace PYQ recor
 
 from __future__ import annotations
 
+import copy
+import hashlib
 import json
+import os
 import re
+import threading
+import time
 from collections import defaultdict
 from typing import Any, Dict, List, Optional, Set, Tuple
+
+import numpy as np
 
 from rag.config import current_academic_year
 from rag.question_extractor import (
@@ -26,11 +33,25 @@ from rag.question_extractor import (
     is_valid_question_id,
     looks_like_ocr_garbage_topic,
     normalize_question_text,
+    topic_label_grounded_in_text,
     validate_question_candidate,
 )
 from rag.syllabus_index import (
     build_syllabus_index_from_workspace,
     map_question_to_syllabus_index,
+)
+from rag.semantic_similarity import embed_texts
+from rag.source_identity import (
+    attach_source_identity,
+    dedupe_records_by_paper,
+    dedupe_records_by_paper_and_question,
+    merge_paper_stats,
+    paper_id_of,
+    source_dedup_summary,
+    source_identity_fields,
+    unique_occurrence_count,
+    unique_session_identities,
+    unique_years,
 )
 from rag.vector_store import VectorStore
 
@@ -229,12 +250,21 @@ def quality_control_intelligence_payload(
     result["semantic_repeats"] = [g for g in (result.get("semantic_repeats") or []) if _group_ok(g, "semantic")]
     cleaned_related = []
     for pair in result.get("related_topics") or []:
-        t1 = ((pair.get("q1") or {}).get("text") or "").strip()
-        t2 = ((pair.get("q2") or {}).get("text") or "").strip()
-        if not t1 or not t2 or t1 == t2:
-            continue
-        if t1 not in valid_texts or t2 not in valid_texts:
-            continue
+        members = pair.get("members") or []
+        if members:
+            texts = [(m.get("text") or "").strip() for m in members]
+            live = [t for t in texts if t]
+            if len(live) < 2:
+                continue
+            if any(t not in valid_texts for t in live):
+                continue
+        else:
+            t1 = ((pair.get("q1") or {}).get("text") or "").strip()
+            t2 = ((pair.get("q2") or {}).get("text") or "").strip()
+            if not t1 or not t2 or t1 == t2:
+                continue
+            if t1 not in valid_texts or t2 not in valid_texts:
+                continue
         if looks_like_ocr_garbage_topic(str(pair.get("topic") or "")):
             pair = {**pair, "topic": "Related concept"}
         cleaned_related.append(pair)
@@ -265,10 +295,30 @@ def quality_control_intelligence_payload(
     return result
 
 
+_ANALYSIS_CACHE: Dict[Tuple, Tuple[float, Dict[str, Any]]] = {}
+_CACHE_LOCK = threading.Lock()
+
+def clear_pyq_analysis_cache(workspace_id: Optional[str] = None) -> None:
+    with _CACHE_LOCK:
+        if workspace_id:
+            keys = [k for k in _ANALYSIS_CACHE if k[0] == workspace_id]
+            for k in keys:
+                _ANALYSIS_CACHE.pop(k, None)
+        else:
+            _ANALYSIS_CACHE.clear()
+
 class PYQIntelligenceEngine:
+    LLM_PAIR_JUDGE_BUDGET = 24
+    ANALYSIS_CACHE_SIZE = 32
+
     def __init__(self, vector_store: Optional[VectorStore] = None, clustering_threshold: float = 0.65):
         self.store = vector_store or VectorStore()
         self.clustering_threshold = clustering_threshold
+        self._analysis_cache = _ANALYSIS_CACHE
+        self._cache_lock = _CACHE_LOCK
+
+    def clear_cache(self, workspace_id: Optional[str] = None) -> None:
+        clear_pyq_analysis_cache(workspace_id)
 
     def extract_temporal_features(self, items: List[Dict[str, Any]], syl_present: bool = True, target_year: Optional[int] = None) -> Dict[str, Any]:
         if target_year is None:
@@ -282,7 +332,18 @@ class PYQIntelligenceEngine:
             raw_years = [target_year]
         valid_years = [y for y in raw_years if y < target_year]
         years = sorted(valid_years) if valid_years else sorted(raw_years)
-        papers = list({it.get("metadata", {}).get("source_file", "paper.pdf") for it in items})
+        paper_records = [
+            {
+                "source_file": it.get("metadata", {}).get("source_file", "paper.pdf"),
+                "year": it.get("metadata", {}).get("year"),
+                "exam_session": it.get("metadata", {}).get("exam_session"),
+                "university": it.get("metadata", {}).get("university"),
+                "subject": it.get("metadata", {}).get("subject"),
+                "canonical_paper_id": it.get("metadata", {}).get("canonical_paper_id"),
+            }
+            for it in items
+        ]
+        attach_source_identity(paper_records)
         marks_list = [
             int(it.get("metadata", {}).get("marks", 5))
             for it in items
@@ -290,8 +351,8 @@ class PYQIntelligenceEngine:
         ] or [5]
         last_y = max(years)
         return {
-            "total_appearances": len(items),
-            "number_of_distinct_papers": len(papers),
+            "total_appearances": unique_occurrence_count(paper_records),
+            "number_of_distinct_papers": unique_occurrence_count(paper_records),
             "number_of_distinct_years": len(set(years)),
             "last_appearance_year": last_y,
             "years_since_last_appearance": max(0, target_year - last_y),
@@ -304,12 +365,16 @@ class PYQIntelligenceEngine:
         return generic_normalize_topic_title(raw_title)
 
     def _intent_bundle(self, q: Dict[str, Any]) -> Dict[str, Any]:
+        from rag.semantic_signature import build_semantic_signature
+
         text = q.get("exact_text", "")
+        sig = build_semantic_signature(text)
         return {
             "question_type": q.get("question_type") or detect_question_type(text),
-            "entities": q.get("entities") or extract_entities(text),
-            "constraints": q.get("constraints") or extract_constraints(text),
+            "entities": q.get("entities") or extract_entities(text) or sig.entities,
+            "constraints": q.get("constraints") or extract_constraints(text) or sig.constraints,
             "question_intent": q.get("question_intent") or build_question_representation(q.get("question_id", "Q?"), text)["question_intent"],
+            "semantic_signature": sig,
         }
 
     def _source_ref(self, q: Dict[str, Any]) -> str:
@@ -319,10 +384,70 @@ class PYQIntelligenceEngine:
         sess_str = str(session).strip()
         return f"{year} {sess_str} — {qid}"
 
-    def find_exact_repeat_groups(self, canonical_questions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _ensure_source_identity(
+        self, questions: List[Dict[str, Any]], workspace_id: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
+        if questions and not questions[0].get("canonical_paper_id"):
+            attach_source_identity(questions, workspace_id=workspace_id)
+        return questions
+
+    def _occurrence_members(self, members: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        return dedupe_records_by_paper(members)
+
+    def _unique_source_refs(self, records: List[Dict[str, Any]]) -> List[str]:
+        unique = self._occurrence_members(records)
+        refs = [self._source_ref(q) for q in unique]
+        if len(refs) == len(set(refs)):
+            return refs
+        out: List[str] = []
+        counts = {r: refs.count(r) for r in refs}
+        for q, ref in zip(unique, refs):
+            if counts.get(ref, 0) <= 1:
+                out.append(ref)
+                continue
+            stem = os.path.splitext(os.path.basename(str(q.get("source_file") or "paper")))[0]
+            out.append(f"{ref} [{stem}]")
+        return out
+
+    def _original_question_payload(self, q: Dict[str, Any]) -> Dict[str, Any]:
+        payload = {
+            "text": q.get("exact_text"),
+            "source_ref": self._source_ref(q),
+            "year": q.get("year"),
+            "exam_session": q.get("exam_session"),
+            "question_id": q.get("question_id"),
+            "source_file": q.get("source_file"),
+            "source_page": q.get("source_page"),
+        }
+        payload.update(source_identity_fields(q))
+        return payload
+
+    def _repeat_group_counts(self, members: List[Dict[str, Any]]) -> Tuple[List[Dict[str, Any]], int, List[int]]:
+        unique = self._occurrence_members(members)
+        years = unique_years(unique)
+        return unique, len(unique), years
+
+    def _bundles_for(self, questions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        return [self._intent_bundle(q) for q in questions]
+
+    def _grounded_group_title(self, candidate: Any, source_text: str, fallback_label: str) -> str:
+        title = str(candidate or "").strip()
+        if not title or looks_like_ocr_garbage_topic(title):
+            return fallback_label
+        if not topic_label_grounded_in_text(title, source_text):
+            return fallback_label
+        return title
+
+    def find_exact_repeat_groups(
+        self,
+        canonical_questions: List[Dict[str, Any]],
+        bundles: Optional[List[Dict[str, Any]]] = None,
+    ) -> List[Dict[str, Any]]:
         groups: List[Dict[str, Any]] = []
         used: Set[int] = set()
+        self._ensure_source_identity(canonical_questions)
         n = len(canonical_questions)
+        bundles = bundles if bundles is not None else self._bundles_for(canonical_questions)
 
         for i in range(n):
             if i in used:
@@ -340,52 +465,107 @@ class PYQIntelligenceEngine:
                 sim = 1.0 if n1 == n2 else compute_text_similarity(n1, n2)
                 rel, concept, conf, reason = classify_repeat_relationship_full(
                     sim, n1, n2, q1.get("exact_text", ""), q2.get("exact_text", ""),
-                    self._intent_bundle(q1), self._intent_bundle(q2),
+                    bundles[i], bundles[j],
                 )
                 if rel == "EXACT_REPEAT" and conf >= 0.85:
                     members.append(q2)
                     used.add(j)
             if len(members) > 1:
+                unique_members, occurrence_count, years = self._repeat_group_counts(members)
+                if occurrence_count < 2:
+                    continue
                 used.add(i)
-                years = sorted({q["year"] for q in members})
+                ident = source_identity_fields(unique_members[0])
+                dup_ids: List[str] = []
+                for q in unique_members:
+                    for sid in q.get("duplicate_source_ids") or []:
+                        if sid not in dup_ids:
+                            dup_ids.append(sid)
                 groups.append(
                     {
                         "exact_text": q1["exact_text"],
-                        "display_title": (q1.get("detected_topics") or [None])[0]
-                        or (self._intent_bundle(q1).get("entities") or ["Repeated Question"])[0],
+                        "display_title": self._grounded_group_title(
+                            (q1.get("detected_topics") or [None])[0],
+                            q1.get("exact_text", ""),
+                            (bundles[i].get("entities") or ["Repeated Question"])[0],
+                        ),
                         "group_type": "EXACT",
-                        "question_ids": [q["question_id"] for q in members],
-                        "source_refs": [self._source_ref(q) for q in members],
+                        "question_ids": [q["question_id"] for q in unique_members],
+                        "source_refs": self._unique_source_refs(unique_members),
                         "years": years,
                         "distinct_years_count": len(years),
-                        "repeat_count": len(members),
+                        "repeat_count": occurrence_count,
+                        "unique_occurrence_count": occurrence_count,
+                        "canonical_paper_id": ident.get("canonical_paper_id"),
+                        "canonical_paper_ids": [paper_id_of(q) for q in unique_members],
+                        "source_identity_confidence": ident.get("source_identity_confidence"),
+                        "duplicate_source_ids": dup_ids,
                         "confidence": 1.0,
                         "similarity_method": "safe_normalized_equality",
                         "reason": "Normalized wording essentially identical",
                         "why_grouped": "Safe normalization produced identical wording",
-                        "original_questions": [
-                            {
-                                "text": q["exact_text"],
-                                "source_ref": self._source_ref(q),
-                                "year": q["year"],
-                                "question_id": q["question_id"],
-                                "source_file": q.get("source_file"),
-                                "source_page": q.get("source_page"),
-                            }
-                            for q in members
-                        ],
+                        "original_questions": [self._original_question_payload(q) for q in unique_members],
                         "questions": members,
                     }
                 )
         return groups
 
     def find_semantic_repeat_groups(
-        self, canonical_questions: List[Dict[str, Any]], already_exact: Optional[Set[str]] = None
+        self,
+        canonical_questions: List[Dict[str, Any]],
+        already_exact: Optional[Set[str]] = None,
+        bundles: Optional[List[Dict[str, Any]]] = None,
+        embeddings: Optional["np.ndarray"] = None,
+        llm_budget: Optional[int] = None,
     ) -> List[Dict[str, Any]]:
+        from rag.semantic_signature import (
+            candidate_pair_indices,
+            compare_semantic_signatures,
+            signature_from_bundle,
+        )
+
         already_exact = already_exact or set()
         groups: List[Dict[str, Any]] = []
         used: Set[int] = set()
+        self._ensure_source_identity(canonical_questions)
         n = len(canonical_questions)
+        bundles = bundles if bundles is not None else self._bundles_for(canonical_questions)
+        budget = self.LLM_PAIR_JUDGE_BUDGET if llm_budget is None else max(0, int(llm_budget))
+        sem_floor = 0.62
+        sigs = [
+            signature_from_bundle(bundles[i], canonical_questions[i].get("exact_text", ""))
+            for i in range(n)
+        ]
+        partner_map: Dict[int, List[int]] = defaultdict(list)
+        for a, b in candidate_pair_indices(sigs, embeddings=embeddings):
+            partner_map[a].append(b)
+            partner_map[b].append(a)
+
+        def sem_sim(a: int, b: int) -> Optional[float]:
+            if embeddings is None:
+                return None
+            try:
+                va, vb = embeddings[a], embeddings[b]
+                denom = float(np.linalg.norm(va) * np.linalg.norm(vb))
+                if denom == 0.0:
+                    return None
+                return float(np.dot(va, vb) / denom)
+            except Exception:
+                return None
+
+        def classify_pair(i: int, j: int):
+            q1, q2 = canonical_questions[i], canonical_questions[j]
+            n1 = q1.get("normalized_text") or normalize_question_text(q1.get("exact_text", ""))
+            n2 = q2.get("normalized_text") or normalize_question_text(q2.get("exact_text", ""))
+            sim = compute_text_similarity(n1, n2)
+            sem = sem_sim(i, j)
+            rel, concept, conf, reason = classify_repeat_relationship_full(
+                sim, n1, n2, q1.get("exact_text", ""), q2.get("exact_text", ""),
+                bundles[i], bundles[j],
+                semantic_similarity=sem,
+            )
+            match = compare_semantic_signatures(sigs[i], sigs[j], lexical_sim=sim, embedding_sim=sem)
+            return rel, concept, conf, reason, sim, match
 
         for i in range(n):
             if i in used:
@@ -394,145 +574,245 @@ class PYQIntelligenceEngine:
             key1 = f"{q1.get('source_file')}:{q1.get('question_id')}"
             if key1 in already_exact:
                 continue
+            leader_norm = q1.get("normalized_text") or normalize_question_text(q1.get("exact_text", ""))
+            if not leader_norm:
+                continue
             members = [q1]
+            member_indices = [i]
             reasons = []
             confs: List[float] = []
-            for j in range(i + 1, n):
+            evidence_rows: List[Dict[str, Any]] = []
+            partners = sorted({j for j in partner_map.get(i, []) if j > i})
+            for j in partners:
                 if j in used:
                     continue
                 q2 = canonical_questions[j]
                 key2 = f"{q2.get('source_file')}:{q2.get('question_id')}"
                 if key2 in already_exact:
                     continue
-                n1 = q1.get("normalized_text") or normalize_question_text(q1.get("exact_text", ""))
                 n2 = q2.get("normalized_text") or normalize_question_text(q2.get("exact_text", ""))
-                if n1 == n2:
+                if not n2 or n2 == leader_norm:
                     continue
-                sim = compute_text_similarity(n1, n2)
-                if sim < 0.22:
-                    continue
-                rel, concept, conf, reason = classify_repeat_relationship_full(
-                    sim, n1, n2, q1.get("exact_text", ""), q2.get("exact_text", ""),
-                    self._intent_bundle(q1), self._intent_bundle(q2),
-                )
-                try:
-                    from rag.hybrid_question_extraction import llm_judge_question_pair
-                    from rag.llm_client import llm_configured
+                rel, concept, conf, reason, sim, match = classify_pair(i, j)
+                # Intra-group validation: every member vs every other member.
+                if rel == "SEMANTIC_REPEAT" and conf >= sem_floor and len(member_indices) > 1:
+                    for mi in member_indices[1:]:
+                        rel_m, _, conf_m, _, _, _ = classify_pair(j, mi)
+                        if rel_m != "SEMANTIC_REPEAT" or conf_m < sem_floor * 0.9:
+                            rel = "RELATED_TOPIC"
+                            break
+                if rel == "SEMANTIC_REPEAT" and match.contradictions:
+                    rel = "RELATED_TOPIC"
 
-                    if llm_configured() and rel in ("SEMANTIC_REPEAT", "RELATED_TOPIC") and sim >= 0.28:
-                        verdict = llm_judge_question_pair(q1.get("exact_text", ""), q2.get("exact_text", ""))
-                        if verdict:
-                            label = str(verdict.get("label") or "").upper()
-                            # Assistive only: LLM may downgrade, never upgrade to a repeat.
-                            if label == "DIFFERENT":
-                                continue
-                            if label == "RELATED_TOPIC":
-                                rel = "RELATED_TOPIC"
-                            if rel == "SEMANTIC_REPEAT" and label in ("SEMANTIC_REPEAT", "EXACT_REPEAT"):
-                                reason = verdict.get("reason") or reason
-                except Exception:
-                    pass
-                if rel == "SEMANTIC_REPEAT" and conf >= 0.62:
+                if rel == "SEMANTIC_REPEAT" and conf >= sem_floor:
                     members.append(q2)
+                    member_indices.append(j)
                     used.add(j)
                     reasons.append(reason)
                     confs.append(float(conf))
+                    evidence_rows.append(match.evidence)
             if len(members) > 1:
+                unique_members, occurrence_count, years = self._repeat_group_counts(members)
+                if occurrence_count < 2:
+                    continue
                 used.add(i)
-                years = sorted({q["year"] for q in members})
-                title = (q1.get("detected_topics") or [None])[0] or (self._intent_bundle(q1).get("entities") or ["Semantic Repeat"])[0]
+                joined_text = " ".join(q.get("exact_text", "") for q in unique_members)
+                proto = str(sigs[i].core_entity or (bundles[i].get("entities") or ["Semantic Repeat"])[0])
+                proto = re.sub(r"^(?:a|an|the|briefly|each of the)\s+", "", proto, flags=re.I).strip(" ,-")
+                if proto:
+                    proto = proto[:1].upper() + proto[1:]
+                title = self._grounded_group_title(
+                    proto,
+                    joined_text,
+                    (q1.get("detected_topics") or [proto])[0] or proto,
+                )
+                if looks_like_ocr_garbage_topic(str(title)) or not topic_label_grounded_in_text(str(title), joined_text):
+                    fallback = (q1.get("detected_topics") or [None])[0] or proto
+                    title = self._grounded_group_title(fallback, joined_text, "Paraphrased question")
                 if looks_like_ocr_garbage_topic(str(title)):
                     title = "Paraphrased question"
                 group_conf = round(sum(confs) / len(confs), 3) if confs else 0.62
+                ident = source_identity_fields(unique_members[0])
+                dup_ids: List[str] = []
+                for q in unique_members:
+                    for sid in q.get("duplicate_source_ids") or []:
+                        if sid not in dup_ids:
+                            dup_ids.append(sid)
+                ev0 = evidence_rows[0] if evidence_rows else {}
+                why = reasons[0] if reasons else "Same entity, intent, and requested output despite wording differences"
                 groups.append(
                     {
                         "display_title": title,
                         "group_type": "SEMANTIC",
-                        "original_questions": [
-                            {
-                                "text": q["exact_text"],
-                                "source_ref": self._source_ref(q),
-                                "year": q["year"],
-                                "question_id": q["question_id"],
-                                "source_file": q.get("source_file"),
-                                "source_page": q.get("source_page"),
-                            }
-                            for q in members
-                        ],
-                        "question_ids": [q["question_id"] for q in members],
-                        "source_refs": [self._source_ref(q) for q in members],
+                        "original_questions": [self._original_question_payload(q) for q in unique_members],
+                        "question_ids": [q["question_id"] for q in unique_members],
+                        "source_refs": self._unique_source_refs(unique_members),
                         "years": years,
-                        "repeat_count": len(members),
+                        "repeat_count": occurrence_count,
+                        "unique_occurrence_count": occurrence_count,
+                        "canonical_paper_id": ident.get("canonical_paper_id"),
+                        "canonical_paper_ids": [paper_id_of(q) for q in unique_members],
+                        "source_identity_confidence": ident.get("source_identity_confidence"),
+                        "duplicate_source_ids": dup_ids,
                         "confidence": group_conf,
-                        "similarity_method": "deterministic_intent_overlap",
-                        "reason": reasons[0] if reasons else "Shared core question intent with paraphrased wording",
-                        "why_same": reasons[0] if reasons else "Same question type, entities, and constraints despite wording differences",
-                        "why_grouped": reasons[0] if reasons else "Equivalent academic intent after conservative matching",
+                        "similarity_method": "semantic_signature",
+                        "reason": why,
+                        "why_same": why,
+                        "why_grouped": why,
+                        "semantic_evidence": {
+                            "entity_match": ev0.get("entity_match"),
+                            "intent_match": ev0.get("intent_match"),
+                            "constraint_match": ev0.get("constraint_match"),
+                            "output_match": ev0.get("output_match"),
+                            "comparison_target_match": ev0.get("comparison_target_match"),
+                            "embedding_support": ev0.get("embedding_support"),
+                            "shared_specific_tokens": ev0.get("shared_specific_tokens") or [],
+                            "core_entity": sigs[i].core_entity,
+                            "intents_a": ev0.get("intents_a") or [],
+                            "intents_b": ev0.get("intents_b") or [],
+                        },
                         "questions": members,
                     }
                 )
         return groups
 
     def find_related_topic_pairs(
-        self, canonical_questions: List[Dict[str, Any]], skip_keys: Optional[Set[str]] = None
+        self,
+        canonical_questions: List[Dict[str, Any]],
+        skip_keys: Optional[Set[str]] = None,
+        bundles: Optional[List[Dict[str, Any]]] = None,
+        embeddings: Optional["np.ndarray"] = None,
     ) -> List[Dict[str, Any]]:
-        skip_keys = skip_keys or set()
-        related: List[Dict[str, Any]] = []
-        n = len(canonical_questions)
-        seen_pairs: Set[Tuple[str, str]] = set()
+        from rag.semantic_signature import (
+            candidate_pair_indices,
+            related_canonical_key,
+            signature_from_bundle,
+            _is_specific,
+        )
 
-        for i in range(n):
-            for j in range(i + 1, n):
-                q1, q2 = canonical_questions[i], canonical_questions[j]
-                k1 = f"{q1.get('source_file')}:{q1.get('question_id')}"
-                k2 = f"{q2.get('source_file')}:{q2.get('question_id')}"
-                if k1 in skip_keys and k2 in skip_keys:
+        skip_keys = skip_keys or set()
+        self._ensure_source_identity(canonical_questions)
+        n = len(canonical_questions)
+        paper_qids: Set[str] = set()
+        skip_texts: Set[str] = set()
+        for q in canonical_questions:
+            sf_key = f"{q.get('source_file')}:{q.get('question_id')}"
+            if sf_key not in skip_keys:
+                continue
+            paper_qids.add(f"{paper_id_of(q)}:{q.get('question_id')}")
+            nt = (q.get("normalized_text") or normalize_question_text(q.get("exact_text") or "")).strip()
+            if nt:
+                skip_texts.add(nt)
+        if paper_qids or skip_texts:
+            expanded = set(skip_keys)
+            for q in canonical_questions:
+                if f"{paper_id_of(q)}:{q.get('question_id')}" in paper_qids:
+                    expanded.add(f"{q.get('source_file')}:{q.get('question_id')}")
+                nt = (q.get("normalized_text") or normalize_question_text(q.get("exact_text") or "")).strip()
+                if nt and nt in skip_texts:
+                    expanded.add(f"{q.get('source_file')}:{q.get('question_id')}")
+            skip_keys = expanded
+        bundles = bundles if bundles is not None else self._bundles_for(canonical_questions)
+        sigs = [
+            signature_from_bundle(bundles[i], canonical_questions[i].get("exact_text", ""))
+            for i in range(n)
+        ]
+        candidates = candidate_pair_indices(sigs, embeddings=embeddings)
+
+        buckets: Dict[str, Dict[str, Any]] = {}
+        for i, j in candidates:
+            q1, q2 = canonical_questions[i], canonical_questions[j]
+            k1 = f"{q1.get('source_file')}:{q1.get('question_id')}"
+            k2 = f"{q2.get('source_file')}:{q2.get('question_id')}"
+            if k1 in skip_keys and k2 in skip_keys:
+                continue
+            if paper_id_of(q1) == paper_id_of(q2):
+                continue
+            n1 = q1.get("normalized_text") or normalize_question_text(q1.get("exact_text", ""))
+            n2 = q2.get("normalized_text") or normalize_question_text(q2.get("exact_text", ""))
+            sim = compute_text_similarity(n1, n2)
+            rel, concept, conf, reason = classify_repeat_relationship_full(
+                sim, n1, n2, q1.get("exact_text", ""), q2.get("exact_text", ""),
+                bundles[i], bundles[j],
+            )
+            if rel != "RELATED_TOPIC":
+                continue
+            shared = {t for t in (sigs[i].specific_tokens & sigs[j].specific_tokens) if _is_specific(t)}
+            key = related_canonical_key(shared)
+            if not key:
+                continue
+            keep = []
+            for idx, kk in ((i, k1), (j, k2)):
+                if kk not in skip_keys:
+                    keep.append(idx)
+            if len(keep) < 1:
+                continue
+            bucket = buckets.setdefault(
+                key,
+                {
+                    "indices": set(),
+                    "confs": [],
+                    "reasons": [],
+                    "concept": concept,
+                    "shared": set(),
+                    "sims": [],
+                },
+            )
+            bucket["indices"].update(keep)
+            bucket["confs"].append(float(conf or 0.0))
+            bucket["reasons"].append(reason)
+            bucket["shared"].update(shared)
+            bucket["sims"].append(sim)
+            if concept and not looks_like_ocr_garbage_topic(str(concept)):
+                bucket["concept"] = concept
+
+        related: List[Dict[str, Any]] = []
+        for key, bucket in buckets.items():
+            idxs = sorted(bucket["indices"])
+            if len(idxs) < 2:
+                continue
+            members = []
+            seen_member: Set[str] = set()
+            for idx in idxs:
+                q = canonical_questions[idx]
+                mk = f"{paper_id_of(q)}:{q.get('question_id')}"
+                if mk in seen_member:
                     continue
-                n1 = q1.get("normalized_text") or normalize_question_text(q1.get("exact_text", ""))
-                n2 = q2.get("normalized_text") or normalize_question_text(q2.get("exact_text", ""))
-                sim = compute_text_similarity(n1, n2)
-                if sim < 0.18:
-                    continue
-                rel, concept, conf, reason = classify_repeat_relationship_full(
-                    sim, n1, n2, q1.get("exact_text", ""), q2.get("exact_text", ""),
-                    self._intent_bundle(q1), self._intent_bundle(q2),
-                )
-                if rel != "RELATED_TOPIC":
-                    continue
-                pair_key = tuple(sorted([k1, k2]))
-                if pair_key in seen_pairs:
-                    continue
-                seen_pairs.add(pair_key)
-                related.append(
-                    {
-                        "group_type": "RELATED",
-                        "topic": concept if concept and not looks_like_ocr_garbage_topic(str(concept)) else "Related concept",
-                        "q1": {
-                            "text": q1["exact_text"],
-                            "source_ref": self._source_ref(q1),
-                            "question_id": q1.get("question_id"),
-                            "year": q1.get("year"),
-                            "source_file": q1.get("source_file"),
-                            "source_page": q1.get("source_page"),
-                        },
-                        "q2": {
-                            "text": q2["exact_text"],
-                            "source_ref": self._source_ref(q2),
-                            "question_id": q2.get("question_id"),
-                            "year": q2.get("year"),
-                            "source_file": q2.get("source_file"),
-                            "source_page": q2.get("source_page"),
-                        },
-                        "confidence": conf,
-                        "similarity": round(sim, 3),
-                        "similarity_method": "deterministic_topic_overlap",
-                        "reason": reason,
-                        "why_grouped": reason,
-                        "is_repeat": False,
-                    }
-                )
-        related.sort(key=lambda x: x.get("confidence", 0), reverse=True)
-        return related[:40]
+                seen_member.add(mk)
+                payload = self._original_question_payload(q)
+                payload.update(source_identity_fields(q))
+                members.append(payload)
+            if len(members) < 2:
+                continue
+            joined = " ".join((m.get("text") or "") for m in members)
+            title = bucket.get("concept") or key
+            if looks_like_ocr_garbage_topic(str(title)) or not topic_label_grounded_in_text(str(title), joined):
+                title = key.replace("_", " ").title()
+            conf = round(sum(bucket["confs"]) / len(bucket["confs"]), 3) if bucket["confs"] else 0.35
+            sim = round(sum(bucket["sims"]) / len(bucket["sims"]), 3) if bucket["sims"] else 0.0
+            reason = bucket["reasons"][0] if bucket["reasons"] else "Meaningful conceptual connection; not the same exam ask"
+            related.append(
+                {
+                    "group_type": "RELATED",
+                    "topic": title,
+                    "members": members,
+                    "q1": members[0],
+                    "q2": members[1],
+                    "confidence": conf,
+                    "similarity": sim,
+                    "similarity_method": "semantic_signature",
+                    "reason": reason,
+                    "why_grouped": reason,
+                    "is_repeat": False,
+                    "unique_occurrence_count": len(members),
+                    "semantic_evidence": {
+                        "shared_specific_tokens": sorted(bucket["shared"]),
+                        "canonical_entity": key,
+                    },
+                }
+            )
+        related.sort(key=lambda x: (x.get("confidence", 0), x.get("unique_occurrence_count", 0)), reverse=True)
+        return related[:12]
 
     def cluster_canonical_questions(
         self, canonical_questions: List[Dict[str, Any]], syllabus_index: Optional[Dict[str, Any]] = None
@@ -543,6 +823,7 @@ class PYQIntelligenceEngine:
         while preserving strict over-merging boundaries for distinct algorithms/entities.
         """
         clusters_map: Dict[str, Dict[str, Any]] = {}
+        self._ensure_source_identity(canonical_questions)
 
         for q_rec in canonical_questions:
             exact_text = q_rec.get("exact_text", "")
@@ -658,15 +939,25 @@ class PYQIntelligenceEngine:
             mod_counts = cdata["module_counts"]
             valid_mods = {k: v for k, v in mod_counts.items() if k != "Unmapped"}
             primary_unit = max(valid_mods.items(), key=lambda x: x[1])[0] if valid_mods else "Unmapped"
-            years = sorted({q["year"] for q in sqs})
-            sessions = sorted({q.get("exam_session", "Exam") for q in sqs})
-            marks = [q["marks"] for q in sqs if isinstance(q.get("marks"), (int, float))] or [5]
+            unique_sqs = self._occurrence_members(sqs)
+            years = unique_years(unique_sqs)
+            sessions = sorted({str(q.get("exam_session") or "Exam") for q in unique_sqs})
+            marks = [q["marks"] for q in unique_sqs if isinstance(q.get("marks"), (int, float))] or [5]
+            ident = source_identity_fields(unique_sqs[0]) if unique_sqs else {}
             clusters_list.append(
                 {
                     "topic_name": concept_name,
                     "unit": primary_unit,
                     "source_questions": sqs,
-                    "appearances_count": len(sqs),
+                    "appearances_count": unique_occurrence_count(sqs),
+                    "unique_occurrence_count": unique_occurrence_count(sqs),
+                    "canonical_paper_ids": [paper_id_of(q) for q in unique_sqs],
+                    "source_identity_confidence": ident.get("source_identity_confidence"),
+                    "duplicate_source_ids": [
+                        sid
+                        for q in unique_sqs
+                        for sid in (q.get("duplicate_source_ids") or [])
+                    ],
                     "years": years,
                     "exam_sessions": sessions,
                     "marks_list": marks,
@@ -764,6 +1055,10 @@ class PYQIntelligenceEngine:
                 except Exception:
                     detected_topics = [detected_topics]
             detected_topics = [t for t in (detected_topics or []) if t and not looks_like_ocr_garbage_topic(str(t))]
+            detected_topics = [
+                t for t in detected_topics
+                if topic_label_grounded_in_text(str(t), q_text)
+            ]
             if not detected_topics:
                 detected_topics = CanonicalConceptExtractor.extract_canonical_concepts(q_text)
 
@@ -818,6 +1113,12 @@ class PYQIntelligenceEngine:
                     "source_file": sf,
                     "source_page": meta.get("source_page", 1),
                     "source_ref": f"{year} {str(session).strip()} — {q_num or q_id}",
+                    "university": meta.get("university") or "",
+                    "subject": meta.get("subject") or "",
+                    "course_code": meta.get("course_code") or meta.get("paper_code") or "",
+                    "document_id": meta.get("document_id") or f"doc-{sf}",
+                    "source_path": meta.get("source_path") or meta.get("persisted_path") or "",
+                    "source_bytes_hash": meta.get("source_bytes_hash") or meta.get("file_sha256") or "",
                     "confidence": conf,
                     "grounding_status": meta.get("grounding_status") or "grounded",
                     "extraction_method": meta.get("extraction_method") or "hybrid",
@@ -828,6 +1129,8 @@ class PYQIntelligenceEngine:
             paper_stats[sf]["exam_year"] = year
             paper_stats[sf]["exam_session"] = session
 
+        attach_source_identity(extracted_questions, workspace_id=workspace_id)
+        paper_stats = merge_paper_stats(paper_stats, extracted_questions)
         return extracted_questions, paper_stats
 
     def _empty_response(self, workspace_id: str, subject: Optional[str], semester: Optional[str], notice: str = "") -> Dict[str, Any]:
@@ -882,73 +1185,133 @@ class PYQIntelligenceEngine:
         if not workspace_id or not workspace_id.strip():
             return self._empty_response("", subject, semester)
 
-        extracted_questions, paper_stats = self._load_valid_questions(workspace_id)
+        extracted_questions, _paper_stats = self._load_valid_questions(workspace_id)
         if not extracted_questions:
             return self._empty_response(workspace_id, subject, semester, "No source PYQ questions available in this workspace.")
 
-        num_papers = len(paper_stats)
+        signature_payload = "\n".join(
+            f"{q.get('source_file')}|{q.get('question_id')}|{hash(q.get('exact_text') or '')}|{q.get('marks')}|{q.get('year')}"
+            for q in extracted_questions
+        )
+        corpus_signature = hashlib.sha1(signature_payload.encode("utf-8", "ignore")).hexdigest()
+        cache_key = (workspace_id, subject or "", semester or "", bool(include_source_questions), corpus_signature)
+        now = time.monotonic()
+        with self._cache_lock:
+            cached = self._analysis_cache.get(cache_key)
+            if cached and now - cached[0] < 300:
+                return copy.deepcopy(cached[1])
+            if len(self._analysis_cache) >= self.ANALYSIS_CACHE_SIZE:
+                for stale_key in sorted(self._analysis_cache, key=lambda k: self._analysis_cache[k][0])[: len(self._analysis_cache) // 2]:
+                    self._analysis_cache.pop(stale_key, None)
+
+        result = self._compute_pyq_analysis(
+            workspace_id, subject, semester, include_source_questions,
+            extracted_questions=extracted_questions, paper_stats=_paper_stats,
+        )
+        with self._cache_lock:
+            self._analysis_cache[cache_key] = (time.monotonic(), copy.deepcopy(result))
+        return result
+
+    def _compute_pyq_analysis(
+        self,
+        workspace_id: str,
+        subject: Optional[str],
+        semester: Optional[str],
+        include_source_questions: bool,
+        extracted_questions: List[Dict[str, Any]],
+        paper_stats: Dict[str, Dict[str, Any]],
+    ) -> Dict[str, Any]:
+        self._ensure_source_identity(extracted_questions, workspace_id=workspace_id)
+        paper_stats = merge_paper_stats(paper_stats, extracted_questions) or paper_stats
+        num_papers = unique_occurrence_count(extracted_questions) or len(paper_stats)
         single_paper_mode = num_papers == 1
-        years_covered = sorted({q["year"] for q in extracted_questions if q.get("year")})
+        years_covered = unique_years(extracted_questions)
 
         syllabus_index = build_syllabus_index_from_workspace(self.store, workspace_id, subject=subject or "Subject")
 
-        exact_repeat_groups = self.find_exact_repeat_groups(extracted_questions)
+        bundles = self._bundles_for(extracted_questions)
+        embeddings = embed_texts([q.get("normalized_text") or q.get("exact_text") or "" for q in extracted_questions])
+
+        exact_repeat_groups = self.find_exact_repeat_groups(extracted_questions, bundles=bundles)
         exact_keys: Set[str] = set()
         for g in exact_repeat_groups:
             for q in g.get("questions", []):
                 exact_keys.add(f"{q.get('source_file')}:{q.get('question_id')}")
 
-        semantic_repeat_groups = self.find_semantic_repeat_groups(extracted_questions, already_exact=exact_keys)
+        semantic_repeat_groups = self.find_semantic_repeat_groups(
+            extracted_questions,
+            already_exact=exact_keys,
+            bundles=bundles,
+            embeddings=embeddings,
+        )
         semantic_keys: Set[str] = set()
         for g in semantic_repeat_groups:
             for q in g.get("questions", []):
                 semantic_keys.add(f"{q.get('source_file')}:{q.get('question_id')}")
 
-        related = self.find_related_topic_pairs(extracted_questions, skip_keys=exact_keys | semantic_keys)
+        related = self.find_related_topic_pairs(
+            extracted_questions,
+            skip_keys=exact_keys | semantic_keys,
+            bundles=bundles,
+            embeddings=embeddings,
+        )
         within_paper_patterns = analyze_single_paper_patterns(extracted_questions)
         clusters = self.cluster_canonical_questions(extracted_questions, syllabus_index=syllabus_index)
 
-        # Paper-level repeat tallies
+        corpus_slots = len(unique_session_identities(extracted_questions))
+        consistency_denominator = max(1, corpus_slots or num_papers)
+
+        # Paper-level repeat tallies: a paper counts once per group it participates in.
         for g in exact_repeat_groups:
-            for q in g.get("questions", []):
-                sf = q.get("source_file")
-                if sf in paper_stats:
-                    paper_stats[sf]["exact_repeats"] += 1
+            for pid in {paper_id_of(q) for q in g.get("questions", [])}:
+                if pid in paper_stats:
+                    paper_stats[pid]["exact_repeats"] += 1
         for g in semantic_repeat_groups:
-            for q in g.get("questions", []):
-                sf = q.get("source_file")
-                if sf in paper_stats:
-                    paper_stats[sf]["semantic_repeats"] += 1
+            for pid in {paper_id_of(q) for q in g.get("questions", [])}:
+                if pid in paper_stats:
+                    paper_stats[pid]["semantic_repeats"] += 1
 
         # Most repeated questions (merge exact + semantic groups)
         most_repeated = []
         for g in exact_repeat_groups:
+            occurrence = int(g.get("unique_occurrence_count") or g["repeat_count"])
             most_repeated.append(
                 {
                     "title": g.get("display_title") or "Repeated Question",
-                    "asked_count": g["repeat_count"],
+                    "asked_count": occurrence,
+                    "unique_occurrence_count": occurrence,
                     "years": g["years"],
-                    "exact_repeats": g["repeat_count"],
+                    "exact_repeats": occurrence,
                     "semantic_repeats": 0,
                     "sources": g.get("source_refs", []),
                     "kind": "exact",
                     "confidence": g.get("confidence", 1.0),
                     "sample_text": g.get("exact_text", ""),
+                    "canonical_paper_id": g.get("canonical_paper_id"),
+                    "canonical_paper_ids": g.get("canonical_paper_ids") or [],
+                    "source_identity_confidence": g.get("source_identity_confidence"),
+                    "duplicate_source_ids": g.get("duplicate_source_ids") or [],
                 }
             )
         for g in semantic_repeat_groups:
+            occurrence = int(g.get("unique_occurrence_count") or g["repeat_count"])
             most_repeated.append(
                 {
                     "title": g.get("display_title") or "Semantic Repeat",
-                    "asked_count": g["repeat_count"],
+                    "asked_count": occurrence,
+                    "unique_occurrence_count": occurrence,
                     "years": g["years"],
                     "exact_repeats": 0,
-                    "semantic_repeats": g["repeat_count"],
+                    "semantic_repeats": occurrence,
                     "sources": g.get("source_refs", []),
                     "kind": "semantic",
                     "confidence": g.get("confidence", 0.7),
                     "sample_text": (g.get("original_questions") or [{}])[0].get("text", ""),
                     "why_same": g.get("why_same"),
+                    "canonical_paper_id": g.get("canonical_paper_id"),
+                    "canonical_paper_ids": g.get("canonical_paper_ids") or [],
+                    "source_identity_confidence": g.get("source_identity_confidence"),
+                    "duplicate_source_ids": g.get("duplicate_source_ids") or [],
                 }
             )
         most_repeated.sort(key=lambda x: (x["asked_count"], len(x["years"])), reverse=True)
@@ -982,15 +1345,25 @@ class PYQIntelligenceEngine:
             avg_m = clus["average_marks"]
             last_y = max(years) if years else current_academic_year()
 
-            exact_in = sum(1 for sq in source_qs if f"{sq.get('source_file')}:{sq.get('question_id')}" in exact_keys)
-            semantic_in = sum(1 for sq in source_qs if f"{sq.get('source_file')}:{sq.get('question_id')}" in semantic_keys)
-            related_in = sum(
-                1
-                for r in related
-                if topic_name.lower() in str(r.get("topic") or "").lower()
-                or str(r.get("topic") or "").lower() in topic_name.lower()
+            exact_in = unique_occurrence_count(
+                [sq for sq in source_qs if f"{sq.get('source_file')}:{sq.get('question_id')}" in exact_keys]
             )
-            consistency = (len(years) / max(1, num_papers)) if num_papers else 0.0
+            semantic_in = unique_occurrence_count(
+                [sq for sq in source_qs if f"{sq.get('source_file')}:{sq.get('question_id')}" in semantic_keys]
+            )
+            cluster_qids = {f"{sq.get('source_file')}:{sq.get('question_id')}" for sq in source_qs}
+            related_pair_keys = set()
+            for r in related:
+                q1 = r.get("q1") or {}
+                q2 = r.get("q2") or {}
+                k1 = f"{q1.get('source_file')}:{q1.get('question_id')}"
+                k2 = f"{q2.get('source_file')}:{q2.get('question_id')}"
+                if k1 in cluster_qids or k2 in cluster_qids:
+                    related_pair_keys.add(
+                        tuple(sorted((paper_id_of(q1), paper_id_of(q2), str(r.get("topic") or ""))))
+                    )
+            related_in = len(related_pair_keys)
+            consistency = len(years) / consistency_denominator
             syllabus_mapped = clus["unit"] not in ("Unmapped", "Syllabus mapping uncertain", "")
             confs = []
             for sq in source_qs:
@@ -1051,8 +1424,18 @@ class PYQIntelligenceEngine:
                 f"Marks: {clus['min_marks']}M–{max_m}M; Unit: {clus['unit']}"
             )
 
-            source_qs_trace = [
-                {
+            source_qs_trace = []
+            for sq in dedupe_records_by_paper_and_question(source_qs):
+                rel = (
+                    "EXACT_REPEAT"
+                    if f"{sq.get('source_file')}:{sq.get('question_id')}" in exact_keys
+                    else (
+                        "SEMANTIC_REPEAT"
+                        if f"{sq.get('source_file')}:{sq.get('question_id')}" in semantic_keys
+                        else "TOPIC_MEMBER"
+                    )
+                )
+                row = {
                     "question_id": sq["question_id"],
                     "year": sq["year"],
                     "exam_session": sq.get("exam_session", "Exam"),
@@ -1061,20 +1444,25 @@ class PYQIntelligenceEngine:
                     "exact_text": sq.get("exact_text", ""),
                     "source_file": sq.get("source_file", ""),
                     "source_page": sq.get("source_page", 1),
-                    "relationship": "EXACT_REPEAT" if f"{sq.get('source_file')}:{sq.get('question_id')}" in exact_keys else ("SEMANTIC_REPEAT" if f"{sq.get('source_file')}:{sq.get('question_id')}" in semantic_keys else "TOPIC_MEMBER"),
+                    "relationship": rel,
                 }
-                for sq in source_qs
-            ]
+                row.update(source_identity_fields(sq))
+                source_qs_trace.append(row)
 
-            topic_recurrence.append(
-                {
-                    "topic": topic_name,
-                    "years": years,
-                    "appearances": appearances,
-                    "note": "Topic recurrence summarizes related questions across past papers.",
-                    "source_refs": [self._source_ref(sq) for sq in source_qs],
-                }
-            )
+            if appearances >= 2:
+                topic_recurrence.append(
+                    {
+                        "topic": topic_name,
+                        "years": years,
+                        "appearances": appearances,
+                        "unique_occurrence_count": appearances,
+                        "note": "Topic recurrence summarizes related questions across past papers.",
+                        "source_refs": self._unique_source_refs(source_qs),
+                        "canonical_paper_ids": clus.get("canonical_paper_ids") or [paper_id_of(sq) for sq in self._occurrence_members(source_qs)],
+                        "source_identity_confidence": clus.get("source_identity_confidence"),
+                        "duplicate_source_ids": clus.get("duplicate_source_ids") or [],
+                    }
+                )
 
             display_unit = clus["unit"] if clus["unit"] not in ("Unmapped", "") else "Syllabus mapping uncertain"
             topic_item = {
@@ -1099,6 +1487,10 @@ class PYQIntelligenceEngine:
                 "why": why_summary,
                 "exact_repeat_count": exact_in,
                 "semantic_repeat_count": semantic_in,
+                "unique_occurrence_count": appearances,
+                "canonical_paper_ids": clus.get("canonical_paper_ids") or [paper_id_of(sq) for sq in self._occurrence_members(source_qs)],
+                "source_identity_confidence": clus.get("source_identity_confidence"),
+                "duplicate_source_ids": clus.get("duplicate_source_ids") or [],
                 "sample_question": clus["sample_question"],
                 "source_questions": source_qs_trace,
             }
@@ -1115,9 +1507,10 @@ class PYQIntelligenceEngine:
             members = g.get("questions", [])
             if not members:
                 continue
-            q1 = members[0]
-            years = g.get("years", [q1.get("year", 2024)])
-            repeat_cnt = g.get("repeat_count", len(members))
+            unique_members = self._occurrence_members(members)
+            q1 = unique_members[0] if unique_members else members[0]
+            years = g.get("years") or unique_years(unique_members)
+            repeat_cnt = int(g.get("unique_occurrence_count") or g.get("repeat_count") or len(unique_members))
             exact_cnt = repeat_cnt if g in exact_repeat_groups else 0
             semantic_cnt = repeat_cnt if g in semantic_repeat_groups else 0
             marks_list = [q.get("marks", 5) for q in members]
@@ -1136,7 +1529,7 @@ class PYQIntelligenceEngine:
                 last_year=last_y,
                 current_year=current_academic_year(),
                 semantic_repeat_count=semantic_cnt,
-                recurrence_consistency=(len(years) / max(1, num_papers)) if num_papers else 0.0,
+                recurrence_consistency=len(years) / consistency_denominator,
                 syllabus_mapped=unit_str not in ("Unmapped", "Syllabus mapping uncertain", ""),
                 extraction_confidence=0.9,
             )
@@ -1172,19 +1565,26 @@ class PYQIntelligenceEngine:
                         f"Typical Marks: {max_m}M",
                         f"Mapped Syllabus Unit: {unit_str}",
                     ],
+                    "unique_occurrence_count": repeat_cnt,
+                    "canonical_paper_ids": g.get("canonical_paper_ids") or [paper_id_of(q) for q in unique_members],
+                    "source_identity_confidence": g.get("source_identity_confidence"),
+                    "duplicate_source_ids": g.get("duplicate_source_ids") or [],
                     "source_questions": [
                         {
-                            "question_id": q["question_id"],
-                            "year": q["year"],
-                            "exam_session": q.get("exam_session", "Exam"),
-                            "source_ref": self._source_ref(q),
-                            "marks": q["marks"],
-                            "exact_text": q.get("exact_text", ""),
-                            "source_file": q.get("source_file", ""),
-                            "source_page": q.get("source_page", 1),
-                            "relationship": "EXACT_REPEAT" if exact_cnt > 0 else "SEMANTIC_REPEAT",
+                            **{
+                                "question_id": q["question_id"],
+                                "year": q["year"],
+                                "exam_session": q.get("exam_session", "Exam"),
+                                "source_ref": self._source_ref(q),
+                                "marks": q["marks"],
+                                "exact_text": q.get("exact_text", ""),
+                                "source_file": q.get("source_file", ""),
+                                "source_page": q.get("source_page", 1),
+                                "relationship": "EXACT_REPEAT" if exact_cnt > 0 else "SEMANTIC_REPEAT",
+                            },
+                            **source_identity_fields(q),
                         }
-                        for q in members
+                        for q in unique_members
                     ],
                 }
             )
@@ -1236,6 +1636,10 @@ class PYQIntelligenceEngine:
                     "years": t.get("years_appeared") or [],
                     "exact_repeat_count": t.get("exact_repeat_count", 0),
                     "semantic_repeat_count": t.get("semantic_repeat_count", 0),
+                    "unique_occurrence_count": t.get("unique_occurrence_count") or t.get("appearances_count"),
+                    "canonical_paper_ids": t.get("canonical_paper_ids") or [],
+                    "source_identity_confidence": t.get("source_identity_confidence"),
+                    "duplicate_source_ids": t.get("duplicate_source_ids") or [],
                 }
             )
 
@@ -1270,10 +1674,15 @@ class PYQIntelligenceEngine:
                 "topic_name": item["title"],
                 "priority_score": item["priority_score"],
                 "signals": item.get("signals", {}),
-                "years": [sq["year"] for sq in item.get("source_questions", []) if sq.get("year")],
-                "appearances": len(item.get("source_questions", [])),
-                "exact_repeat_count": sum(1 for sq in item.get("source_questions", []) if sq.get("relationship") == "EXACT_REPEAT"),
-                "semantic_repeat_count": sum(1 for sq in item.get("source_questions", []) if sq.get("relationship") == "SEMANTIC_REPEAT"),
+                "years": unique_years(item.get("source_questions", [])),
+                "appearances": unique_occurrence_count(item.get("source_questions", [])),
+                "unique_occurrence_count": unique_occurrence_count(item.get("source_questions", [])),
+                "exact_repeat_count": unique_occurrence_count(
+                    [sq for sq in item.get("source_questions", []) if sq.get("relationship") == "EXACT_REPEAT"]
+                ),
+                "semantic_repeat_count": unique_occurrence_count(
+                    [sq for sq in item.get("source_questions", []) if sq.get("relationship") == "SEMANTIC_REPEAT"]
+                ),
                 "evidence_label": item.get("tier_badge", "Priority Item"),
                 "explanation": item["explanation"],
             }
@@ -1306,6 +1715,7 @@ class PYQIntelligenceEngine:
             "years_covered": years_covered,
             "exact_repeat_count": len(exact_repeat_groups),
             "semantic_repeat_count": len(semantic_repeat_groups),
+            "source_deduplication": source_dedup_summary(extracted_questions),
             "summary_stats": {
                 "high_priority_topics_count": high_priority_count,
                 "repeated_questions_count": len(exact_repeat_groups) + len(semantic_repeat_groups),
@@ -1343,7 +1753,10 @@ class PYQIntelligenceEngine:
             "source_questions_available_via": f"/workspaces/{workspace_id}/pyq-questions",
             "debug_trace": {
                 "workspace_id": workspace_id,
-                "papers_analyzed": list(paper_stats.keys()),
+                "papers_analyzed": [
+                    p.get("source_file") or pid for pid, p in paper_stats.items()
+                ] if isinstance(paper_stats, dict) else list(paper_stats.keys()),
+                "unique_canonical_papers": num_papers,
                 "total_canonical_questions": len(extracted_questions),
                 "unique_topics": len(topics),
                 "exact_repeat_groups_count": len(exact_repeat_groups),

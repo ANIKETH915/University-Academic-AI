@@ -467,6 +467,10 @@ class DynamicIngestPipeline:
                 is_valid = False
                 reason = "native_contains_garbled_prefix_force_ocr"
                 metrics = {**(metrics or {}), "raw_chars": len(raw_native), "filtered_chars": len(filtered_native)}
+            elif is_valid and len(filtered_native) < 450:
+                is_valid = False
+                reason = "sparse_native_text_force_ocr"
+                metrics = {**(metrics or {}), "raw_chars": len(raw_native), "filtered_chars": len(filtered_native)}
 
             page_text = filtered_native
             ocr_raw_hd = ""

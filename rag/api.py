@@ -9,6 +9,7 @@ from rag.answer_engine import GroundedAnswerEngine
 from rag.pyq_intelligence import PYQIntelligenceEngine
 from rag.workspace_db import WorkspaceDB
 from rag.dynamic_ingest import DynamicIngestPipeline
+from rag.config import BASE_DIR
 
 app = FastAPI(
     title="University Academic AI RAG API",
@@ -79,10 +80,15 @@ def require_workspace(workspace_id: str) -> Dict[str, Any]:
         raise HTTPException(status_code=400, detail="A valid workspace_id is required.")
     ws = workspace_db.get_by_id(workspace_id)
     if not ws:
-        raise HTTPException(
-            status_code=404,
-            detail=f"Workspace '{workspace_id}' not found. Create it via POST /workspaces.",
-        )
+        from rag.config import BASE_DIR
+        upload_dir = os.path.join(BASE_DIR, "data", "uploads", workspace_id)
+        if os.path.exists(upload_dir):
+            ws = workspace_db.get_or_create(workspace_id)
+        else:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Workspace '{workspace_id}' not found. Create it via POST /workspaces.",
+            )
     return ws
 
 
@@ -95,18 +101,18 @@ def health_check():
         stats = store.get_stats()
     except Exception as e:
         stats = {"total_vectors": 0, "status": "active", "warning": str(e)}
-    from rag.llm_client import llm_status
+    from rag.hybrid_question_extraction import EXTRACTION_ENGINE_BUILD
 
     return {
         "status": "ok",
         "service": "University Academic AI RAG Backend",
         "version": "3.6.0-universal-reconciliation",
+        "build_id": EXTRACTION_ENGINE_BUILD,
         "extraction_pipeline": "universal_9_stage_reconciliation_v2",
         "git_commit": "914f07d3e54714e78d0dbb93a190e2a6ae8baeca",
         "started_at": START_TIME,
         "vector_store_stats": stats,
-        # Provider names and models only — credentials never leave the server.
-        "llm": llm_status(),
+        "llm": {"configured": False, "mode": "deterministic_grounded"},
     }
 
 @app.get("/workspaces", summary="List all academic workspaces")
@@ -164,6 +170,32 @@ def workspace_audit(workspace_id: str):
         "last_ingest_audit_log": dynamic_ingest.last_audit_log
     }
 
+@app.post("/workspaces/{workspace_id}/upload-pending", summary="Upload PDF document to workspace as pending (before build)")
+@app.post("/workspaces/{workspace_id}/upload", summary="Upload PDF document to workspace as pending (before build)")
+async def upload_pending_document(workspace_id: str, file: UploadFile = File(...), doc_type: str = Form("syllabus")):
+    ws = require_workspace(workspace_id)
+    safe_name = os.path.basename(file.filename or "upload.pdf")
+    persist_dir = os.path.join(BASE_DIR, "data", "uploads", workspace_id)
+    os.makedirs(persist_dir, exist_ok=True)
+    persist_path = os.path.join(persist_dir, safe_name)
+
+    with open(persist_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    size_mb = f"{round(os.path.getsize(persist_path) / (1024*1024), 1)} MB"
+    file_info = {
+        "id": f"doc-{safe_name}",
+        "name": safe_name,
+        "size": size_mb,
+        "metadata": ws.get("semester", "Semester 1"),
+        "status": "PENDING",
+        "build_started": False,
+        "persisted_path": persist_path,
+        "persisted_pdf": persist_path
+    }
+    updated_ws = workspace_db.add_file(workspace_id, file_info, doc_type)
+    return {"status": "success", "file": file_info, "workspace": updated_ws}
+
 @app.post("/workspaces/{workspace_id}/ingest", summary="Dynamically ingest PDF document into workspace")
 async def ingest_document(workspace_id: str, file: UploadFile = File(...), doc_type: str = Form("syllabus")):
     if not workspace_id or workspace_id in {"/", "undefined", "null", "ws-default-workspace"}:
@@ -173,10 +205,7 @@ async def ingest_document(workspace_id: str, file: UploadFile = File(...), doc_t
         )
     ws = workspace_db.get_by_id(workspace_id)
     if not ws:
-        raise HTTPException(
-            status_code=404,
-            detail=f"Workspace '{workspace_id}' not found. Create it via POST /workspaces before ingesting.",
-        )
+        ws = workspace_db.get_or_create(workspace_id)
 
     import tempfile
     from rag.config import BASE_DIR
@@ -196,6 +225,20 @@ async def ingest_document(workspace_id: str, file: UploadFile = File(...), doc_t
         shutil.copy2(temp_path, persist_path)
     except Exception as e:
         print(f"[INGEST] persist copy warning: {e}")
+
+    # Immediately lock document in workspace_db so DELETE API is rejected with 409 Conflict
+    size_mb = f"{round(os.path.getsize(temp_path) / (1024*1024), 1)} MB"
+    processing_file_info = {
+        "id": f"doc-{safe_name}",
+        "name": safe_name,
+        "size": size_mb,
+        "metadata": ws.get("semester", "Semester 1"),
+        "status": "PROCESSING",
+        "build_started": True,
+        "persisted_path": persist_path,
+        "persisted_pdf": persist_path
+    }
+    workspace_db.add_file(workspace_id, processing_file_info, doc_type)
 
     pages_count = 1
     try:
@@ -235,6 +278,12 @@ async def ingest_document(workspace_id: str, file: UploadFile = File(...), doc_t
                 for r in (audit.get("rejected_candidates") or [])[:80]
             ]),
             "missing_genuine_questions": raw_audit.get("missing_genuine_questions", (audit.get("quality_summary") or {}).get("missing_questions") or []),
+            "parent_frontier_audit": raw_audit.get("parent_frontier_audit", []),
+            "observed_markers": raw_audit.get("observed_markers", []),
+            "recovered_markers": raw_audit.get("recovered_markers", []),
+            "inferred_candidates": raw_audit.get("inferred_candidates", []),
+            "source_proven_missing": raw_audit.get("source_proven_missing", []),
+            "rejected_noise": raw_audit.get("rejected_noise", []),
             "cross_page_merges": raw_audit.get("cross_page_merges", []),
             "representation_sources": raw_audit.get("representation_sources", {}),
             "page_extraction_audit": audit.get("page_extraction_audit", []),
@@ -284,14 +333,15 @@ async def ingest_document(workspace_id: str, file: UploadFile = File(...), doc_t
                 },
             )
 
-    size_mb = f"{round(os.path.getsize(temp_path) / (1024*1024), 1)} MB"
     file_info = {
         "id": f"doc-{safe_name}",
         "name": safe_name,
         "size": size_mb,
         "metadata": ws.get("semester", "Semester 1"),
         "status": "VERIFIED" if metas else "FAILED",
+        "build_started": True,
         "persisted_path": persist_path,
+        "persisted_pdf": persist_path,
     }
     workspace_db.add_file(workspace_id, file_info, doc_type)
 
@@ -354,13 +404,73 @@ async def ingest_document(workspace_id: str, file: UploadFile = File(...), doc_t
         "persisted_pdf": persist_path if os.path.exists(persist_path) else None,
     }
 
-@app.delete("/workspaces/{workspace_id}/documents/{file_id}", summary="Delete document from workspace and purge vectors")
+@app.delete("/workspaces/{workspace_id}/documents/{file_id}", summary="Delete document from workspace (allowed only before build)")
 def delete_document(workspace_id: str, file_id: str, doc_type: str = "syllabus", filename: Optional[str] = None):
-    if filename:
-        store.delete_by_source_file(filename, workspace_id=workspace_id)
+    ws = workspace_db.get_by_id(workspace_id)
+    if not ws:
+        raise HTTPException(status_code=404, detail=f"Workspace '{workspace_id}' not found")
 
-    updated_ws = workspace_db.remove_file(workspace_id, file_id, doc_type)
-    return {"status": "success", "workspace": updated_ws}
+    target_file = None
+    file_list = ws.get("syllabus_files", []) if doc_type == "syllabus" else ws.get("pyq_files", [])
+    for f in file_list:
+        if f.get("id") == file_id or f.get("name") == file_id or f.get("filename") == file_id:
+            target_file = f
+            break
+
+    if not target_file:
+        alt_list = ws.get("pyq_files", []) if doc_type == "syllabus" else ws.get("syllabus_files", [])
+        for f in alt_list:
+            if f.get("id") == file_id or f.get("name") == file_id or f.get("filename") == file_id:
+                target_file = f
+                doc_type = "pyq" if doc_type == "syllabus" else "syllabus"
+                break
+
+    resolved_filename = filename or (target_file.get("name") if target_file else None) or (target_file.get("filename") if target_file else None) or file_id
+
+    # If document is not found in workspace file list and resolved_filename doesn't match any file in workspace:
+    if not target_file:
+        raise HTTPException(status_code=404, detail=f"Document '{file_id}' not found in workspace '{workspace_id}'")
+
+    file_status = str(target_file.get("status", "")).upper()
+    build_started = (target_file.get("build_started") is True)
+
+    # Check if document has vectors in store
+    has_vectors = False
+    if resolved_filename:
+        try:
+            c_res = store.collection.get(where={"$and": [{"workspace_id": {"$eq": workspace_id}}, {"source_file": {"$eq": resolved_filename}}]})
+            has_vectors = bool(c_res and c_res.get("ids") and len(c_res["ids"]) > 0)
+        except Exception:
+            has_vectors = False
+
+    locked_statuses = {"VERIFIED", "READY", "PROCESSING", "CHUNKED", "EMBEDDED", "INDEXED", "COMPLETED"}
+    if build_started or file_status in locked_statuses or has_vectors:
+        raise HTTPException(
+            status_code=409,
+            detail="Document cannot be deleted after build processing has started."
+        )
+
+    # Document is PENDING and build has NOT started -> Allow deletion of pending file & metadata
+    if resolved_filename:
+        upload_dir = os.path.join(BASE_DIR, "data", "uploads", workspace_id)
+        possible_paths = [
+            os.path.join(upload_dir, resolved_filename),
+            target_file.get("persisted_path") if target_file else None,
+            target_file.get("persisted_pdf") if target_file else None
+        ]
+        for p in possible_paths:
+            if p and os.path.exists(p):
+                try:
+                    os.remove(p)
+                except Exception as e:
+                    print(f"Warning deleting file {p}: {e}")
+
+    updated_ws = workspace_db.remove_file(workspace_id, file_id, doc_type, resolved_filename)
+
+    from rag.pyq_intelligence import clear_pyq_analysis_cache
+    clear_pyq_analysis_cache(workspace_id)
+
+    return {"status": "success", "workspace": updated_ws or workspace_db.get_by_id(workspace_id)}
 
 @app.post("/search", summary="Hybrid vector search strictly scoped by workspace_id")
 def search_endpoint(req: SearchRequest):
@@ -534,3 +644,6 @@ def study_priority_endpoint(req: StudyPriorityRequest, workspace_id: Optional[st
     subject = req.subject or (ws.get("subject") if ws else "Subject")
     semester = req.semester or (ws.get("semester") if ws else "Semester")
     return pyq_intel.get_study_priority(workspace_id=ws_id, subject=subject, semester=semester, top_n=req.top_n)
+
+
+

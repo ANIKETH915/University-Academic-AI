@@ -78,14 +78,14 @@ export default function PYQIntelligencePage({ setActiveTab, setSelectedTopicForA
         badge={isSinglePaper ? 'Single Paper Diagnostic' : 'Multi-Year Recurrence Engine'}
       />
 
-      <div className="p-4 rounded-xl bg-[#0B1020] border border-[#1F2937] text-slate-300 text-xs flex items-center justify-between gap-3">
+      <div className="p-4 rounded-xl bg-white dark:bg-[#0B1020] border border-slate-200 dark:border-[#1F2937] text-slate-700 dark:text-slate-300 text-xs flex items-center justify-between gap-3 shadow-xs">
         <div>
-          <span className="font-semibold text-white">Analysis Scope:</span>{' '}
-          Active workspace only — <strong className="text-purple-300">{activeWorkspace?.university || 'Workspace'} / {activeWorkspace?.subject || 'Subject'} ({activeWorkspace?.semester || 'Sem'})</strong>.
+          <span className="font-semibold text-slate-900 dark:text-white">Analysis Scope:</span>{' '}
+          Active workspace only — <strong className="text-purple-600 dark:text-purple-300">{activeWorkspace?.university || 'Workspace'} / {activeWorkspace?.subject || 'Subject'} ({activeWorkspace?.semester || 'Sem'})</strong>.
         </div>
         <button
           onClick={() => setIsSelectorOpen(true)}
-          className="px-3 py-1.5 rounded-lg bg-[#111827] hover:bg-[#1F2937] border border-[#1F2937] text-purple-300 text-xs font-semibold flex items-center space-x-1 transition-colors flex-shrink-0"
+          className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-[#111827] hover:bg-slate-200 dark:hover:bg-[#1F2937] border border-slate-200 dark:border-[#1F2937] text-purple-600 dark:text-purple-300 text-xs font-semibold flex items-center space-x-1 transition-colors flex-shrink-0"
         >
           <Layers className="w-3.5 h-3.5" />
           <span>Switch Workspace</span>
@@ -94,12 +94,12 @@ export default function PYQIntelligencePage({ setActiveTab, setSelectedTopicForA
 
       {isInvalidWorkspace ? (
         <div className="saas-card p-10 text-center space-y-4 max-w-2xl mx-auto my-6">
-          <div className="w-16 h-16 rounded-3xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 rounded-3xl bg-amber-500/10 border border-amber-500/20 text-amber-500 dark:text-amber-400 flex items-center justify-center mx-auto">
             <AlertCircle className="w-8 h-8" />
           </div>
           <div className="space-y-1">
-            <h3 className="font-heading font-extrabold text-lg text-white">No active workspace selected</h3>
-            <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
+            <h3 className="font-heading font-extrabold text-lg text-slate-900 dark:text-white">No active workspace selected</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
               Create or select an active academic workspace to analyze examination questions.
             </p>
           </div>
@@ -108,38 +108,38 @@ export default function PYQIntelligencePage({ setActiveTab, setSelectedTopicForA
           </button>
         </div>
       ) : loading ? (
-        <div className="p-12 text-center text-slate-400 saas-card">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto text-purple-400 mb-2" />
+        <div className="p-12 text-center text-slate-500 dark:text-slate-400 saas-card">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto text-purple-600 dark:text-purple-400 mb-2" />
           <p className="text-xs">Computing question-level intelligence for {activeWorkspace.subject || 'uploaded papers'}...</p>
         </div>
       ) : data?.unavailable ? (
         <div className="saas-card p-10 text-center space-y-4 max-w-2xl mx-auto my-6">
-          <div className="w-16 h-16 rounded-3xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 rounded-3xl bg-rose-500/10 border border-rose-500/20 text-rose-500 dark:text-rose-400 flex items-center justify-center mx-auto">
             <AlertCircle className="w-8 h-8" />
           </div>
           <div className="space-y-1">
-            <h3 className="font-heading font-extrabold text-lg text-white">Intelligence could not be loaded</h3>
-            <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
+            <h3 className="font-heading font-extrabold text-lg text-slate-900 dark:text-white">Intelligence could not be loaded</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
               The backend rejected or could not serve this request, so no analysis is shown.
               This is not the same as an empty workspace.
             </p>
-            <p className="text-xs text-rose-300 font-mono break-words max-w-md mx-auto pt-2">
+            <p className="text-xs text-rose-600 dark:text-rose-300 font-mono break-words max-w-md mx-auto pt-2">
               {data.error}{data.error_status ? ` (HTTP ${data.error_status})` : ''}
             </p>
           </div>
-          <button onClick={() => setActiveTab('workspace')} className="px-6 py-3 rounded-xl bg-[#111827] hover:bg-[#1F2937] border border-[#1F2937] text-purple-300 font-semibold text-xs inline-flex items-center space-x-2">
+          <button onClick={() => setActiveTab('workspace')} className="px-6 py-3 rounded-xl bg-slate-100 dark:bg-[#111827] hover:bg-slate-200 dark:hover:bg-[#1F2937] border border-slate-200 dark:border-[#1F2937] text-purple-600 dark:text-purple-300 font-semibold text-xs inline-flex items-center space-x-2">
             <Database className="w-4 h-4" /><span>Open Knowledge Base</span>
           </button>
         </div>
       ) : !(data?.total_valid_questions || data?.total_questions_analyzed || data?.total_papers) ? (
         <div className="saas-card p-10 text-center space-y-4 max-w-2xl mx-auto my-6">
-          <div className="w-16 h-16 rounded-3xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 rounded-3xl bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 flex items-center justify-center mx-auto">
             <Database className="w-8 h-8" />
           </div>
           <div className="space-y-1">
-            <h3 className="font-heading font-extrabold text-lg text-white">No previous-year papers in this workspace yet</h3>
-            <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
-              Upload PYQ PDFs for <strong className="text-white">{activeWorkspace.subject || 'your subject'}</strong> to unlock recurrence intelligence.
+            <h3 className="font-heading font-extrabold text-lg text-slate-900 dark:text-white">No previous-year papers in this workspace yet</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
+              Upload PYQ PDFs for <strong className="text-slate-900 dark:text-white">{activeWorkspace.subject || 'your subject'}</strong> to unlock recurrence intelligence.
               {localPyqHint ? ' (Local file list exists but backend returned no PYQ vectors — re-ingest may be required.)' : ''}
             </p>
           </div>
@@ -151,20 +151,20 @@ export default function PYQIntelligencePage({ setActiveTab, setSelectedTopicForA
         <div className="space-y-6">
           {/* Overall Statistics */}
           <div>
-            <h3 className="font-heading font-bold text-xs text-white uppercase tracking-wider mb-3">Overall Statistics</h3>
+            <h3 className="font-heading font-bold text-xs text-slate-800 dark:text-white uppercase tracking-wider mb-3">Overall Statistics</h3>
             <div className="saas-card p-5 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 text-center">
-              <Stat label="Questions analyzed" value={data?.total_valid_questions || data?.total_questions_analyzed || 0} color="text-purple-400" />
-              <Stat label="Papers analyzed" value={data?.total_papers || 0} color="text-indigo-400" />
-              <Stat label="Years covered" value={yearsLabel} color="text-blue-400" small />
-              <Stat label="Unique intents" value={data?.unique_question_intents || 0} color="text-cyan-400" />
-              <Stat label="Exact repeats" value={data?.exact_repeat_count || data?.exact_repeats?.length || 0} color="text-emerald-400" />
-              <Stat label="Semantic repeats" value={data?.semantic_repeat_count || data?.semantic_repeats?.length || 0} color="text-amber-400" />
-              <Stat label="Repeated topics" value={data?.topic_recurrence?.length || data?.unique_topic_clusters || 0} color="text-rose-400" />
+              <Stat label="Questions analyzed" value={data?.total_valid_questions || data?.total_questions_analyzed || 0} color="text-purple-600 dark:text-purple-400" />
+              <Stat label="Papers analyzed" value={data?.total_papers || 0} color="text-indigo-600 dark:text-indigo-400" />
+              <Stat label="Years covered" value={yearsLabel} color="text-blue-600 dark:text-blue-400" small />
+              <Stat label="Unique intents" value={data?.unique_question_intents || 0} color="text-cyan-600 dark:text-cyan-400" />
+              <Stat label="Exact repeats" value={data?.exact_repeat_count || data?.exact_repeats?.length || 0} color="text-emerald-600 dark:text-emerald-400" />
+              <Stat label="Semantic repeats" value={data?.semantic_repeat_count || data?.semantic_repeats?.length || 0} color="text-amber-600 dark:text-amber-400" />
+              <Stat label="Repeated topics" value={data?.topic_recurrence?.length || data?.unique_topic_clusters || 0} color="text-rose-600 dark:text-rose-400" />
             </div>
             <div className="mt-3 flex justify-end">
               <button
                 onClick={openSourceQuestions}
-                className="px-3 py-1.5 rounded-lg bg-[#111827] hover:bg-[#1F2937] border border-[#1F2937] text-slate-300 text-xs font-semibold inline-flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-[#111827] hover:bg-slate-200 dark:hover:bg-[#1F2937] border border-slate-200 dark:border-[#1F2937] text-slate-700 dark:text-slate-300 text-xs font-semibold inline-flex items-center gap-1.5 transition-colors"
               >
                 <FileText className="w-3.5 h-3.5" />
                 View Source Questions
@@ -173,11 +173,11 @@ export default function PYQIntelligencePage({ setActiveTab, setSelectedTopicForA
           </div>
 
           {isSinglePaper && (
-            <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs flex items-start gap-3">
-              <Info className="w-5 h-5 flex-shrink-0 text-purple-400 mt-0.5" />
+            <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-700 dark:text-purple-300 text-xs flex items-start gap-3">
+              <Info className="w-5 h-5 flex-shrink-0 text-purple-600 dark:text-purple-400 mt-0.5" />
               <div>
-                <h4 className="font-bold text-white text-sm">Single paper mode</h4>
-                <p className="mt-1 leading-relaxed text-slate-300">
+                <h4 className="font-bold text-slate-900 dark:text-white text-sm">Single paper mode</h4>
+                <p className="mt-1 leading-relaxed text-slate-600 dark:text-slate-300">
                   Historical multi-year prediction stays inactive until more papers are uploaded. Within-paper patterns and source validation still apply.
                 </p>
               </div>
@@ -191,24 +191,24 @@ export default function PYQIntelligencePage({ setActiveTab, setSelectedTopicForA
             ) : (
               <div className="space-y-3">
                 {data.most_repeated_questions.slice(0, 12).map((item, idx) => (
-                  <div key={idx} className="p-4 rounded-xl bg-[#0B1020] border border-[#1F2937] space-y-2">
+                  <div key={idx} className="p-4 rounded-xl bg-slate-50 dark:bg-[#0B1020] border border-slate-200 dark:border-[#1F2937] space-y-2 transition-colors">
                     <div className="flex items-start justify-between gap-3">
-                      <h4 className="font-semibold text-sm text-white">{idx + 1}. {item.title}</h4>
-                      <span className="text-[10px] px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/20 text-purple-300 uppercase">
+                      <h4 className="font-semibold text-sm text-slate-900 dark:text-white">{idx + 1}. {item.title}</h4>
+                      <span className="text-[10px] px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-300 font-bold uppercase">
                         {item.kind}
                       </span>
                     </div>
-                    <div className="text-xs text-slate-400 grid grid-cols-2 sm:grid-cols-4 gap-2">
-                      <span>Asked: <strong className="text-slate-200">{item.asked_count}</strong> times</span>
-                      <span>Years: <strong className="text-slate-200">{(item.years || []).join(', ')}</strong></span>
-                      <span>Exact: <strong className="text-slate-200">{item.exact_repeats || 0}</strong></span>
-                      <span>Semantic: <strong className="text-slate-200">{item.semantic_repeats || 0}</strong></span>
+                    <div className="text-xs text-slate-600 dark:text-slate-400 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                      <span>Asked: <strong className="text-slate-900 dark:text-slate-200">{item.unique_occurrence_count ?? item.asked_count}</strong> times</span>
+                      <span>Years: <strong className="text-slate-900 dark:text-slate-200">{(item.years || []).join(', ')}</strong></span>
+                      <span>Exact: <strong className="text-slate-900 dark:text-slate-200">{item.exact_repeats || 0}</strong></span>
+                      <span>Semantic: <strong className="text-slate-900 dark:text-slate-200">{item.semantic_repeats || 0}</strong></span>
                     </div>
-                    <div className="text-[11px] text-slate-300">
+                    <div className="text-[11px] text-slate-600 dark:text-slate-300">
                       <span className="text-slate-500 font-semibold uppercase tracking-wide">Sources:</span>{' '}
-                      {(item.sources || []).join(' · ')}
+                      {uniqueSourceLabels(item.sources).join(' · ')}
                     </div>
-                    {item.why_same && <p className="text-[11px] text-slate-400 italic">Why same: {item.why_same}</p>}
+                    {item.why_same && <p className="text-[11px] text-slate-500 dark:text-slate-400 italic">Why same: {item.why_same}</p>}
                   </div>
                 ))}
               </div>
@@ -222,26 +222,26 @@ export default function PYQIntelligencePage({ setActiveTab, setSelectedTopicForA
             ) : (
               <div className="space-y-3">
                 {data.exact_repeats.map((g, idx) => (
-                  <div key={idx} className="p-4 rounded-xl bg-[#0B1020] border border-[#1F2937] space-y-2">
+                  <div key={idx} className="p-4 rounded-xl bg-slate-50 dark:bg-[#0B1020] border border-slate-200 dark:border-[#1F2937] space-y-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded border bg-emerald-500/10 text-emerald-300 border-emerald-500/30">{g.group_type || 'EXACT'}</span>
-                      <span className="text-[11px] text-slate-400">conf {g.confidence ?? 1}</span>
+                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded border bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border-emerald-500/30">{g.group_type || 'EXACT'}</span>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400">conf {g.confidence ?? 1}</span>
                     </div>
-                    <p className="text-xs text-slate-200 leading-relaxed">{g.exact_text}</p>
-                    {(g.original_questions || []).length > 0 && (
+                    <p className="text-xs text-slate-800 dark:text-slate-200 leading-relaxed">{g.exact_text}</p>
+                    {uniqueOriginalQuestions(g.original_questions).length > 0 && (
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {g.original_questions.map((oq, i2) => (
-                          <div key={i2} className="p-2 rounded bg-[#111827] border border-[#1F2937] text-[11px] text-slate-300">
-                            <div className="text-purple-300 font-semibold mb-1">{oq.source_ref}</div>
+                        {uniqueOriginalQuestions(g.original_questions).map((oq, i2) => (
+                          <div key={i2} className="p-2 rounded bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] text-[11px] text-slate-700 dark:text-slate-300">
+                            <div className="text-purple-600 dark:text-purple-300 font-semibold mb-1">{oq.source_ref}</div>
                             {oq.text}
                           </div>
                         ))}
                       </div>
                     )}
-                    <div className="text-[11px] text-slate-400">
-                      Years: {(g.years || []).join(', ')} · {(g.source_refs || []).join(' · ')}
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                      Years: {(g.years || []).join(', ')} · {uniqueSourceLabels(g.source_refs).join(' · ')}
                     </div>
-                    <p className="text-[11px] text-emerald-400/90">Why grouped: {g.why_grouped || g.reason || 'Normalized wording essentially identical'}</p>
+                    <p className="text-[11px] text-emerald-600 dark:text-emerald-400/90">Why grouped: {g.why_grouped || g.reason || 'Normalized wording essentially identical'}</p>
                   </div>
                 ))}
               </div>
@@ -255,21 +255,30 @@ export default function PYQIntelligencePage({ setActiveTab, setSelectedTopicForA
             ) : (
               <div className="space-y-3">
                 {data.semantic_repeats.map((g, idx) => (
-                  <div key={idx} className="p-4 rounded-xl bg-[#0B1020] border border-[#1F2937] space-y-3">
+                  <div key={idx} className="p-4 rounded-xl bg-slate-50 dark:bg-[#0B1020] border border-slate-200 dark:border-[#1F2937] space-y-3">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded border bg-amber-500/10 text-amber-300 border-amber-500/30">{g.group_type || 'SEMANTIC'}</span>
-                      <h4 className="text-sm font-semibold text-white">{g.display_title}</h4>
-                      <span className="text-[11px] text-slate-400">conf {g.confidence ?? '—'}</span>
+                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded border bg-amber-500/10 text-amber-600 dark:text-amber-300 border-amber-500/30">{g.group_type || 'SEMANTIC'}</span>
+                      <h4 className="text-sm font-semibold text-slate-900 dark:text-white">{g.display_title}</h4>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400">conf {g.confidence ?? '—'}</span>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {(g.original_questions || []).map((oq, i2) => (
-                        <div key={i2} className="p-2 rounded bg-[#111827] border border-[#1F2937] text-[11px] text-slate-300">
-                          <div className="text-purple-300 font-semibold mb-1">{oq.source_ref}</div>
+                      {uniqueOriginalQuestions(g.original_questions).map((oq, i2) => (
+                        <div key={i2} className="p-2 rounded bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] text-[11px] text-slate-700 dark:text-slate-300">
+                          <div className="text-purple-600 dark:text-purple-300 font-semibold mb-1">{oq.source_ref}</div>
                           {oq.text}
                         </div>
                       ))}
                     </div>
-                    <p className="text-[11px] text-amber-300/90">Why they are considered the same: {g.why_same || g.reason}</p>
+                    <p className="text-[11px] text-amber-600 dark:text-amber-300/90">Why grouped: {g.why_grouped || g.why_same || g.reason}</p>
+                    {g.semantic_evidence && (
+                      <p className="text-[11px] text-slate-500">
+                        Entity match {g.semantic_evidence.entity_match ?? '—'}
+                        {' · '}intent {g.semantic_evidence.intent_match ?? '—'}
+                        {' · '}output {g.semantic_evidence.output_match ?? '—'}
+                        {' · '}constraints {g.semantic_evidence.constraint_match ?? '—'}
+                        {' · '}comparison {g.semantic_evidence.comparison_target_match ?? '—'}
+                      </p>
+                    )}
                   </div>
                 ))}
               </div>
@@ -282,29 +291,32 @@ export default function PYQIntelligencePage({ setActiveTab, setSelectedTopicForA
               Broader than a repeat: shared concept, different academic ask. Original questions stay visible.
             </p>
             {(data?.related_topics || []).length === 0 ? (
-              <Empty note="No related-topic pairs met the conservative threshold." />
+              <Empty note="No related-topic groups met the conservative threshold." />
             ) : (
               <div className="space-y-3">
-                {data.related_topics.slice(0, 20).map((r, idx) => (
-                  <div key={idx} className="p-4 rounded-xl bg-[#0B1020] border border-[#1F2937] space-y-2">
+                {data.related_topics.slice(0, 20).map((r, idx) => {
+                  const members = (r.members && r.members.length)
+                    ? r.members
+                    : [r.q1, r.q2].filter(Boolean);
+                  return (
+                  <div key={idx} className="p-4 rounded-xl bg-slate-50 dark:bg-[#0B1020] border border-slate-200 dark:border-[#1F2937] space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded border bg-indigo-500/10 text-indigo-300 border-indigo-500/30">{r.group_type || 'RELATED'}</span>
-                      <span className="font-semibold text-white text-sm">{r.topic}</span>
-                      <span className="text-[11px] text-slate-400">sim {r.similarity ?? '—'} · conf {r.confidence ?? '—'}</span>
+                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded border bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 border-indigo-500/30">{r.group_type || 'RELATED'}</span>
+                      <span className="font-semibold text-slate-900 dark:text-white text-sm">{r.topic}</span>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400">{members.length} questions · conf {r.confidence ?? '—'}</span>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <div className="p-2 rounded bg-[#111827] border border-[#1F2937] text-[11px] text-slate-300">
-                        <div className="text-purple-300 font-semibold mb-1">{r.q1?.source_ref}</div>
-                        {r.q1?.text}
-                      </div>
-                      <div className="p-2 rounded bg-[#111827] border border-[#1F2937] text-[11px] text-slate-300">
-                        <div className="text-purple-300 font-semibold mb-1">{r.q2?.source_ref}</div>
-                        {r.q2?.text}
-                      </div>
+                      {members.map((m, mi) => (
+                        <div key={mi} className="p-2 rounded bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] text-[11px] text-slate-700 dark:text-slate-300">
+                          <div className="text-purple-600 dark:text-purple-300 font-semibold mb-1">{m?.source_ref}</div>
+                          {m?.text}
+                        </div>
+                      ))}
                     </div>
-                    <p className="text-[11px] text-slate-400 italic">Why grouped: {r.why_grouped || r.reason}</p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 italic">Why grouped: {r.why_grouped || r.reason}</p>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </Section>
@@ -319,9 +331,9 @@ export default function PYQIntelligencePage({ setActiveTab, setSelectedTopicForA
             ) : (
               <div className="space-y-2">
                 {(data.topic_recurrence || []).slice(0, 20).map((t, idx) => (
-                  <div key={idx} className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-lg bg-[#0B1020] border border-[#1F2937] text-xs">
-                    <span className="font-semibold text-white">{t.topic}</span>
-                    <span className="text-slate-400">Appeared in: <strong className="text-slate-200">{(t.years || []).join(', ')}</strong> ({t.appearances}×)</span>
+                  <div key={idx} className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-lg bg-slate-50 dark:bg-[#0B1020] border border-slate-200 dark:border-[#1F2937] text-xs">
+                    <span className="font-semibold text-slate-900 dark:text-white">{t.topic}</span>
+                    <span className="text-slate-500 dark:text-slate-400">Appeared in: <strong className="text-slate-800 dark:text-slate-200">{(t.years || []).join(', ')}</strong> ({t.unique_occurrence_count ?? t.appearances}×)</span>
                   </div>
                 ))}
               </div>
@@ -356,11 +368,11 @@ export default function PYQIntelligencePage({ setActiveTab, setSelectedTopicForA
       <WhyPriorityModal topic={selectedWhyTopic} onClose={() => setSelectedWhyTopic(null)} />
 
       {showSourceModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70">
-          <div className="w-full max-w-3xl max-h-[80vh] overflow-hidden rounded-2xl bg-[#0B1020] border border-[#1F2937] shadow-2xl flex flex-col">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-[#1F2937]">
-              <h3 className="font-heading font-bold text-sm text-white">Source Questions (valid canonical PYQs only)</h3>
-              <button onClick={() => setShowSourceModal(false)} className="text-slate-400 hover:text-white"><X className="w-5 h-5" /></button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="w-full max-w-3xl max-h-[80vh] overflow-hidden rounded-2xl bg-white dark:bg-[#0B1020] border border-slate-200 dark:border-[#1F2937] shadow-2xl flex flex-col">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-[#1F2937]">
+              <h3 className="font-heading font-bold text-sm text-slate-900 dark:text-white">Source Questions (valid canonical PYQs only)</h3>
+              <button onClick={() => setShowSourceModal(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-white"><X className="w-5 h-5" /></button>
             </div>
             <div className="overflow-y-auto p-5 space-y-3">
               {loadingSources ? (
@@ -369,15 +381,15 @@ export default function PYQIntelligencePage({ setActiveTab, setSelectedTopicForA
                 <p className="text-xs text-slate-400 text-center py-8">No valid source questions.</p>
               ) : (
                 sourceQuestions.map((q, idx) => (
-                  <div key={idx} className="p-3 rounded-lg bg-[#111827] border border-[#1F2937]">
-                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-purple-300 font-semibold mb-1">
+                  <div key={idx} className="p-3 rounded-lg bg-slate-50 dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937]">
+                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-purple-600 dark:text-purple-300 font-semibold mb-1">
                       <span>{q.question_number || q.question_id}</span>
                       {q.marks != null && <span className="text-slate-500">· {q.marks}M</span>}
                       {q.year != null && <span className="text-slate-500">· {q.year}</span>}
                       {q.source_page != null && <span className="text-slate-500">· p.{q.source_page}</span>}
                     </div>
                     <p className="text-[10px] text-slate-500 mb-1 truncate">{q.source_file || q.source_ref}</p>
-                    <p className="text-xs text-slate-200 leading-relaxed">{q.exact_text}</p>
+                    <p className="text-xs text-slate-800 dark:text-slate-200 leading-relaxed">{q.exact_text}</p>
                   </div>
                 ))
               )}
@@ -387,6 +399,30 @@ export default function PYQIntelligencePage({ setActiveTab, setSelectedTopicForA
       )}
     </div>
   );
+}
+
+function uniqueSourceLabels(sources) {
+  const seen = new Set();
+  const out = [];
+  for (const raw of sources || []) {
+    const key = String(raw || '').trim();
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    out.push(raw);
+  }
+  return out;
+}
+
+function uniqueOriginalQuestions(questions) {
+  const seen = new Set();
+  const out = [];
+  for (const q of questions || []) {
+    const key = q?.canonical_paper_id || q?.source_ref || `${q?.year}|${q?.source_file}|${q?.text}`;
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    out.push(q);
+  }
+  return out;
 }
 
 function Stat({ label, value, color, small }) {
@@ -401,9 +437,9 @@ function Stat({ label, value, color, small }) {
 function Section({ title, icon: Icon, children }) {
   return (
     <div className="saas-card p-6 space-y-4">
-      <div className="flex items-center space-x-2 border-b border-[#1F2937] pb-3">
-        <Icon className="w-5 h-5 text-purple-400" />
-        <h3 className="font-heading font-bold text-sm text-white uppercase tracking-wider">{title}</h3>
+      <div className="flex items-center space-x-2 border-b border-slate-200 dark:border-[#1F2937] pb-3">
+        <Icon className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+        <h3 className="font-heading font-bold text-sm text-slate-900 dark:text-white uppercase tracking-wider">{title}</h3>
       </div>
       {children}
     </div>
@@ -411,5 +447,5 @@ function Section({ title, icon: Icon, children }) {
 }
 
 function Empty({ note }) {
-  return <div className="p-6 text-center text-slate-400 bg-[#0B1020] rounded-xl border border-[#1F2937] text-xs">{note}</div>;
+  return <div className="p-6 text-center text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-[#0B1020] rounded-xl border border-slate-200 dark:border-[#1F2937] text-xs">{note}</div>;
 }

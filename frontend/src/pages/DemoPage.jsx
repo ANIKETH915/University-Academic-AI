@@ -62,17 +62,17 @@ export default function DemoPage({ setActiveTab, setSelectedTopicForAsk }) {
 
       {/* The walkthrough operates on real uploaded data, never a preloaded fixture. */}
       {activeWorkspaceId ? (
-        <div className="p-4 rounded-xl bg-[#0B1020] border border-[#1F2937] text-slate-300 text-xs flex items-center justify-between gap-3">
+        <div className="p-4 rounded-xl bg-white dark:bg-[#0B1020] border border-slate-200 dark:border-[#1F2937] text-slate-700 dark:text-slate-300 text-xs flex items-center justify-between gap-3 shadow-xs">
           <span>
             Running against:{' '}
-            <strong className="text-white">
+            <strong className="text-slate-900 dark:text-white">
               {activeWorkspace.university || 'Workspace'} / {activeWorkspace.subject || 'Subject'} ({activeWorkspace.semester || 'Sem'})
             </strong>
             <span className="ml-2 text-slate-500 font-mono">[{activeWorkspaceId}]</span>
           </span>
           <button
             onClick={() => setIsSelectorOpen(true)}
-            className="px-3 py-1.5 rounded-lg bg-[#111827] hover:bg-[#1F2937] border border-[#1F2937] text-purple-300 text-xs font-semibold flex-shrink-0 transition-colors"
+            className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-[#111827] hover:bg-slate-200 dark:hover:bg-[#1F2937] border border-slate-200 dark:border-[#1F2937] text-purple-600 dark:text-purple-300 text-xs font-semibold flex-shrink-0 transition-colors"
           >
             Switch Workspace
           </button>

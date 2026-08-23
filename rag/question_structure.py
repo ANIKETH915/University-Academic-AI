@@ -34,7 +34,7 @@ INSTRUCTION_KEYWORDS = {
 
 
 def is_parent_instruction_line(text: str) -> bool:
-    """Detect if line is a parent instruction header like 'Q6. Solve any Four'."""
+    """Detect if line is a parent instruction header like 'Q3. Solve any Four'."""
     s = text.strip()
     m = re.match(rf"^(?:Q\.?|Question)?\s*({_PARENT_NUM})\s*[\.\):]?\s*(.*)$", s, re.I)
     if not m:

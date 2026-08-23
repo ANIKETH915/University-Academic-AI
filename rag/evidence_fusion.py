@@ -151,12 +151,61 @@ def semantic_signal(exact_text: str) -> float:
         score += 0.2
     if re.search(
         r"\b(explain|what|discuss|describe|define|differentiate|compare|"
-        r"derive|calculate|design|write|state|list|draw|justify|comment)\b",
+        r"derive|calculate|design|write|state|list|draw|justify|comment|"
+        r"prove|compute|solve|formulate|construct|illustrate|evaluate)\b",
         t,
         re.I,
     ):
         score += 0.2
     return min(1.0, score)
+
+
+def body_strength_score(exact_text: str) -> float:
+    """
+    Score the strength of a question body independently of the marker.
+    Identifies academic commands, definitions, explanations, derivations, etc.
+    Does NOT require '?'.
+    """
+    t = (exact_text or "").strip()
+    if not t:
+        return 0.0
+    score = 0.2
+    if len(t) >= 20:
+        score += 0.2
+    if len(t) >= 60:
+        score += 0.1
+    if "?" in t:
+        score += 0.15
+    if re.search(r"\[\s*\d+\s*\]", t):  # marks notation
+        score += 0.15
+    if re.search(
+        r"\b(explain|what|discuss|describe|define|differentiate|compare|"
+        r"derive|calculate|design|write|state|list|draw|justify|comment|"
+        r"prove|compute|solve|formulate|construct|illustrate|evaluate)\b",
+        t,
+        re.I,
+    ):
+        score += 0.3
+    return min(1.0, score)
+
+
+def noise_penalty_score(exact_text: str, source_blob: str = "") -> float:
+    """
+    Compute noise penalty for a candidate (header/footer text, duration, admin lines,
+    corrupted OCR characters, table debris).
+    """
+    t = (exact_text or "").strip()
+    if not t:
+        return 1.0
+    penalty = 0.0
+    if re.search(r"\b\d+\s*(?:hours?|hrs?|mins?|minutes?)\b", t, re.I):
+        penalty += 0.4
+    if re.search(r"\b(?:page\s+\d+\s+of\s+\d+|university|semester|code|paper\s*/\s*subject)\b", t, re.I):
+        penalty += 0.3
+    hits = sum(t.count(c) for c in "<>{}|")
+    if hits >= 3:
+        penalty += 0.3
+    return min(1.0, penalty)
 
 
 def continuity_signal(candidate: Dict[str, Any]) -> float:
@@ -202,6 +251,72 @@ def fuse_candidate_evidence(
     }
 
 
+def evaluate_question_level_evidence(
+    candidate: Dict[str, Any],
+    *,
+    source_blob: str = "",
+    all_ids: Optional[List[str]] = None,
+    known_parents: Optional[set] = None,
+    rep_count: int = 1,
+) -> Dict[str, Any]:
+    """
+    Question-Level Evidence Model evaluation per candidate.
+    Calculates candidate confidence and assigns explicit candidate status:
+    DETECTED, VALIDATED, GROUNDED, ADMITTED, REJECTED, AMBIGUOUS, UNVERIFIED.
+    """
+    fusion = fuse_candidate_evidence(
+        candidate,
+        source_blob=source_blob,
+        all_ids=all_ids,
+        known_parents=known_parents,
+    )
+    b_score = body_strength_score(candidate.get("exact_text") or "")
+    n_penalty = noise_penalty_score(candidate.get("exact_text") or "", source_blob)
+    grounded_score = float(candidate.get("grounding_score") or 0.0)
+
+    # Conceptual candidate_confidence combining marker, body, layout, parent, sibling, grounding & noise
+    raw_conf = (
+        0.35 * fusion["confidence"]
+        + 0.35 * b_score
+        + 0.15 * min(1.0, rep_count / 2.0)
+        + 0.15 * grounded_score
+        - 0.30 * n_penalty
+    )
+    cand_confidence = round(max(0.0, min(1.0, raw_conf)), 4)
+
+    status = "DETECTED"
+    exact = (candidate.get("exact_text") or "").strip()
+    if exact and len(exact) >= 3:
+        status = "VALIDATED"
+    if grounded_score >= 0.5:
+        status = "GROUNDED"
+
+    if status == "GROUNDED" and cand_confidence >= 0.35 and n_penalty < 0.6:
+        status = "ADMITTED"
+    elif n_penalty >= 0.6:
+        status = "REJECTED"
+    elif cand_confidence < 0.35:
+        status = "AMBIGUOUS"
+
+    marker_conf = round(float(fusion["signals"]["marker"]), 4)
+    layout_conf = round(float(fusion["signals"]["layout"]), 4)
+    body_conf = round(b_score, 4)
+    grounding_conf = round(grounded_score, 4)
+
+    return {
+        "candidate_confidence": cand_confidence,
+        "overall_confidence": cand_confidence,
+        "marker_confidence": marker_conf,
+        "body_confidence": body_conf,
+        "layout_confidence": layout_conf,
+        "grounding_confidence": grounding_conf,
+        "body_strength": round(b_score, 4),
+        "noise_penalty": round(n_penalty, 4),
+        "fusion": fusion,
+        "status": status,
+    }
+
+
 def fusion_bonus(confidence: float, *, max_bonus: float = 40.0) -> float:
     """
     Bounded rank adjustment for reconciliation tie-breaks. Centred at 0.55 so
@@ -210,3 +325,4 @@ def fusion_bonus(confidence: float, *, max_bonus: float = 40.0) -> float:
     real content against instruction frames (-400).
     """
     return round((confidence - 0.55) * (max_bonus / 0.45), 3)
+

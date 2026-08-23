@@ -50,7 +50,7 @@ export default function UploadDropzone({
     <div
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      className="border-2 border-dashed border-[#1F2937] hover:border-purple-500/50 rounded-2xl p-6 sm:p-8 text-center bg-[#0B1020] hover:bg-[#0B1020]/90 transition-all group flex flex-col items-center justify-center space-y-3"
+      className="border-2 border-dashed border-slate-200 dark:border-[#1F2937] hover:border-purple-500/50 rounded-2xl p-6 sm:p-8 text-center bg-slate-50 dark:bg-[#0B1020] hover:bg-slate-100 dark:hover:bg-[#0B1020]/90 transition-all group flex flex-col items-center justify-center space-y-3"
     >
       {/* Hidden File Input */}
       <input
@@ -63,15 +63,15 @@ export default function UploadDropzone({
         className="hidden"
       />
 
-      <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+      <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 flex items-center justify-center group-hover:scale-110 transition-transform">
         <Icon className="w-6 h-6" />
       </div>
 
       <div>
-        <h4 className="font-heading font-bold text-sm text-white group-hover:text-purple-300 transition-colors">
+        <h4 className="font-heading font-bold text-sm text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
           {title}
         </h4>
-        <p className="text-xs text-slate-400 mt-0.5">
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
           {subtitle}
         </p>
       </div>
@@ -87,7 +87,7 @@ export default function UploadDropzone({
       </button>
 
       {/* Supporting Text */}
-      <span className="text-[11px] font-medium text-slate-500">
+      <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
         or drag & drop your PDF file{multiple ? 's' : ''} here
       </span>
     </div>

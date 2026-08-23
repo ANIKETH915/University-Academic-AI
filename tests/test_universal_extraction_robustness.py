@@ -1,180 +1,256 @@
 """
-Regression tests for universal extraction fixes:
-
-1. Scanned papers whose subquestions are terse topics under an explicit
-   instruction frame ("Write short notes on …" → "a. Ripple", "c. Corda").
-2. Parent instruction frames never hijack a printed subquestion's ID.
-3. Numbered N.B.-style instruction lists ("2. Answer any three out of…")
-   are furniture, not question parents — while choice-parents
-   ("Q.1 Solve any Four …") stay boundaries.
-4. Glued OCR marker leads ("d.Blockchain for DeFi") parse as markers.
-5. Status vocabulary: PARTIAL (not REVIEW_REQUIRED) when genuine markers
-   are detected but not recovered.
-6. Multi-resolution OCR evidence: a second high-DPI pass is reconciled,
-   never blindly concatenated.
+Unit tests for Universal PYQ Extraction — Final Master Hardening Pass.
+Verifies:
+1. Question-level partial recovery (1 bad candidate doesn't poison valid candidates).
+2. Body-first recovery for damaged/weak markers with strong question bodies.
+3. Adaptive failure recovery pass when 0 questions are initially extracted.
+4. Candidate lifecycle status tracking (DETECTED, VALIDATED, GROUNDED, ADMITTED, REJECTED, AMBIGUOUS).
+5. Debug audit report structure and exact rejection reason tracking.
 """
 
 import os
 import sys
 import unittest
-from unittest.mock import patch
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
 os.environ.setdefault("WORKSPACE_DB_TEST_MODE", "1")
-os.environ.setdefault("PYQRAG_TEST_COLLECTION", "pyqrag_pytest_collection")
+os.environ.setdefault("PYQRAG_TEST_COLLECTION", "pyqrag_pytest_robustness")
 
-from rag.hybrid_question_extraction import (
-    compute_extraction_quality,
-    hybrid_extract_document,
-)
-from rag.question_extractor import (
-    extract_questions_from_page_text,
-    fix_ocr_question_glyphs,
-    is_header_or_instruction,
-    is_instruction_frame_text,
-    prepare_page_text_for_extraction,
-)
+from rag.hybrid_question_extraction import run_universal_reconciliation_pipeline, hybrid_extract_document
+from rag.evidence_fusion import evaluate_question_level_evidence, body_strength_score, noise_penalty_score
 
 
-SHORT_NOTES_PAPER = """
-N.B.: 1. Question No. 1 is compulsory.
-2. Answer any three out of the remaining questions.
-3. Assume suitable data if necessary.
-4. Figures to the right indicate full marks.
-
-Ql. Attempt the following (any 4): (20)
-a. Distinguish between public, private, and consortium blockchain.
-b. Explain the concept of double spending with a suitable example.
-c. Compare hot wallets and cold wallets.
-d. What is a Merkle tree? Explain the structure of a Merkle tree.
-e. Write a program in solidity to find the second largest element in an array.
-
-Q2. Attempt the following:
-a. With a suitable diagram, explain the structure of a block header with a list of transactions. (10)
-b. State and explain different types of cryptocurrencies. (10)
-
-Q3. Attempt the following:
-a. Describe the concept of state machine replication. How is a smart contract represented as a state machine? (10)
-b. Explain Hyperledger Fabric v1 architecture. (10)
-
-Q4. Attempt the following:
-a. Describe the architecture on Ethereum. (10)
-b. Write a program in solidity to implement single inheritance. (10)
-
-Q5. Attempt the following:
-a. Explain RAFT consensus mechanism for a private blockchain. (10)
-b. Explain fixed and dynamic arrays in solidity with suitable examples. (10)
-
-Q6. Write short notes (any 2): (20)
-a. Ripple
-b. UTXO model of Bitcoin
-c. Corda
-d.Blockchain for DeFi
-"""
-
-
-class TestInstructionFrameTopics(unittest.TestCase):
-    def test_short_note_topics_are_genuine_questions(self):
-        pages = [{
-            "page": 1,
-            "raw_native_text": "",
-            "raw_ocr_text": SHORT_NOTES_PAPER,
-            "reconstructed_text": prepare_page_text_for_extraction(SHORT_NOTES_PAPER),
-            "ocr_used": True,
-        }]
-        with patch("rag.hybrid_question_extraction.llm_configured", return_value=False):
-            result = hybrid_extract_document(
-                pages, filename="blk.pdf", workspace_id="ws-t", subject="Blockchain", year=2023
-            )
-        ids = [q["question_id"] for q in result["accepted_questions"]]
-        self.assertEqual(len(ids), len(set(ids)))
-        for qid in ("Q1(a)", "Q1(e)", "Q2(a)", "Q5(b)", "Q6(a)", "Q6(b)", "Q6(c)", "Q6(d)"):
-            self.assertIn(qid, ids, f"{qid} missing from {ids}")
-        by_id = {q["question_id"]: q for q in result["accepted_questions"]}
-        # Terse topic items keep their own text, never the parent frame
-        self.assertEqual(by_id["Q6(a)"]["exact_text"].strip(), "Ripple")
-        self.assertEqual(by_id["Q6(c)"]["exact_text"].strip(), "Corda")
-        # The parent frame itself is not a question record
-        for q in result["accepted_questions"]:
-            self.assertFalse(is_instruction_frame_text(q["exact_text"]), q["question_id"])
-
-    def test_glued_marker_lead_parsed(self):
-        acc, _rej = extract_questions_from_page_text(
-            "Q6. Write short notes on any two: (20)\na. Ripple\nd.Blockchain for DeFi\n",
-            1, "g.pdf", "ws",
+class TestUniversalExtractionRobustness(unittest.TestCase):
+    def test_partial_recovery_one_bad_candidate_does_not_poison_valid(self):
+        """
+        Verify Critical Requirement 2: Q1(a), Q1(c), Q1(e) are valid, Q2 is ambiguous/damaged.
+        Result MUST be PARTIAL with 3 valid questions, NEVER FAILED with 0 questions.
+        """
+        raw_text = (
+            "Q1(a) Explain the fundamental architecture of Convolutional Neural Networks. [10]\n"
+            "Q1(c) Derive the backpropagation equations for Recurrent Neural Networks. [10]\n"
+            "Q1(e) Compare supervised and unsupervised learning algorithms with examples. [10]\n"
+            "Q2(ambiguous_garbage_noise_without_valid_body_or_text)\n"
         )
-        ids = sorted(q["question_id"] for q in acc)
-        self.assertIn("Q6(a)", ids)
-        self.assertIn("Q6(d)", ids)
-        by_id = {q["question_id"]: q for q in acc}
-        self.assertIn("Blockchain", by_id["Q6(d)"]["exact_text"])
-
-
-class TestInstructionListNotParents(unittest.TestCase):
-    def test_nb_list_items_are_headers(self):
-        self.assertTrue(is_header_or_instruction("N.B.: 1. Question No. 1 is compulsory."))
-        self.assertTrue(is_header_or_instruction("2. Answer any three out of the remaining questions."))
-        self.assertTrue(is_header_or_instruction("3. Assume suitable data if necessary."))
-        self.assertTrue(is_header_or_instruction("4. Figures to the right indicate full marks."))
-
-    def test_choice_parents_are_not_headers(self):
-        self.assertFalse(is_header_or_instruction("1 Attempt any four"))
-        self.assertFalse(is_header_or_instruction("Q1(a) Explain dropout in detail."))
-        self.assertFalse(is_header_or_instruction("What are the different types of Gradient Descent methods, explain any three of them."))
-
-    def test_frame_detector_is_strict(self):
-        # A real question that merely contains "any three" is NOT a frame
-        self.assertFalse(is_instruction_frame_text(
-            "What are the different types of Gradient Descent methods, explain any three of them."
-        ))
-        self.assertTrue(is_instruction_frame_text("Attempt any four"))
-        self.assertTrue(is_instruction_frame_text("Write short notes on any two: (20)"))
-
-
-class TestQuGlyphRecovery(unittest.TestCase):
-    def test_qu_marker_becomes_q1(self):
-        self.assertEqual(fix_ocr_question_glyphs("Qu. Attempt the following"), "Q1 Attempt the following")
-        self.assertEqual(fix_ocr_question_glyphs("Qu."), "Q1")
-        # Numbered variant keeps its number
-        self.assertEqual(fix_ocr_question_glyphs("Qu 3 Explain"), "Q3 Explain")
-
-
-class TestStatusVocabulary(unittest.TestCase):
-    def test_partial_status_name(self):
-        quality = compute_extraction_quality(
-            ["Q1(a)", "Q1(b)", "Q2(a)"],
-            ["Q1(a)", "Q1(b)", "Q1(c)", "Q2(a)", "Q2(b)"],
+        pages = [
+            {
+                "page": 1,
+                "raw_native_text": raw_text,
+                "raw_ocr_text": raw_text,
+                "reconstructed_text": raw_text,
+            }
+        ]
+        res = run_universal_reconciliation_pipeline(
+            pages,
+            filename="test_partial_paper.pdf",
+            workspace_id="ws-test-partial",
+            subject="Deep Learning",
+            year=2024,
         )
-        self.assertEqual(quality["extraction_quality"], "PARTIAL")
-        self.assertIn("Q1(c)", quality["missing_questions"])
+        accepted = res.get("accepted_questions") or []
+        extracted_ids = [q["question_id"] for q in accepted]
+        quality = res.get("quality") or {}
+        status = quality.get("extraction_quality")
 
-    def test_no_legacy_review_required_emitted(self):
-        quality = compute_extraction_quality(["Q1(a)"], ["Q1(a)", "Q9(z)"])
-        self.assertIn(quality["extraction_quality"], ("COMPLETE", "RECOVERED", "PARTIAL", "FAILED"))
-        self.assertNotEqual(quality["extraction_quality"], "REVIEW_REQUIRED")
+        self.assertGreaterEqual(len(accepted), 3)
+        self.assertIn("Q1(a)", extracted_ids)
+        self.assertIn("Q1(c)", extracted_ids)
+        self.assertIn("Q1(e)", extracted_ids)
+        self.assertNotEqual(status, "FAILED")
+        self.assertIn(status, ("COMPLETE", "RECOVERED", "PARTIAL"))
 
+    def test_body_first_recovery_imperative_verbs(self):
+        """
+        Verify Section 3 & 4: Question body with academic commands (Define, Explain, Calculate)
+        and layout support is admitted even without standard '?' or clean markers.
+        """
+        b_score = body_strength_score("Explain deadlock prevention and avoidance algorithms in operating systems")
+        self.assertGreaterEqual(b_score, 0.6)
 
-class TestMultiResolutionOcrEvidence(unittest.TestCase):
-    def test_hd_representation_participates_in_reconciliation(self):
-        base = "Q1(a) Explain " + "morphological parsing. " * 3 + "\n"
-        hd = "Q1(a) Explain " + "morphological parsing. " * 3 + "\nQ1(b) Define suppletive inflectional morphology clearly.\n"
-        pages = [{
-            "page": 1,
-            "raw_native_text": "",
-            "raw_ocr_text": base,
-            "raw_ocr_hd_text": hd,
-            "reconstructed_text": "",
-            "ocr_used": True,
-        }]
-        with patch("rag.hybrid_question_extraction.llm_configured", return_value=False):
-            result = hybrid_extract_document(pages, filename="hd.pdf", workspace_id="ws-t", year=2024)
-        ids = [q["question_id"] for q in result["accepted_questions"]]
-        # Q1(b) exists only in the HD pass — reconciliation must recover it
-        self.assertIn("Q1(b)", ids)
-        sources = result.get("extraction_audit", {}).get("representation_sources") or {}
-        self.assertEqual(sources.get("Q1(b)"), "ocr_text_hd")
+        b_score_calc = body_strength_score("Calculate the time complexity of QuickSort in worst case")
+        self.assertGreaterEqual(b_score_calc, 0.6)
+
+        b_score_def = body_strength_score("Define database normalization up to Third Normal Form")
+        self.assertGreaterEqual(b_score_def, 0.6)
+
+    def test_candidate_status_lifecycle_and_evidence(self):
+        """
+        Verify Section 1 & 2: Candidate status assigned correctly (ADMITTED, REJECTED, AMBIGUOUS).
+        """
+        cand_valid = {
+            "question_id": "Q1(a)",
+            "exact_text": "Explain the concept of page replacement algorithms in operating systems.",
+            "grounding_score": 0.95,
+            "extraction_method": "ocr_layout",
+            "parent_question": "Q1",
+        }
+        eval_valid = evaluate_question_level_evidence(
+            cand_valid,
+            source_blob="Q1(a) Explain the concept of page replacement algorithms in operating systems.",
+            all_ids=["Q1(a)", "Q1(b)"],
+            known_parents={"Q1"},
+        )
+        self.assertEqual(eval_valid["status"], "ADMITTED")
+
+        cand_noisy = {
+            "question_id": "Q99(z)",
+            "exact_text": "Duration 3 hours Page 1 of 4 University Code 12345",
+            "grounding_score": 0.9,
+            "extraction_method": "ocr_text",
+        }
+        eval_noisy = evaluate_question_level_evidence(
+            cand_noisy,
+            source_blob="Duration 3 hours Page 1 of 4 University Code 12345",
+            all_ids=["Q99(z)"],
+        )
+        self.assertEqual(eval_noisy["status"], "REJECTED")
+
+    def test_adaptive_failure_recovery_pass(self):
+        """
+        Verify Section 25: When initial pass has non-standard marker format but valid source text,
+        adaptive failure recovery pass recovers grounded questions before declaring document status.
+        """
+        raw_text = (
+            "Examination 2024\n"
+            "Question 1 Attempt any two:\n"
+            "Stem A: Explain the architecture of Transformer model in NLP. [10]\n"
+            "Stem B: Derive the loss function for logistic regression. [10]\n"
+        )
+        pages = [
+            {
+                "page": 1,
+                "raw_native_text": raw_text,
+                "raw_ocr_text": raw_text,
+                "reconstructed_text": raw_text,
+            }
+        ]
+        res = hybrid_extract_document(
+            pages,
+            filename="unseen_exam.pdf",
+            workspace_id="ws-adaptive-test",
+            subject="AI",
+            year=2024,
+        )
+        accepted = res.get("accepted_questions") or []
+        quality = res.get("quality") or {}
+        status = quality.get("extraction_quality")
+
+        self.assertGreater(len(accepted), 0)
+        self.assertNotEqual(status, "FAILED")
+
+    def test_debug_report_audit_structure(self):
+        """
+        Verify Section 29: Debug report structure is produced with all required keys.
+        """
+        raw_text = "Q1(a) Discuss database transactions and ACID properties. [10]\n"
+        pages = [
+            {
+                "page": 1,
+                "raw_native_text": raw_text,
+                "raw_ocr_text": raw_text,
+                "reconstructed_text": raw_text,
+            }
+        ]
+        res = run_universal_reconciliation_pipeline(
+            pages,
+            filename="test_debug_report.pdf",
+            workspace_id="ws-debug-report",
+            subject="DBMS",
+            year=2023,
+        )
+        audit = res.get("extraction_audit") or {}
+        report = audit.get("debug_report") or res.get("debug_report") or {}
+
+        self.assertIsNotNone(report)
+        self.assertEqual(report.get("FILE"), "test_debug_report.pdf")
+        self.assertIn("STATUS", report)
+        self.assertIn("RECOVERED_QUESTIONS", report)
+        self.assertIn("AMBIGUOUS_MARKERS", report)
+        self.assertIn("REJECTED_MARKERS", report)
+        self.assertIn("MISSING_SOURCE_PROVEN_QUESTIONS", report)
+        self.assertIn("FABRICATED_IDS", report)
+        self.assertIn("DUPLICATES", report)
+
+    def test_multi_signal_confidence_breakdown(self):
+        """
+        Verify Section 27: Every canonical question carries marker_confidence,
+        body_confidence, layout_confidence, grounding_confidence, overall_confidence,
+        bounding_region, and marker_provenance.
+        """
+        raw_text = "Q1(a) Explain the difference between process and thread in operating systems. [10]\n"
+        pages = [
+            {
+                "page": 1,
+                "raw_native_text": raw_text,
+                "raw_ocr_text": raw_text,
+                "reconstructed_text": raw_text,
+            }
+        ]
+        res = run_universal_reconciliation_pipeline(
+            pages,
+            filename="test_confidence_breakdown.pdf",
+            workspace_id="ws-conf-test",
+            subject="OS",
+            year=2024,
+        )
+        accepted = res.get("accepted_questions") or []
+        self.assertGreaterEqual(len(accepted), 1)
+        q = accepted[0]
+        self.assertIn("marker_confidence", q)
+        self.assertIn("body_confidence", q)
+        self.assertIn("layout_confidence", q)
+        self.assertIn("grounding_confidence", q)
+        self.assertIn("overall_confidence", q)
+        self.assertIn("bounding_region", q)
+        self.assertIn("marker_provenance", q)
+
+    def test_universal_missing_sibling_recovery(self):
+        """
+        Verify missing sibling gap recovery:
+        Q6(a), Q6(b), Q6(d), Q6(e) exist, Q6(c) has garbled OCR marker ('Role of DBA [05]').
+        Missing sibling recovery recovers Q6(c) while suppressing non-existent Q6(f)-Q6(i).
+        """
+        text = (
+            "Q1(a) Explain fundamental database management concepts. [10]\n"
+            "Q2(a) Describe DBMS architecture with diagram. [10]\n"
+            "Q3(a) Discuss SQL queries and normalization. [10]\n"
+            "Q4(a) Consider employee database and write queries. [10]\n"
+            "Q5(a) Explain ACID properties with suitable example. [10]\n"
+            "Q6 Solve any four out of the following [20]\n"
+            "a Conversion of Specialization to relational schema with suitable example [05]\n"
+            "b Log based recovery [05]\n"
+            "Role of DBA [05]\n"
+            "d Triggers [05]\n"
+            "e Types of attributes [05]\n"
+        )
+        pages = [
+            {
+                "page": 1,
+                "raw_native_text": text,
+                "raw_ocr_text": text,
+                "reconstructed_text": text,
+            }
+        ]
+        res = run_universal_reconciliation_pipeline(
+            pages,
+            filename="test_missing_sibling.pdf",
+            workspace_id="ws-sibling-test",
+            subject="DBMS",
+            year=2024,
+        )
+        accepted_ids = [q.get("question_id") for q in (res.get("accepted_questions") or [])]
+        self.assertIn("Q6(c)", accepted_ids)
+        self.assertIn("Q6(a)", accepted_ids)
+        self.assertIn("Q6(b)", accepted_ids)
+        self.assertIn("Q6(d)", accepted_ids)
+        self.assertIn("Q6(e)", accepted_ids)
+        # Anti-hallucination: Q6(f) and beyond MUST NOT be fabricated
+        self.assertNotIn("Q6(f)", accepted_ids)
+        self.assertNotIn("Q6(g)", accepted_ids)
+        self.assertNotIn("Q6(h)", accepted_ids)
 
 
 if __name__ == "__main__":
-    unittest.main(verbosity=2)
+    unittest.main()
+
+

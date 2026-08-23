@@ -124,19 +124,18 @@ export default function StudyPriorityPage({ setActiveTab, setSelectedTopicForAsk
         icon={GraduationCap}
         badge="Workspace Ingested"
       />
-
       {/* INVALID WORKSPACE STATE */}
       {isInvalidWorkspace ? (
         <div className="saas-card p-10 text-center space-y-4 max-w-2xl mx-auto my-6">
-          <div className="w-16 h-16 rounded-3xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 rounded-3xl bg-amber-500/10 border border-amber-500/20 text-amber-500 dark:text-amber-400 flex items-center justify-center mx-auto">
             <AlertCircle className="w-8 h-8" />
           </div>
 
           <div className="space-y-1">
-            <h3 className="font-heading font-extrabold text-lg text-white">
+            <h3 className="font-heading font-extrabold text-lg text-slate-900 dark:text-white">
               No active workspace selected
             </h3>
-            <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
               Please select or create an academic workspace to generate study priorities.
             </p>
           </div>
@@ -150,22 +149,22 @@ export default function StudyPriorityPage({ setActiveTab, setSelectedTopicForAsk
           </button>
         </div>
       ) : loading ? (
-        <div className="p-12 text-center text-slate-400 saas-card">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto text-purple-400 mb-2" />
+        <div className="p-12 text-center text-slate-500 dark:text-slate-400 saas-card">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto text-purple-600 dark:text-purple-400 mb-2" />
           <p className="text-xs">Reading ingested PYQ documents for {activeWorkspace.subject || 'workspace'}...</p>
         </div>
       ) : !hasIngestedPapers ? (
         /* NO PYQ DOCUMENTS IN WORKSPACE AT ALL - SHOW UPLOAD CTA ONLY HERE */
         <div className="saas-card p-10 text-center space-y-4 max-w-2xl mx-auto my-6">
-          <div className="w-16 h-16 rounded-3xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 rounded-3xl bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 flex items-center justify-center mx-auto">
             <Upload className="w-8 h-8" />
           </div>
           <div className="space-y-1.5">
-            <h3 className="font-heading font-extrabold text-lg text-white">
+            <h3 className="font-heading font-extrabold text-lg text-slate-900 dark:text-white">
               No PYQ documents found in {activeWorkspace.subject || 'this workspace'}
             </h3>
-            <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
-              Upload past-year examination PDFs for <strong className="text-white">{activeWorkspace.subject || 'your subject'}</strong> to unlock automated study priorities and question analysis.
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
+              Upload past-year examination PDFs for <strong className="text-slate-900 dark:text-white">{activeWorkspace.subject || 'your subject'}</strong> to unlock automated study priorities and question analysis.
             </p>
           </div>
           <button
@@ -180,18 +179,18 @@ export default function StudyPriorityPage({ setActiveTab, setSelectedTopicForAsk
         /* WORKSPACE ALREADY CONTAINS PYQS - SHOW WORKSPACE OVERVIEW & STUDY PLAN (NO PRIMARY UPLOAD UI) */
         <>
           {/* Workspace Status & Uploaded Papers Overview Card */}
-          <div className="saas-card p-5 space-y-4 border-purple-500/30 bg-gradient-to-r from-[#0B1020] via-[#0D1326] to-[#0B1020]">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#1F2937] pb-4">
+          <div className="saas-card p-5 space-y-4 border-slate-200 dark:border-purple-500/30 bg-gradient-to-r from-purple-100/70 via-indigo-50/70 to-slate-100 dark:from-[#0B1020] dark:via-[#0D1326] dark:to-[#0B1020]">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-[#1F2937] pb-4">
               <div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30 uppercase">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/30 uppercase">
                     Active Workspace
                   </span>
-                  <span className="text-xs font-semibold text-white">
+                  <span className="text-xs font-semibold text-slate-800 dark:text-white">
                     {activeWorkspace.university || 'University'} / {activeWorkspace.subject || 'Subject'} ({activeWorkspace.semester || 'Sem'})
                   </span>
                 </div>
-                <h3 className="font-heading font-extrabold text-lg text-white mt-1">
+                <h3 className="font-heading font-extrabold text-lg text-slate-900 dark:text-white mt-1">
                   Ingested PYQ Intelligence Summary
                 </h3>
               </div>
@@ -199,7 +198,7 @@ export default function StudyPriorityPage({ setActiveTab, setSelectedTopicForAsk
               <div className="flex flex-wrap items-center gap-2">
                 <button
                   onClick={() => loadPriority(true)}
-                  className="px-3.5 py-2 rounded-xl bg-[#111827] hover:bg-[#1F2937] border border-[#1F2937] text-purple-300 text-xs font-semibold flex items-center space-x-1.5 transition-colors"
+                  className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-[#111827] hover:bg-slate-200 dark:hover:bg-[#1F2937] border border-slate-200 dark:border-[#1F2937] text-purple-600 dark:text-purple-300 text-xs font-semibold flex items-center space-x-1.5 transition-colors"
                   title="Re-run recurrence analysis on ingested papers"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
@@ -208,16 +207,16 @@ export default function StudyPriorityPage({ setActiveTab, setSelectedTopicForAsk
 
                 <button
                   onClick={() => setActiveTab('workspace')}
-                  className="px-3.5 py-2 rounded-xl bg-[#111827] hover:bg-[#1F2937] border border-[#1F2937] text-slate-300 text-xs font-semibold flex items-center space-x-1.5 transition-colors"
+                  className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-[#111827] hover:bg-slate-200 dark:hover:bg-[#1F2937] border border-slate-200 dark:border-[#1F2937] text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center space-x-1.5 transition-colors"
                   title="Add more past year papers to workspace"
                 >
-                  <PlusCircle className="w-3.5 h-3.5 text-slate-400" />
+                  <PlusCircle className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                   <span>Add More PYQs</span>
                 </button>
 
                 <button
                   onClick={() => setIsSelectorOpen(true)}
-                  className="px-3.5 py-2 rounded-xl bg-[#111827] hover:bg-[#1F2937] border border-[#1F2937] text-slate-400 hover:text-white text-xs font-semibold flex items-center space-x-1.5 transition-colors"
+                  className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-[#111827] hover:bg-slate-200 dark:hover:bg-[#1F2937] border border-slate-200 dark:border-[#1F2937] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-xs font-semibold flex items-center space-x-1.5 transition-colors"
                 >
                   <Layers className="w-3.5 h-3.5" />
                   <span>Switch Workspace</span>
@@ -227,43 +226,43 @@ export default function StudyPriorityPage({ setActiveTab, setSelectedTopicForAsk
 
             {/* Quick Stat Pills */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-              <div className="p-3 rounded-xl bg-[#080B14] border border-[#1F2937] flex items-center space-x-3">
-                <div className="p-2 rounded-lg bg-purple-500/10 text-purple-400">
+              <div className="p-3 rounded-xl bg-white dark:bg-[#080B14] border border-slate-200 dark:border-[#1F2937] flex items-center space-x-3">
+                <div className="p-2 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400">
                   <FileText className="w-4 h-4" />
                 </div>
                 <div>
                   <div className="text-[10px] uppercase font-bold text-slate-500">PYQ Papers</div>
-                  <div className="font-heading font-extrabold text-sm text-white">{totalPapers} papers</div>
+                  <div className="font-heading font-extrabold text-sm text-slate-900 dark:text-white">{totalPapers} papers</div>
                 </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-[#080B14] border border-[#1F2937] flex items-center space-x-3">
-                <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-400">
+              <div className="p-3 rounded-xl bg-white dark:bg-[#080B14] border border-slate-200 dark:border-[#1F2937] flex items-center space-x-3">
+                <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
                 <div>
                   <div className="text-[10px] uppercase font-bold text-slate-500">Canonical Questions</div>
-                  <div className="font-heading font-extrabold text-sm text-white">{totalQuestions} extracted</div>
+                  <div className="font-heading font-extrabold text-sm text-slate-900 dark:text-white">{totalQuestions} extracted</div>
                 </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-[#080B14] border border-[#1F2937] flex items-center space-x-3">
-                <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
+              <div className="p-3 rounded-xl bg-white dark:bg-[#080B14] border border-slate-200 dark:border-[#1F2937] flex items-center space-x-3">
+                <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                   <Calendar className="w-4 h-4" />
                 </div>
                 <div>
                   <div className="text-[10px] uppercase font-bold text-slate-500">Years Covered</div>
-                  <div className="font-heading font-extrabold text-sm text-white">{yearsRange}</div>
+                  <div className="font-heading font-extrabold text-sm text-slate-900 dark:text-white">{yearsRange}</div>
                 </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-[#080B14] border border-[#1F2937] flex items-center space-x-3">
-                <div className={`p-2 rounded-lg ${hasSyllabus ? 'bg-indigo-500/10 text-indigo-400' : 'bg-amber-500/10 text-amber-400'}`}>
+              <div className="p-3 rounded-xl bg-white dark:bg-[#080B14] border border-slate-200 dark:border-[#1F2937] flex items-center space-x-3">
+                <div className={`p-2 rounded-lg ${hasSyllabus ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'}`}>
                   <BookOpen className="w-4 h-4" />
                 </div>
                 <div>
                   <div className="text-[10px] uppercase font-bold text-slate-500">Syllabus Index</div>
-                  <div className={`font-heading font-extrabold text-sm ${hasSyllabus ? 'text-indigo-300' : 'text-amber-300'}`}>
+                  <div className={`font-heading font-extrabold text-sm ${hasSyllabus ? 'text-indigo-600 dark:text-indigo-300' : 'text-amber-600 dark:text-amber-300'}`}>
                     {hasSyllabus ? 'Available' : 'Not Uploaded'}
                   </div>
                 </div>
@@ -272,34 +271,34 @@ export default function StudyPriorityPage({ setActiveTab, setSelectedTopicForAsk
 
             {/* Uploaded Papers Checklist */}
             <div className="pt-2">
-              <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
+              <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
                 <span>Ingested Examination Papers ({papersList.length || pyqFiles.length})</span>
-                <span className="text-[10px] text-purple-400 font-normal">ChromaDB Grounded</span>
+                <span className="text-[10px] text-purple-600 dark:text-purple-400 font-normal">ChromaDB Grounded</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                 {papersList.length > 0 ? (
                   papersList.map((p, i) => (
-                    <div key={i} className="p-2.5 rounded-lg bg-[#080B14] border border-slate-800 flex items-center justify-between text-xs">
+                    <div key={i} className="p-2.5 rounded-lg bg-white dark:bg-[#080B14] border border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
                       <div className="flex items-center space-x-2 truncate">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
-                        <span className="font-semibold text-white truncate">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+                        <span className="font-semibold text-slate-900 dark:text-white truncate">
                           {p.exam_year ? `${p.exam_year} ${str(p.exam_session).split('/')[0]}` : p.source_file}
                         </span>
                       </div>
-                      <span className="text-[10px] text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded font-mono">
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono">
                         {p.valid_questions} Qs
                       </span>
                     </div>
                   ))
                 ) : (
                   pyqFiles.map((f, i) => (
-                    <div key={i} className="p-2.5 rounded-lg bg-[#080B14] border border-slate-800 flex items-center justify-between text-xs">
+                    <div key={i} className="p-2.5 rounded-lg bg-white dark:bg-[#080B14] border border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
                       <div className="flex items-center space-x-2 truncate">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
-                        <span className="font-semibold text-white truncate">{f.name || f.id}</span>
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+                        <span className="font-semibold text-slate-900 dark:text-white truncate">{f.name || f.id}</span>
                       </div>
-                      <span className="text-[10px] text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded font-mono">
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono">
                         {f.status || 'VERIFIED'}
                       </span>
                     </div>
@@ -309,18 +308,18 @@ export default function StudyPriorityPage({ setActiveTab, setSelectedTopicForAsk
             </div>
           </div>
 
-          {/* SYLLABUS STATUS BANNER (REQUIREMENT 8) */}
+          {/* SYLLABUS STATUS BANNER */}
           {!hasSyllabus && (
-            <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs flex items-center justify-between gap-3">
+            <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-200 text-xs flex items-center justify-between gap-3">
               <div className="flex items-center space-x-2.5">
-                <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0" />
                 <span>
                   <strong>PYQ analysis available.</strong> Upload a syllabus in Knowledge Base to enable module-wise topic mapping.
                 </span>
               </div>
               <button
                 onClick={() => setActiveTab('workspace')}
-                className="px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-200 text-xs font-semibold transition-colors flex-shrink-0"
+                className="px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-700 dark:text-amber-200 text-xs font-semibold transition-colors flex-shrink-0"
               >
                 Upload Syllabus
               </button>
@@ -409,14 +408,14 @@ export default function StudyPriorityPage({ setActiveTab, setSelectedTopicForAsk
           </div>
 
           {/* Navigation Sub-Tabs */}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#1F2937] pb-3">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 dark:border-[#1F2937] pb-3">
             <div className="flex space-x-2">
               <button
                 onClick={() => setActiveSubTab('study-first')}
                 className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all flex items-center space-x-2 ${
                   activeSubTab === 'study-first'
                     ? 'bg-purple-600 border-purple-500 text-white shadow-md glow-purple'
-                    : 'bg-[#0B1020] border-[#1F2937] text-slate-400 hover:text-slate-200'
+                    : 'bg-white dark:bg-[#0B1020] border-slate-200 dark:border-[#1F2937] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
               >
                 <GraduationCap className="w-3.5 h-3.5" />
@@ -428,7 +427,7 @@ export default function StudyPriorityPage({ setActiveTab, setSelectedTopicForAsk
                 className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all flex items-center space-x-2 ${
                   activeSubTab === 'repeated-questions'
                     ? 'bg-purple-600 border-purple-500 text-white shadow-md glow-purple'
-                    : 'bg-[#0B1020] border-[#1F2937] text-slate-400 hover:text-slate-200'
+                    : 'bg-white dark:bg-[#0B1020] border-slate-200 dark:border-[#1F2937] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
               >
                 <Repeat className="w-3.5 h-3.5" />
@@ -440,7 +439,7 @@ export default function StudyPriorityPage({ setActiveTab, setSelectedTopicForAsk
                 className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all flex items-center space-x-2 ${
                   activeSubTab === 'recurring-topics'
                     ? 'bg-purple-600 border-purple-500 text-white shadow-md glow-purple'
-                    : 'bg-[#0B1020] border-[#1F2937] text-slate-400 hover:text-slate-200'
+                    : 'bg-white dark:bg-[#0B1020] border-slate-200 dark:border-[#1F2937] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
               >
                 <Award className="w-3.5 h-3.5" />
@@ -452,7 +451,7 @@ export default function StudyPriorityPage({ setActiveTab, setSelectedTopicForAsk
                 className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all flex items-center space-x-2 ${
                   activeSubTab === 'related-topics'
                     ? 'bg-purple-600 border-purple-500 text-white shadow-md glow-purple'
-                    : 'bg-[#0B1020] border-[#1F2937] text-slate-400 hover:text-slate-200'
+                    : 'bg-white dark:bg-[#0B1020] border-slate-200 dark:border-[#1F2937] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
               >
                 <BookOpen className="w-3.5 h-3.5" />
@@ -464,7 +463,7 @@ export default function StudyPriorityPage({ setActiveTab, setSelectedTopicForAsk
                 className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all flex items-center space-x-2 ${
                   activeSubTab === 'modules'
                     ? 'bg-purple-600 border-purple-500 text-white shadow-md glow-purple'
-                    : 'bg-[#0B1020] border-[#1F2937] text-slate-400 hover:text-slate-200'
+                    : 'bg-white dark:bg-[#0B1020] border-slate-200 dark:border-[#1F2937] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
               >
                 <Layers className="w-3.5 h-3.5" />
@@ -601,29 +600,32 @@ export default function StudyPriorityPage({ setActiveTab, setSelectedTopicForAsk
                 <p className="text-xs text-slate-400">Shared concepts that are not exact or semantic repeats. Original source questions stay visible.</p>
               </div>
               {!(data?.related_topics || []).length ? (
-                <div className="saas-card p-8 text-center text-slate-400 text-xs">No related-topic pairs met the conservative threshold.</div>
+                <div className="saas-card p-8 text-center text-slate-400 text-xs">No related-topic groups met the conservative threshold.</div>
               ) : (
                 <div className="space-y-3">
-                  {(data.related_topics || []).map((r, idx) => (
+                  {(data.related_topics || []).map((r, idx) => {
+                    const members = (r.members && r.members.length)
+                      ? r.members
+                      : [r.q1, r.q2].filter(Boolean);
+                    return (
                     <div key={idx} className="saas-card p-4 space-y-2">
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] font-extrabold px-2 py-0.5 rounded border bg-indigo-500/10 text-indigo-300 border-indigo-500/30">RELATED</span>
                         <span className="font-semibold text-white text-sm">{r.topic}</span>
-                        <span className="text-[11px] text-slate-400">confidence {r.confidence ?? '—'}</span>
+                        <span className="text-[11px] text-slate-400">{members.length} questions · confidence {r.confidence ?? '—'}</span>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px] text-slate-300">
-                        <div className="p-2 rounded bg-[#080B14] border border-slate-800">
-                          <div className="text-purple-300 font-semibold mb-1">{r.q1?.source_ref}</div>
-                          {r.q1?.text}
-                        </div>
-                        <div className="p-2 rounded bg-[#080B14] border border-slate-800">
-                          <div className="text-purple-300 font-semibold mb-1">{r.q2?.source_ref}</div>
-                          {r.q2?.text}
-                        </div>
+                        {members.map((m, mi) => (
+                          <div key={mi} className="p-2 rounded bg-white dark:bg-[#080B14] border border-slate-200 dark:border-slate-800">
+                            <div className="text-purple-600 dark:text-purple-300 font-semibold mb-1">{m?.source_ref}</div>
+                            {m?.text}
+                          </div>
+                        ))}
                       </div>
                       <p className="text-[11px] text-slate-400 italic">Why grouped: {r.why_grouped || r.reason}</p>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>

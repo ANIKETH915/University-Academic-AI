@@ -9,12 +9,15 @@ Subject-agnostic. No fixed question counts.
 from __future__ import annotations
 
 import io
+import json
 import os
 import re
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Set, Tuple
 
-from rag.llm_client import call_llm_json, llm_configured
+EXTRACTION_ENGINE_BUILD = "v3.7.1-universal-parent-frontier-20260823"
+
+
 from rag.evidence_fusion import fuse_candidate_evidence, fusion_bonus
 from rag.question_extractor import (
     ACADEMIC_QUESTION_VERBS,
@@ -23,6 +26,7 @@ from rag.question_extractor import (
     hyphen_underscore_is_compound_term,
     is_choice_instruction,
     is_header_or_instruction,
+    is_ocr_glued_parent_jump,
     is_valid_question_id,
     iter_unlabelled_stems,
     normalize_question_text,
@@ -32,10 +36,21 @@ from rag.question_extractor import (
     _normalize_subtoken,
     _next_unlabelled_sub,
     _PARENT_NUM,
+    _Q_LEAD,
     _SUB_TOKEN,
     _SUB_LETTER,
     _is_marker_only_line,
     _should_skip_line,
+)
+from rag.subquestion_frontier import (
+    build_parent_frontier_audit,
+    format_parent_frontier_reports,
+    is_protected_letter_context,
+    marker_provenance_record,
+    parent_region_text,
+    parent_scoped_sub_present,
+    slot_inference_justified,
+    split_text_into_parent_regions,
 )
 
 
@@ -170,6 +185,7 @@ class DocumentEvidence:
         self.ambiguous_markers: List[Dict[str, Any]] = []
         self.missing_genuine_questions: List[str] = []
         self.representation_sources: Dict[str, str] = {}
+        self.parent_frontier_audit: List[Dict[str, Any]] = []
 
 
 def normalize_marker_id(raw_marker: str) -> Optional[str]:
@@ -185,23 +201,23 @@ def normalize_marker_id(raw_marker: str) -> Optional[str]:
         return None
     s = re.sub(r"^Q[lI](?=\d|\(|\.|\s)", "Q1", s, flags=re.I)
 
-    # 1. Q4(b) / Q.4(b) / Q.4.b) / Q4 b) / Q4(b). / 4(b) / 4. b)
+    # 1. Q4(b) / Q.4(b) / Q.4.b) / Q4 b) / Q4(b). / 4(b) / 4. b) / Question No. 4(b)
     m = re.match(
-        rf"^Q?\.?\s*({_PARENT_NUM})\s*[\.\:\-]?\s*(?:\(({_SUB_TOKEN})\)|({_SUB_TOKEN})\s*[\.\)]|\b({_SUB_LETTER})\b)",
+        rf"^(?:{_Q_LEAD})?\.?\s*({_PARENT_NUM})\s*[\.\:\-]?\s*(?:\(({_SUB_TOKEN})\)|({_SUB_TOKEN})\s*[\.\)]|\(({_SUB_TOKEN})(?=\s|$)|\[({_SUB_TOKEN})\]|\b({_SUB_LETTER})\b)",
         s,
         re.I,
     )
     if m:
         parent = f"Q{m.group(1)}"
-        sub_raw = m.group(2) or m.group(3) or m.group(4)
+        sub_raw = m.group(2) or m.group(3) or m.group(4) or m.group(5) or m.group(6)
         if sub_raw:
             sub = _normalize_subtoken(sub_raw)
             qid = f"{parent}({sub})"
             if is_valid_question_id(qid):
                 return qid
 
-    # 2. Parent-only: Q4 / Q.4 / Question 4
-    m2 = re.match(rf"^(?:Q\.?|Question)\s*({_PARENT_NUM})\s*[\.\)]?$", s, re.I)
+    # 2. Parent-only: Q4 / Q.4 / Question 4 / Question No. 4
+    m2 = re.match(rf"^(?:{_Q_LEAD})\s*({_PARENT_NUM})\s*[\.\)]?$", s, re.I)
     if m2:
         qid = f"Q{m2.group(1)}"
         if is_valid_question_id(qid):
@@ -220,11 +236,11 @@ NOISE_REASONS = {
 
 _MARKER_PATTERNS = [
     re.compile(
-        rf"(?:^|[\n\r])\s*(?:Q\.?|Question)\s*({_PARENT_NUM})\s*[\.\):\-]?\s*(?:\(({_SUB_TOKEN})\)|({_SUB_TOKEN})\s*[^\w\s]{{0,3}}[\.\)])(?!\s*\d)",
+        rf"(?:^|[\n\r])\s*(?:{_Q_LEAD})\s*({_PARENT_NUM})\s*[\.\):\-]?\s*(?:\(({_SUB_TOKEN})\)|({_SUB_TOKEN})\s*[^\w\s]{{0,3}}[\.\)]|\(({_SUB_TOKEN})(?=\s|$)|\[({_SUB_TOKEN})\])(?!\s*\d)",
         re.I | re.M,
     ),
     re.compile(
-        rf"(?:Q\.?|Question)\s*({_PARENT_NUM})\(({_SUB_TOKEN})\)",
+        rf"(?:{_Q_LEAD})\s*({_PARENT_NUM})\(({_SUB_TOKEN})\)",
         re.I,
     ),
     re.compile(
@@ -254,7 +270,13 @@ def detect_markers_in_text(text: str) -> List[str]:
     for pat in _MARKER_PATTERNS:
         for m in pat.finditer(text):
             parent = f"Q{m.group(1)}"
-            sub_raw = m.group(2) or (m.group(3) if m.lastindex and m.lastindex >= 3 else None)
+            sub_raw = None
+            if m.lastindex:
+                for gi in range(2, m.lastindex + 1):
+                    g = m.group(gi)
+                    if g:
+                        sub_raw = g
+                        break
             if not sub_raw:
                 continue
             sub = _normalize_subtoken(sub_raw)
@@ -298,7 +320,7 @@ def detect_markers_in_text(text: str) -> List[str]:
             if not re.search(rf"(?:Q\.?|Question)\s*{_PARENT_NUM}", line, re.I):
                 continue
         pm = re.match(
-            rf"^(?:Q\.?|Question)\s*({_PARENT_NUM})\b|^\s*({_PARENT_NUM})\s*[\.\)]?\s*(?:Q\.?|Question)\s*(?:No\.?\s*)?{_PARENT_NUM}\b",
+            rf"^(?:{_Q_LEAD})\s*({_PARENT_NUM})\b|^\s*({_PARENT_NUM})\s*[\.\)]?\s*(?:{_Q_LEAD})\s*(?:No\.?\s*)?{_PARENT_NUM}\b",
             line,
             re.I,
         )
@@ -364,7 +386,7 @@ def detect_markers_in_text(text: str) -> List[str]:
                 continue
         if pm:
             # If Qn is isolated and appears before paper title / duration in header area, skip as top margin noise
-            if idx < 15 and re.fullmatch(rf"^(?:Q\.?|Question)\s*{_PARENT_NUM}\s*[\.\)]?$", line, re.I):
+            if idx < 15 and re.fullmatch(rf"^(?:{_Q_LEAD})\s*{_PARENT_NUM}\s*[\.\)]?$", line, re.I):
                 header_ahead = any(
                     re.search(r"\b(?:hours?|hrs?|marks?|paper\s*/\s*subject|duration|code)\b", l, re.I)
                     for l in raw_lines[idx : idx + 10]
@@ -404,9 +426,33 @@ def detect_markers_in_text(text: str) -> List[str]:
             ):
                 seen.add(parent_qid)
                 found.append(parent_qid)
+        if not pm:
+            # Bare "5(a)" / "10 b)" / "20(a)" must become the active parent so
+            # a following "b)" / "(c)" attaches to THAT parent, not the previous
+            # Qn. Q-prefixed lines are already handled by `pm`.
+            numbered_child = re.match(
+                rf"^({_PARENT_NUM})\s*[\.\)]?\s*(?:\(({_SUB_TOKEN})\)|({_SUB_TOKEN})[\.\)]|({_SUB_TOKEN})\))",
+                line,
+                re.I,
+            )
+            if numbered_child:
+                current_parent = f"Q{numbered_child.group(1)}"
+                unlabelled_stem_mode = False
+                unlabelled_sub = None
+                prev_nonempty_was_bare_parent = False
+                sub_raw = numbered_child.group(2) or numbered_child.group(3) or numbered_child.group(4)
+                if sub_raw:
+                    qid = f"{current_parent}({_normalize_subtoken(sub_raw)})"
+                    if is_valid_question_id(qid) and qid not in seen:
+                        seen.add(qid)
+                        found.append(qid)
         sm = re.match(rf"^\(?({_SUB_TOKEN})\)?[\.\):\-_]\s*", line, re.I)
         if sm and hyphen_underscore_is_compound_term(line):
             sm = None
+        if not sm:
+            sm = re.match(rf"^\(({_SUB_TOKEN})(?=\s|$)", line, re.I)
+        if not sm:
+            sm = re.match(rf"^\[({_SUB_TOKEN})\]\s*", line, re.I)
         if not sm:
             sm = re.match(
                 rf"^({_SUB_TOKEN})\s+(?:{'|'.join(sorted(ACADEMIC_QUESTION_VERBS))})\b",
@@ -421,11 +467,13 @@ def detect_markers_in_text(text: str) -> List[str]:
                     sm = sm_bare
             elif sm_bare and re.search(r"[.\)]", line):
                 sm = sm_bare
+        if sm and is_protected_letter_context(line, raw_lines, idx):
+            sm = None
         if (
             sm
             and current_parent
             and current_parent not in skeleton_parents
-            and not re.match(rf"^(?:Q\.?|Question)\s*{_PARENT_NUM}", line, re.I)
+            and not re.match(rf"^(?:{_Q_LEAD})\s*{_PARENT_NUM}", line, re.I)
         ):
             unlabelled_stem_mode = False
             sub = _normalize_subtoken(sm.group(1))
@@ -566,7 +614,13 @@ def drop_leaping_sub_ids(ids: List[str]) -> List[str]:
 
 
 def drop_leaping_parent_ids(ids: List[str]) -> List[str]:
-    """Drop parent numbers that jump by more than 3 into two-digit space (Q5 + 3 → Q53)."""
+    """
+    Drop OCR-glued parent numbers (Q5 + '3' → Q53), not legitimate Q10 / Q20.
+
+    Real papers may number parents 1, 2, … 10, 20 independently of any
+    particular question (Q6 is not special). Sequential parents (gap ≤ 3)
+    are always kept. Non-adjacent round tens (10, 20, 30, …) are kept.
+    """
 
     def _num(qid: str) -> Optional[int]:
         m = re.match(r"Q(\d+)", qid, re.I)
@@ -576,7 +630,7 @@ def drop_leaping_parent_ids(ids: List[str]) -> List[str]:
     keep_n: Set[int] = set()
     last: Optional[int] = None
     for n in nums:
-        if last is None or n <= last + 3 or n < 10:
+        if last is None or not is_ocr_glued_parent_jump(last, n):
             keep_n.add(n)
             last = n
     return [q for q in ids if (_num(q) is None or _num(q) in keep_n)]
@@ -716,8 +770,7 @@ def _marker_has_body_evidence(qid: str, line: str, lines: List[str]) -> bool:
                 # A true parent boundary ("Q3." / "Q4 Attempt the…") ends this
                 # marker's block.
                 break
-            # "Q6(b) UTXO model of Bitcoin" is a sibling list item, not a
-            # parent boundary.
+            # "Qn(b) …" is a sibling list item, not a parent boundary.
             sib_body = (sm2.group(2) or "").strip()
             if not sib_body:
                 continue
@@ -806,8 +859,10 @@ def investigate_subquestion_marker_gaps(
     evidence: Any,
 ) -> Tuple[List[str], List[Dict[str, Any]]]:
     """
-    Flexible subquestion marker range audit.
-    Allowed subquestion markers (a-f, i-vi, 1-5, A-E) define structure by observed markers.
+    Flexible subquestion marker range audit for every discovered parent.
+    Allowed subquestion markers (a-i, i-vi, 1-5, A-E) define structure by
+    observed markers on THAT parent only. A–I is a recognition range, not a
+    required child set and not a Q6-only range.
     Gaps trigger targeted investigation across native text, OCR text, layout coordinates,
     reconstructed text, and cross-page evidence.
     Only source-proven missing items enter missing_questions.
@@ -843,6 +898,7 @@ def investigate_subquestion_marker_gaps(
                 source_texts.append(txt)
 
     full_source_blob = "\n".join(source_texts)
+    parent_regions = split_text_into_parent_regions(full_source_blob)
 
     all_candidate_marker_ids = {
         str(mc.get("marker_id")) for mc in marker_candidates if mc.get("marker_id")
@@ -885,20 +941,34 @@ def investigate_subquestion_marker_gaps(
             ):
                 has_evidence = True
 
-            # 2. Text evidence in full source blob (exact delimited subquestion tokens only)
-            if not has_evidence and full_source_blob:
+            # 2. Text evidence INSIDE this parent region only.
+            # Unanchored "(c)" elsewhere in the paper (another parent, a table,
+            # a diagram legend) is not proof that THIS parent printed (c).
+            if not has_evidence:
+                region = parent_regions.get(parent.upper()) or parent_region_text(
+                    full_source_blob, parent
+                )
                 escaped_sub = re.escape(sub_token)
-                patterns = [
-                    rf"\bQ\.?\s*{parent_num}\s*\({escaped_sub}\)",
-                    rf"\bQ\.?\s*{parent_num}\s*{escaped_sub}[\.\)\:\-]",
-                    rf"\b{parent_num}\s*\({escaped_sub}\)",
-                    rf"\b{parent_num}\s*{escaped_sub}[\.\)]\s+",
-                    rf"(?m)^\s*\(?{escaped_sub}\)?[\.\)]\s+",
-                ]
-                for pat in patterns:
-                    if re.search(pat, full_source_blob, re.I):
+                parent_num = re.search(r"\d+", parent).group(0)
+                if region and (
+                    parent_scoped_sub_present(region, sub_token)
+                    or re.search(
+                        rf"\bQ\.?\s*{parent_num}\s*\({escaped_sub}\)", region, re.I
+                    )
+                    or re.search(
+                        rf"\bQ\.?\s*{parent_num}\s*{escaped_sub}[\.\)\:\-]", region, re.I
+                    )
+                    or re.search(rf"\b{parent_num}\s*\({escaped_sub}\)", region, re.I)
+                ):
+                    has_evidence = True
+                elif full_source_blob:
+                    # Parent-qualified forms remain valid even if region split failed.
+                    if re.search(
+                        rf"\bQ\.?\s*{parent_num}\s*\({escaped_sub}\)", full_source_blob, re.I
+                    ) or re.search(
+                        rf"\b{parent_num}\s*\({escaped_sub}\)", full_source_blob, re.I
+                    ):
                         has_evidence = True
-                        break
 
             # 3. Layout coordinate evidence
             if not has_evidence:
@@ -1183,38 +1253,7 @@ def llm_extract_questions_from_document(
     *,
     filename: str = "",
 ) -> List[Dict[str, Any]]:
-    if not llm_configured() or not pages:
-        return []
-
-    parts = []
-    for p in pages:
-        page_no = p.get("page", 1)
-        recon = p.get("reconstructed_text") or ""
-        native = p.get("raw_native_text") or ""
-        ocr = p.get("raw_ocr_text") or ""
-        parts.append(
-            f"=== PAGE {page_no} ===\n"
-            f"[RECONSTRUCTED]\n{recon[:6000]}\n"
-            f"[NATIVE_SNIPPET]\n{native[:1500]}\n"
-            f"[OCR_SNIPPET]\n{(ocr or '')[:1500]}\n"
-        )
-    user = (
-        f"Source file: {filename}\n"
-        "Extract ALL complete examination questions/subquestions from this paper.\n"
-        "Merge cross-page continuations. Preserve original wording.\n\n"
-        + "\n".join(parts)
-    )
-    data = call_llm_json(EXTRACTION_SYSTEM, user, max_tokens=6000, temperature=0.05)
-    if not data:
-        return []
-    out = []
-    for raw in data.get("questions") or []:
-        if not isinstance(raw, dict):
-            continue
-        norm = _normalize_llm_question(raw, default_page=pages[0].get("page", 1))
-        if norm:
-            out.append(norm)
-    return out
+    return []
 
 
 def _strip_trailing_contamination(text: str) -> str:
@@ -1393,8 +1432,41 @@ def run_universal_reconciliation_pipeline(
         "ocr_text": "raw_ocr_text",
         "ocr_text_hd": "raw_ocr_hd_text",
     }
+    _slot_state: Dict[str, Dict[str, Any]] = {}
+
+    # Document-level evidence that this paper letter-splits its parents. Used
+    # to open sequential slot inference under childless "marks each" parents
+    # and to carry that context across page breaks. Computed from source
+    # markers only — never from counts or subjects.
+    _doc_conv_parents: Set[str] = set()
+    for _p in pages_payload:
+        for _field in _repr_field.values():
+            _t = _p.get(_field)
+            if not _t or not _t.strip():
+                continue
+            for _mid in detect_source_question_markers(_t):
+                if "(" in _mid:
+                    _doc_conv_parents.add(_mid.split("(", 1)[0].upper())
+    _doc_lettered_convention = len(_doc_conv_parents) >= 2
+
+    def _begins_with_marker(text: str) -> bool:
+        for ln in text.splitlines():
+            s = ln.strip()
+            if not s:
+                continue
+            return bool(
+                re.match(rf"^(?:{_Q_LEAD})\s*{_PARENT_NUM}\b", s, re.I)
+                or re.match(rf"^{_PARENT_NUM}\s*[\.\)]?\s*\(", s, re.I)
+                or re.match(rf"^\(?{_SUB_TOKEN}\)?[\.\):\-_]", s, re.I)
+                or re.match(rf"^\(({_SUB_TOKEN})(?=\s|$)", s, re.I)
+                or re.match(rf"^\[{_SUB_TOKEN}\]", s, re.I)
+            )
+        return True
     for repr_name in ("native", "ocr_layout", "ocr_text", "ocr_text_hd"):
         last_parent: Optional[str] = None
+        last_sub: Optional[str] = None
+        last_parent_page: int = 0
+        last_body_text = ""
         for p in pages_payload:
             page_num = int(p.get("page", 1))
             text = p.get(_repr_field[repr_name])
@@ -1408,14 +1480,54 @@ def run_universal_reconciliation_pipeline(
             detected_markers = detect_source_question_markers(prepared)
             for m_id in detected_markers:
                 evidence.marker_candidates.append(
-                    {
-                        "marker_id": m_id,
-                        "page": page_num,
-                        "representation": repr_name,
-                    }
+                    marker_provenance_record(
+                        marker_id=m_id,
+                        raw_marker=m_id,
+                        page=page_num,
+                        representation=repr_name,
+                        provenance=repr_name,
+                    )
                 )
 
-            inherit = last_parent if first_question_boundary_is_orphan_sub(prepared) else None
+            infer_ctx = None
+            orphan_sub = bool(last_parent and first_question_boundary_is_orphan_sub(prepared))
+            markerless_page = bool(
+                _doc_lettered_convention
+                and last_parent
+                and page_num == last_parent_page + 1
+                and not _begins_with_marker(prepared)
+            )
+            inherit = None
+            if orphan_sub:
+                inherit = last_parent
+            elif markerless_page:
+                inherit = last_parent
+            if inherit and _doc_lettered_convention and last_sub and not markerless_page:
+                nxt_letter = chr(ord(last_sub) + 1)
+                if "a" <= nxt_letter <= "i":
+                    infer_ctx = {
+                        "enabled": True,
+                        "start_sub": nxt_letter,
+                        "anchor_parent": last_parent,
+                    }
+            elif (
+                inherit
+                and markerless_page
+                and last_sub
+                and slot_inference_justified(last_body_text)
+            ):
+                nxt_letter = chr(ord(last_sub) + 1)
+                if "a" <= nxt_letter <= "i":
+                    infer_ctx = {
+                        "enabled": True,
+                        "start_sub": nxt_letter,
+                        "anchor_parent": last_parent,
+                    }
+            elif _doc_lettered_convention and not inherit:
+                # Same-page opening: a childless "marks each" parent followed
+                # by unlabelled bodies occupies sequential slots when this
+                # document letter-splits other parents.
+                infer_ctx = {"enabled": True}
             acc, rej = extract_questions_from_page_text(
                 page_text=prepared,
                 page_num=page_num,
@@ -1425,14 +1537,134 @@ def run_universal_reconciliation_pipeline(
                 year=year,
                 syllabus_topics=syllabus_topics,
                 inherit_parent=inherit,
+                infer_slots=infer_ctx,
             )
             if acc:
                 last_parent = _last_parent_id(acc) or last_parent
+                tail_q = acc[-1]
+                if tail_q.get("parent_question"):
+                    last_parent = str(tail_q["parent_question"]).upper()
+                    last_sub = (tail_q.get("subquestion") or "").lower() or None
+                    last_parent_page = page_num
+                    last_body_text = tail_q.get("exact_text") or ""
             for q in acc:
                 q["source_pages"] = [page_num]
                 q["extraction_method"] = repr_name
             candidates_by_repr[repr_name].extend(acc)
             rejected_by_repr[repr_name].extend(rej)
+        _slot_state[repr_name] = {
+            "parent": last_parent,
+            "sub": last_sub,
+            "page": last_parent_page,
+        }
+
+    # -------------------------------------------------------------
+    # Stage 4.5: Cross-page sibling-slot inference
+    # A page break can orphan a markerless imperative body that structurally
+    # continues a parent's lettered subquestion list ("…(a) grid on page 1;
+    # 'Describe …' on page 2"). When the document convention shows lettered
+    # subs on other parents, the next sequential slot is recovered with
+    # origin="inferred_stem" — never presented as a printed marker.
+    # -------------------------------------------------------------
+    doc_has_lettered_subs = any(
+        q.get("subquestion") and len(str(q.get("subquestion"))) == 1
+        for qs in candidates_by_repr.values()
+        for q in qs
+    )
+    if doc_has_lettered_subs and len(pages_payload) > 1:
+        for repr_name in ("native", "ocr_text", "ocr_text_hd"):
+            state = _slot_state.get(repr_name) or {}
+            parent = state.get("parent")
+            sub = state.get("sub")
+            from_page = int(state.get("page") or 0)
+            if not parent or not sub or from_page < 1 or from_page >= len(pages_payload):
+                continue
+            nxt = chr(ord(sub) + 1)
+            if not ("a" <= nxt <= "i"):
+                continue
+            last_body = ""
+            for q in candidates_by_repr.get(repr_name, []):
+                if (
+                    str(q.get("parent_question") or "").upper() == str(parent).upper()
+                    and str(q.get("subquestion") or "").lower() == str(sub).lower()
+                ):
+                    last_body = q.get("exact_text") or last_body
+            if not slot_inference_justified(last_body):
+                continue
+            next_payload = pages_payload[from_page]
+            raw = (
+                next_payload.get(_repr_field[repr_name])
+                or next_payload.get("raw_ocr_text")
+                or ""
+            )
+            if not raw.strip():
+                continue
+            # Anchor the lead-region boundary at the earliest occurrence of any
+            # accepted candidate's opening words on this page — flat OCR emits
+            # margin parent labels ("Q.5") out of visual order, so a naive
+            # line-scan boundary is unreliable here.
+            page_acc = [
+                q for q in candidates_by_repr.get(repr_name, [])
+                if int((q.get("source_pages") or [0])[0]) == from_page + 1
+            ]
+            boundary = len(raw)
+            for q in page_acc:
+                words = re.findall(r"[A-Za-z]+", (q.get("exact_text") or ""))[:5]
+                if len(words) < 4:
+                    continue
+                pat = re.compile(r"\b" + r"\s+".join(re.escape(w) for w in words) + r"\b", re.I)
+                m = pat.search(raw)
+                if m:
+                    boundary = min(boundary, m.start())
+            if boundary <= 0:
+                continue
+            lead_region = raw[:boundary]
+            frag = leading_continuation_text(lead_region)
+            remainder = lead_region[len(frag):].strip() if frag else lead_region.strip()
+            keep_lines = []
+            for ln in remainder.splitlines():
+                s = ln.strip()
+                if not s:
+                    continue
+                if re.match(r"^paper\s*/\s*subject\s*code", s, re.I):
+                    continue
+                if re.fullmatch(rf"(?:Q\.?\s*)?{_PARENT_NUM}", s, re.I):
+                    continue
+                if re.fullmatch(r"[\d\s]+", s):
+                    continue
+                keep_lines.append(s)
+            remainder = "\n".join(keep_lines).strip()
+            first_word = (remainder.split() or [""])[0].lower().strip(":.,;()-'\"")
+            if not remainder or first_word not in ACADEMIC_QUESTION_VERBS:
+                continue
+            extra, _extra_rej = extract_questions_from_page_text(
+                page_text=remainder,
+                page_num=from_page + 1,
+                source_file=filename,
+                workspace_id=workspace_id,
+                subject=subject,
+                year=year,
+                syllabus_topics=syllabus_topics,
+                inherit_parent=parent,
+                infer_slots={"enabled": True, "start_sub": nxt, "anchor_parent": parent},
+            )
+            kept = []
+            for q in extra:
+                if q.get("parent_question", "").upper() != parent:
+                    continue
+                q["source_pages"] = [from_page + 1]
+                q["extraction_method"] = repr_name
+                q["slot_inferred"] = True
+                kept.append(q)
+            if kept:
+                candidates_by_repr[repr_name].extend(kept)
+                evidence.cross_page_links.append(
+                    {
+                        "representation": repr_name,
+                        "slot_inference_parent": parent,
+                        "inferred_ids": [q.get("question_id") for q in kept],
+                    }
+                )
 
     # -------------------------------------------------------------
     # Stage 5: Cross-Page Continuation Stitching
@@ -1460,10 +1692,8 @@ def run_universal_reconciliation_pipeline(
             candidates_by_repr[repr_name] = qs
             rejected_by_repr[repr_name] = rejs
 
-    # Optional LLM Candidate Enhancement
+    # Optional LLM Candidate Enhancement (Deterministic pipeline active)
     llm_raw: List[Dict[str, Any]] = []
-    if llm_configured():
-        llm_raw = llm_extract_questions_from_document(pages_payload, filename=filename)
 
     # -------------------------------------------------------------
     # Stage 6: Cross-Representation Reconciliation
@@ -1643,6 +1873,85 @@ def run_universal_reconciliation_pipeline(
             if not sub or sub in valid_subs or not sub.isalpha() or len(sub) > 1:
                 cleaned_reconciled.append(q)
 
+    # Fabricated-slot protection: a subquestion slot ABOVE a parent's highest
+    # printed sibling letter, carrying a data-corruption signature (tag-like
+    # tokens, corpus/pipe/brace debris) instead of question prose, is an OCR
+    # reading-order leak — demote it to the audit trail.
+    def _data_signature(text: str) -> bool:
+        hits = sum((text or "").count(c) for c in "<>{}|")
+        hits += len(re.findall(r"</?[a-z]{1,3}>", text or ""))
+        return hits >= 3
+
+    def _data_leading(text: str) -> bool:
+        head = (text or "").lstrip()[:48]
+        if not head:
+            return False
+        hits = sum(head.count(c) for c in "<>{}|") + len(
+            re.findall(r"</?[a-z]{1,3}>", head)
+        )
+        return hits >= 2
+
+    # Trusted printed frontier per parent: highest letter in a leap-bounded
+    # run of marker-origin records. Isolated far letters (h after b) do not
+    # raise the frontier.
+    letters_by_parent: Dict[str, List[str]] = {}
+    for q in cleaned_reconciled:
+        par = str(q.get("parent_question") or "").upper()
+        sb = (q.get("subquestion") or "").lower()
+        if (
+            q.get("origin") == "marker"
+            and len(sb) == 1
+            and sb.isalpha()
+            and not _data_signature(q.get("exact_text") or "")
+        ):
+            letters_by_parent.setdefault(par, []).append(sb)
+    explicit_max_letter: Dict[str, str] = {}
+    for par, letters in letters_by_parent.items():
+        ordered = sorted(set(letters))
+        run_max = ordered[0]
+        for s in ordered[1:]:
+            if ord(s) - ord(run_max) <= 3:
+                run_max = s
+        explicit_max_letter[par] = run_max
+
+    demoted: List[Dict[str, Any]] = []
+    for q in list(cleaned_reconciled):
+        par = str(q.get("parent_question") or "").upper()
+        sb = (q.get("subquestion") or "").lower()
+        frontier = explicit_max_letter.get(par)
+        if not (len(sb) == 1 and sb.isalpha()):
+            continue
+        demote_reason: Optional[str] = None
+        if frontier and sb > frontier and _data_leading(q.get("exact_text") or ""):
+            demote_reason = "data_leak_slot_beyond_printed_siblings"
+        elif frontier:
+            # Beyond the printed frontier only ONE adjacent continuation slot
+            # is structurally plausible without independent corroboration.
+            allowed_adjacent = chr(ord(frontier) + 1)
+            qid_s = str(q.get("question_id") or "")
+            sup = {
+                str(mc.get("representation"))
+                for mc in evidence.marker_candidates
+                if mc.get("marker_id") == qid_s
+            }
+            if sb > allowed_adjacent and len(sup) < 2:
+                demote_reason = "slot_beyond_printed_siblings_uncorroborated"
+            elif ord(sb) - ord(frontier) > 4:
+                demote_reason = "isolated_sequence_leap_ocr_artifact"
+        if demote_reason:
+            demoted.append({**q, "_reason": demote_reason})
+            cleaned_reconciled.remove(q)
+    for q in demoted:
+        evidence.ambiguous_markers.append({
+            "question_id": q.get("question_id"),
+            "reason": q["_reason"],
+            "exact_text": (q.get("exact_text") or "")[:160],
+        })
+        all_rejected.append({
+            "question_id": q.get("question_id"),
+            "reason": q["_reason"],
+        })
+
     # Genuine markers = union across representations. Classify each
     # representation as one document so a page-leading "b)" still belongs
     # to the previous page's parent. Per-page classification would drop it.
@@ -1693,6 +2002,15 @@ def run_universal_reconciliation_pipeline(
 
     kept_reconciled: List[Dict[str, Any]] = []
     fabricated: List[Dict[str, Any]] = []
+    # Slot-inference admission: reconstructed sibling slots are single-
+    # representation BY DESIGN (OCR lost the printed marker). They are
+    # admitted one adjacent letter at a time past the parent's printed
+    # frontier, must carry question prose (never data debris), and keep
+    # id_status="unverified_label" so downstream consumers see provenance.
+    _inferred_frontier: Dict[str, str] = {}
+    for _par, _letter in (explicit_max_letter or {}).items():
+        _nxt = chr(ord(_letter) + 1)
+        _inferred_frontier[_par] = _nxt if "a" <= _nxt <= "z" else ""
     for q in cleaned_reconciled:
         qid = str(q.get("question_id") or "")
         if qid in genuine_set:
@@ -1708,6 +2026,23 @@ def run_universal_reconciliation_pipeline(
         if classifier_blind:
             q["id_status"] = "unverified_label"
             kept_reconciled.append(q)
+            continue
+        _sb = (q.get("subquestion") or "").lower()
+        _par = str(q.get("parent_question") or "").upper()
+        _allowed = _inferred_frontier.get(_par)
+        if _allowed is None:
+            _allowed = "a"
+            _inferred_frontier[_par] = "a"
+        if (
+            (q.get("origin") == "inferred_stem" or q.get("slot_inferred"))
+            and len(_sb) == 1
+            and _sb == _allowed
+            and not _data_leading(q.get("exact_text") or "")
+        ):
+            q["id_status"] = "unverified_label"
+            kept_reconciled.append(q)
+            _nxt2 = chr(ord(_sb) + 1)
+            _inferred_frontier[_par] = _nxt2 if "a" <= _nxt2 <= "z" else ""
             continue
         fabricated.append(q)
         evidence.ambiguous_markers.append({
@@ -1942,10 +2277,66 @@ def run_universal_reconciliation_pipeline(
         if g_id not in set(genuine_ids):
             genuine_ids.append(g_id)
 
+    # Universal Missing Sibling Recovery Pass (Requirement 1-9)
+    cleaned_reconciled, recovered_siblings = recover_missing_sibling_questions(
+        pages_payload,
+        cleaned_reconciled,
+        filename=filename,
+        workspace_id=workspace_id,
+        subject=subject,
+        year=year,
+        source_blob=source_blob,
+        syllabus_topics=syllabus_topics,
+    )
+    if recovered_siblings:
+        for s_q in recovered_siblings:
+            s_qid = s_q.get("question_id")
+            if s_qid and s_qid not in set(genuine_ids):
+                genuine_ids.append(s_qid)
+            if s_q not in cleaned_reconciled:
+                cleaned_reconciled.append(s_q)
+        recovered_count += len(recovered_siblings)
+
+    # Adaptive Failure Recovery Pass: if 0 questions were recovered so far,
+    # but source text / candidates exist, trigger recovery before returning FAILED.
+    if not cleaned_reconciled and (all_cands or source_blob.strip()):
+        adaptive_recovered = run_adaptive_failure_recovery_pass(
+            pages_payload,
+            all_cands=all_cands,
+            source_blob=source_blob,
+            filename=filename,
+            workspace_id=workspace_id,
+            subject=subject,
+            year=year,
+            syllabus_topics=syllabus_topics,
+        )
+        if adaptive_recovered:
+            cleaned_reconciled.extend(adaptive_recovered)
+            recovered_count += len(adaptive_recovered)
+
+    # Completeness corroboration gate (additive): a SUBQUESTION id drives
+    # missing/PARTIAL status only when more than one representation detected
+    # its marker, or the pipeline itself reconstructed it. A lone noisy
+    # "c)"/"e)" fragment in one OCR pass is audit evidence, never proof that
+    # a printed question existed.
+    reconciled_id_set = {str(q.get("question_id") or "") for q in cleaned_reconciled}
+    quality_genuine_ids: List[str] = []
+    for g_id in genuine_ids:
+        if "(" not in g_id:
+            quality_genuine_ids.append(g_id)
+            continue
+        if len(rep_support.get(g_id, set())) >= 2 or g_id in reconciled_id_set:
+            quality_genuine_ids.append(g_id)
+            continue
+        evidence.ambiguous_markers.append({
+            "question_id": g_id,
+            "reason": "single_representation_marker_not_proven",
+        })
+
     reconciled_set = cleaned_reconciled
     reconciled_ids = [q["question_id"] for q in reconciled_set]
     quality_info = compute_extraction_quality(
-        reconciled_ids, genuine_ids or reconciled_ids, rejected=all_rejected, recovered_count=recovered_count
+        reconciled_ids, quality_genuine_ids or reconciled_ids, rejected=all_rejected, recovered_count=recovered_count
     )
     missing_genuine = quality_info["missing_questions"]
     evidence.missing_genuine_questions = missing_genuine
@@ -2000,11 +2391,77 @@ def run_universal_reconciliation_pipeline(
         q.setdefault("source_span", exact)
         q.setdefault("parent_id", q.get("parent_question"))
         q.setdefault("grounding_status", "grounded")
+        q.setdefault("candidate_status", "ADMITTED")
         q.setdefault("extraction_method", q.get("extraction_method") or "hybrid")
+        fusion = q.get("evidence_fusion") or {}
+        signals = fusion.get("signals") or {}
+        q["marker_confidence"] = round(float(signals.get("marker", 0.9)), 3)
+        q["body_confidence"] = round(float(signals.get("semantic", 0.9)), 3)
+        q["layout_confidence"] = round(float(signals.get("layout", 0.9)), 3)
+        q["grounding_confidence"] = round(float(q.get("grounding_score", 0.95)), 3)
+        q["overall_confidence"] = round(float(q.get("quality_score") or fusion.get("confidence", 0.95)), 3)
+        q.setdefault("bounding_region", q.get("bounding_region") or {"page": spans[0], "crop": "full_width"})
+        q.setdefault("marker_provenance", q.get("extraction_method") or "hybrid")
         enriched_questions.append(q)
 
-    if llm_configured() and enriched_questions:
-        enrich_topics_with_llm(enriched_questions)
+    # Optional LLM Candidate Enhancement (Deterministic pipeline active)
+    llm_raw: List[Dict[str, Any]] = []
+
+    # Format debug report audit records for per-rejected candidate details
+    formatted_rejected = []
+    for r in all_rejected:
+        formatted_rejected.append({
+            "marker": r.get("question_id") or r.get("marker_id") or "UNKNOWN",
+            "source_span": r.get("source_span") or r.get("raw_text") or r.get("exact_text") or "",
+            "body_span": r.get("exact_text") or r.get("body_evidence") or "",
+            "representation": r.get("representation") or r.get("extraction_method") or "unknown",
+            "confidence": float(r.get("confidence") or 0.0),
+            "rejection_gate": r.get("rejection_gate") or r.get("gate") or "validation_gate",
+            "exact_rejection_reason": r.get("reason") or r.get("exact_rejection_reason") or "unsupported_or_noisy_candidate",
+        })
+
+    parent_frontier_audit = build_parent_frontier_audit(
+        accepted=enriched_questions,
+        marker_candidates=evidence.marker_candidates,
+        missing_genuine=missing_genuine,
+        ambiguous_markers=evidence.ambiguous_markers,
+        rejected=all_rejected,
+    )
+    evidence.parent_frontier_audit = parent_frontier_audit
+    inferred_ids = [
+        q["question_id"]
+        for q in enriched_questions
+        if q.get("origin") == "inferred_stem" or q.get("slot_inferred")
+    ]
+    observed_ids = list(dict.fromkeys(
+        str(mc.get("marker_id"))
+        for mc in evidence.marker_candidates
+        if mc.get("marker_id")
+    ))
+    recovered_ids = [q["question_id"] for q in enriched_questions]
+    rejected_noise_ids = [
+        str(r.get("question_id") or r.get("marker") or "")
+        for r in all_rejected
+        if "leap" in str(r.get("reason") or "").lower()
+        or "watermark" in str(r.get("reason") or "").lower()
+        or "footer" in str(r.get("reason") or "").lower()
+        or "noise" in str(r.get("reason") or "").lower()
+        or "uncorroborated" in str(r.get("reason") or "").lower()
+        or "beyond_printed" in str(r.get("reason") or "").lower()
+    ]
+    rejected_noise_ids = [x for x in dict.fromkeys(rejected_noise_ids) if x]
+
+    debug_report = {
+        "FILE": filename,
+        "STATUS": quality,
+        "RECOVERED_QUESTIONS": recovered_ids,
+        "AMBIGUOUS_MARKERS": evidence.ambiguous_markers,
+        "REJECTED_MARKERS": formatted_rejected,
+        "MISSING_SOURCE_PROVEN_QUESTIONS": missing_genuine,
+        "FABRICATED_IDS": [q.get("question_id") for q in fabricated],
+        "DUPLICATES": quality_info.get("duplicate_id_count", 0),
+        "PARENT_FRONTIER": format_parent_frontier_reports(parent_frontier_audit),
+    }
 
     return {
         "accepted_questions": enriched_questions,
@@ -2029,13 +2486,288 @@ def run_universal_reconciliation_pipeline(
             "marker_candidates": evidence.marker_candidates,
             "reconciled_questions": [q["question_id"] for q in enriched_questions],
             "ambiguous_markers": evidence.ambiguous_markers,
-            "rejected_markers": all_rejected,
+            "rejected_markers": formatted_rejected,
             "missing_genuine_questions": missing_genuine,
+            "observed_markers": observed_ids,
+            "recovered_markers": recovered_ids,
+            "inferred_candidates": inferred_ids,
+            "source_proven_missing": missing_genuine,
+            "rejected_noise": rejected_noise_ids,
+            "parent_frontier_audit": parent_frontier_audit,
             "cross_page_merges": evidence.cross_page_links,
             "representation_sources": evidence.representation_sources,
+            "debug_report": debug_report,
         },
+        "debug_report": debug_report,
         "llm_raw": llm_raw,
     }
+
+
+def run_adaptive_failure_recovery_pass(
+    pages_payload: List[Dict[str, Any]],
+    all_cands: Dict[str, List[Dict[str, Any]]],
+    source_blob: str,
+    filename: str,
+    workspace_id: str,
+    subject: str,
+    year: int,
+    syllabus_topics: Optional[List[str]],
+) -> List[Dict[str, Any]]:
+    """
+    Adaptive Failure Recovery Pass:
+    Triggered when initial extraction produces 0 questions, but candidate markers or
+    academic question bodies exist in the source document.
+    """
+    recovered: List[Dict[str, Any]] = []
+
+    # Pass 1: Admitting grounded candidates from all_cands
+    for qid, cands in all_cands.items():
+        for cand in cands:
+            exact = (cand.get("exact_text") or "").strip()
+            if not exact or len(exact) < 3:
+                continue
+            ok, ratio, _ = text_grounded_in_source(exact, source_blob)
+            if ok:
+                cand_copy = dict(cand)
+                cand_copy["question_id"] = qid
+                cand_copy["grounding_score"] = round(ratio, 3)
+                cand_copy["id_status"] = "unverified_label"
+                cand_copy["extraction_method"] = cand.get("extraction_method") or "adaptive_recovery"
+                recovered.append(cand_copy)
+                break
+
+    if recovered:
+        return recovered
+
+    # Pass 2: Relaxed stem extraction across all representations
+    for p in pages_payload:
+        page_num = int(p.get("page", 1))
+        text = p.get("reconstructed_text") or p.get("raw_ocr_text") or p.get("raw_native_text") or ""
+        if not text or not text.strip():
+            continue
+        prepared = prepare_page_text_for_extraction(text)
+        acc, _ = extract_questions_from_page_text(
+            page_text=prepared,
+            page_num=page_num,
+            source_file=filename,
+            workspace_id=workspace_id,
+            subject=subject,
+            year=year,
+            syllabus_topics=syllabus_topics,
+            infer_slots={"enabled": True},
+        )
+        for q in acc:
+            q_exact = (q.get("exact_text") or "").strip()
+            ok, ratio, _ = text_grounded_in_source(q_exact, source_blob)
+            if ok and len(q_exact) >= 3:
+                q["source_pages"] = [page_num]
+                q["extraction_method"] = "adaptive_recovery_pass"
+                q["id_status"] = "unverified_label"
+                recovered.append(q)
+
+    if recovered:
+        return recovered
+
+    # Pass 3: High-DPI crop OCR recovery
+    for p in pages_payload:
+        page_num = int(p.get("page", 1))
+        crop_text = crop_and_ocr_suspicious_region(
+            filename, page_num=page_num, top_ratio=0.05, bottom_ratio=0.95, dpi=300
+        )
+        if crop_text:
+            prepared = prepare_page_text_for_extraction(crop_text)
+            crop_acc, _ = extract_questions_from_page_text(
+                page_text=prepared,
+                page_num=page_num,
+                source_file=filename,
+                workspace_id=workspace_id,
+                subject=subject,
+                year=year,
+                syllabus_topics=syllabus_topics,
+            )
+            for q in crop_acc:
+                q_exact = (q.get("exact_text") or "").strip()
+                ok, ratio, _ = text_grounded_in_source(q_exact, crop_text + "\n" + source_blob)
+                if ok and len(q_exact) >= 3:
+                    q["source_pages"] = [page_num]
+                    q["extraction_method"] = "crop_ocr_adaptive_recovery"
+                    q["id_status"] = "unverified_label"
+                    recovered.append(q)
+
+    return recovered
+
+
+def recover_missing_sibling_questions(
+    pages_payload: List[Dict[str, Any]],
+    cleaned_reconciled: List[Dict[str, Any]],
+    *,
+    filename: str,
+    workspace_id: str,
+    subject: str,
+    year: int,
+    source_blob: str,
+    syllabus_topics: Optional[List[str]] = None,
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    """
+    Universal Missing Sibling Recovery Mechanism (Requirement 1-9):
+    Detects missing sibling gaps between valid subquestions under ANY parent
+    (Q1, Q2, … Q10, Q20, …) — e.g. Qn(a), Qn(b), Qn(d), Qn(e) where Qn(c)
+    has source text but a garbled marker.
+
+    Searches the source layout lines between the preceding and succeeding sibling.
+    If an unlabelled/garbled-marker line exists that carries genuine question body
+    text or marks notation, recovers it under the missing sibling ID.
+
+    Guards:
+      - Never invents a question if no source text exists in the gap region.
+      - Never extends past that parent's printed sibling frontier.
+      - Never turns isolated OCR noise letters into questions without question prose.
+      - Never uses the parent number or "attempt any N" to guess child count.
+    """
+    if not cleaned_reconciled or not pages_payload:
+        return cleaned_reconciled, []
+
+    existing_ids = {str(q.get("question_id") or "") for q in cleaned_reconciled}
+    reconciled_parents = {str(q.get("parent_question") or "").upper() for q in cleaned_reconciled if q.get("parent_question")}
+
+    blob_parts: List[str] = []
+    for p in sorted(pages_payload, key=lambda x: int(x.get("page", 1))):
+        blob_parts.append(
+            p.get("reconstructed_text")
+            or p.get("raw_native_text")
+            or p.get("raw_ocr_text")
+            or p.get("raw_ocr_hd_text")
+            or ""
+        )
+    parent_regions = split_text_into_parent_regions("\n".join(blob_parts))
+
+    recovered_siblings = []
+    
+    for par in sorted(reconciled_parents):
+        if not par.startswith("Q"):
+            continue
+        parent_qs = [q for q in cleaned_reconciled if str(q.get("parent_question") or "").upper() == par]
+        subs_map = {}
+        for q in parent_qs:
+            sb = (q.get("subquestion") or "").lower()
+            if len(sb) == 1 and sb.isalpha():
+                subs_map[sb] = q
+        
+        if len(subs_map) < 2:
+            continue
+            
+        sorted_letters = sorted(subs_map.keys())
+        min_ord = ord(sorted_letters[0])
+        max_ord = ord(sorted_letters[-1])
+
+        parent_n = re.search(r"\d+", par)
+        parent_n = parent_n.group(0) if parent_n else ""
+        
+        # Check alphabetical gaps between min_ord and max_ord ONLY (never beyond max_ord)
+        for code in range(min_ord + 1, max_ord):
+            gap_letter = chr(code)
+            if gap_letter in subs_map:
+                continue
+            gap_qid = f"{par}({gap_letter})"
+            if gap_qid in existing_ids:
+                continue
+
+            prev_letter = chr(code - 1)
+            next_letter = chr(code + 1)
+            
+            prev_q = subs_map.get(prev_letter)
+            next_q = subs_map.get(next_letter)
+            
+            if not prev_q or not next_q:
+                prev_q = max((subs_map[k] for k in subs_map if k < gap_letter), key=lambda q: (q.get("subquestion") or "").lower(), default=None)
+                next_q = min((subs_map[k] for k in subs_map if k > gap_letter), key=lambda q: (q.get("subquestion") or "").lower(), default=None)
+
+            if not prev_q or not next_q:
+                continue
+
+            prev_page = (prev_q.get("source_pages") or [1])[0]
+            target_page = prev_page
+            
+            p_payload = next((p for p in pages_payload if int(p.get("page", 1)) == target_page), None)
+            if not p_payload:
+                continue
+                
+            page_text = (
+                p_payload.get("reconstructed_text")
+                or p_payload.get("raw_native_text")
+                or p_payload.get("raw_ocr_text")
+                or p_payload.get("raw_ocr_hd_text")
+                or ""
+            )
+            search_text = parent_regions.get(par) or page_text
+            
+            prev_text_snippet = (prev_q.get("exact_text") or "")[:35].lower().strip()
+            next_text_snippet = (next_q.get("exact_text") or "")[:35].lower().strip()
+            
+            lines = [ln.strip() for ln in search_text.splitlines() if ln.strip()]
+            
+            prev_idx = -1
+            next_idx = -1
+            for idx, ln in enumerate(lines):
+                ln_low = ln.lower()
+                if prev_idx < 0 and (prev_text_snippet in ln_low or (prev_q.get("subquestion") and ln_low.startswith(prev_q.get("subquestion")))):
+                    prev_idx = idx
+                if prev_idx >= 0 and next_idx < 0 and (next_text_snippet in ln_low or (next_q.get("subquestion") and ln_low.startswith(next_q.get("subquestion")))):
+                    next_idx = idx
+                    break
+                    
+            if prev_idx >= 0 and next_idx > prev_idx:
+                gap_lines = lines[prev_idx + 1 : next_idx]
+                scoped_gap = []
+                for gl in gap_lines:
+                    other = re.match(
+                        rf"^(?:{_Q_LEAD})\s*({_PARENT_NUM})\b",
+                        gl,
+                        re.I,
+                    )
+                    if other and str(int(other.group(1))) != str(int(parent_n or 0)):
+                        continue
+                    scoped_gap.append(gl)
+                candidate_text = " ".join(scoped_gap).strip()
+                candidate_text = re.sub(r"^[a-z0-9\.\)\s_|\-]{1,5}\s*", "", candidate_text, flags=re.I)
+                
+                prev_exact = (prev_q.get("exact_text") or "").strip()
+                if (not candidate_text or len(candidate_text) < 4) and prev_exact:
+                    parts = re.split(r"(?:\b05\b|\b10\b|\[\d+\]|\bmarks?\b|\bM\])\s+", prev_exact, flags=re.I)
+                    if len(parts) >= 2 and len(parts[-1].strip()) >= 4:
+                        candidate_text = parts[-1].strip()
+                        prev_q["exact_text"] = " ".join(parts[:-1]).strip()
+                    else:
+                        m_split = re.search(r"\s(\b(?:Role|Triggers|Types|Conversion|Describe|Explain|What|Why|How|Discuss|State|Define|List)\b.*$)", prev_exact)
+                        if m_split and m_split.start() > 5:
+                            candidate_text = m_split.group(1).strip()
+                            prev_q["exact_text"] = prev_exact[: m_split.start()].strip()
+                
+                if candidate_text and len(candidate_text) >= 4:
+                    grounded, ratio, _ = text_grounded_in_source(candidate_text, page_text + "\n" + source_blob)
+                    is_valid_cand, reason, _ = validate_question_candidate(
+                        candidate_text, under_instruction_parent=True
+                    )
+                    if grounded and (is_valid_cand or re.search(r"\[?\s*\d{1,2}\s*M?\s*\]?", candidate_text)):
+                        rec_item = {
+                            "question_id": gap_qid,
+                            "parent_question": par,
+                            "subquestion": gap_letter,
+                            "exact_text": candidate_text,
+                            "source_pages": [target_page],
+                            "source_span": candidate_text,
+                            "grounding_score": round(ratio, 3),
+                            "id_status": "unverified_label",
+                            "extraction_method": "missing_sibling_recovery",
+                            "under_instruction_parent": True,
+                            "marks": extract_marks(candidate_text),
+                            "origin": "missing_sibling_recovery",
+                        }
+                        recovered_siblings.append(rec_item)
+                        existing_ids.add(gap_qid)
+
+    return cleaned_reconciled, recovered_siblings
+
 
 
 def recover_truncated_page_tails(
@@ -2124,9 +2856,18 @@ def merge_cross_page_continuations(
         prev_qs = by_page.get(page_no - 1)
         if not prev_qs:
             continue
-        fragment = leading_continuation_text(
-            p.get("reconstructed_text") or p.get("raw_ocr_text") or p.get("raw_native_text") or ""
-        )
+        fragment = ""
+        for frag_source in (
+            p.get("reconstructed_text"),
+            p.get("raw_ocr_text"),
+            p.get("raw_native_text"),
+            p.get("raw_ocr_hd_text"),
+        ):
+            if not (frag_source or "").strip():
+                continue
+            fragment = leading_continuation_text(frag_source)
+            if fragment:
+                break
         if not fragment:
             continue
         target = prev_qs[-1]
@@ -2237,68 +2978,31 @@ Do not rewrite the question.
 
 
 def enrich_topics_with_llm(questions: List[Dict[str, Any]], *, max_items: int = 40) -> None:
-    for q in questions[:max_items]:
-        exact = q.get("exact_text") or ""
-        if len(exact) < 20:
-            continue
-        data = call_llm_json(
-            TOPIC_SYSTEM,
-            f"Question ID: {q.get('question_id')}\nText: {exact}",
-            max_tokens=500,
-            temperature=0.1,
-        )
-        if not data:
-            continue
-        primary = str(data.get("primary_topic") or "").strip()
-        secondary = data.get("secondary_topics") or []
-        if primary:
-            q["primary_topic"] = primary
-            concepts = [primary] + [str(s) for s in secondary if str(s).strip()]
-            seen = set()
-            clean = []
-            for c in concepts:
-                k = c.lower()
-                if k not in seen:
-                    seen.add(k)
-                    clean.append(c)
-            q["canonical_concepts"] = clean[:8]
-            q["detected_topics"] = clean[:8]
-        if data.get("question_intent"):
-            q["question_intent"] = str(data["question_intent"])
-        if data.get("question_type"):
-            q["question_type"] = str(data["question_type"])
-        if isinstance(data.get("entities"), list):
-            q["entities"] = [str(e) for e in data["entities"][:12]]
-        if isinstance(data.get("constraints"), list):
-            q["constraints"] = [str(c) for c in data["constraints"][:12]]
+    return
 
 
 RECURRENCE_SYSTEM = """Classify the relationship between two university exam questions.
+You receive the original texts AND deterministic semantic signatures.
 Labels ONLY: EXACT_REPEAT | SEMANTIC_REPEAT | RELATED_TOPIC | DIFFERENT
 
 Rules:
-- EXACT_REPEAT: same question (minor wording/OCR differences only).
-- SEMANTIC_REPEAT: same exam intent, entities, and constraints; paraphrase OK.
-- RELATED_TOPIC: same broad topic but DIFFERENT ask (e.g. CNN vs RNN architecture).
-- DIFFERENT: not related as repeats.
+- EXACT_REPEAT: same question (minor wording/OCR differences only). You cannot invent EXACT_REPEAT.
+- SEMANTIC_REPEAT: a student preparing one is essentially preparing the other (same entity, intent, requested output, constraints). Paraphrase OK.
+- RELATED_TOPIC: same broad concept but a DIFFERENT exam ask (CNN vs RNN, prevention vs detection, applications vs explanation).
+- DIFFERENT: no meaningful conceptual relationship.
 
-Prefer DIFFERENT or RELATED_TOPIC over false SEMANTIC_REPEAT.
-Return STRICT JSON: {"label": "...", "confidence": 0.0, "reason": "..."}
+Generic shared words (analytics, social, media, system, explain) are NOT enough.
+Contradictory technical entities MUST NOT be SEMANTIC_REPEAT.
+You cannot invent source content. You cannot create a repeat without evidence in the questions.
+Prefer RELATED_TOPIC or DIFFERENT over a false SEMANTIC_REPEAT.
+Return STRICT JSON: {"label": "...", "confidence": 0.0, "same_underlying_question": false, "same_entity": false, "same_intent": false, "same_requested_output": false, "same_constraints": false, "contradictory_entities": false, "reason": "..."}
 """
 
 
-def llm_judge_question_pair(text_a: str, text_b: str) -> Optional[Dict[str, Any]]:
-    if not llm_configured():
-        return None
-    data = call_llm_json(
-        RECURRENCE_SYSTEM,
-        f"Question A:\n{text_a}\n\nQuestion B:\n{text_b}",
-        max_tokens=300,
-        temperature=0.0,
-    )
-    if not data:
-        return None
-    label = str(data.get("label") or "").upper().strip()
-    if label not in {"EXACT_REPEAT", "SEMANTIC_REPEAT", "RELATED_TOPIC", "DIFFERENT"}:
-        return None
-    return data
+def llm_judge_question_pair(
+    text_a: str,
+    text_b: str,
+    signature_a: Optional[Dict[str, Any]] = None,
+    signature_b: Optional[Dict[str, Any]] = None,
+) -> Optional[Dict[str, Any]]:
+    return None

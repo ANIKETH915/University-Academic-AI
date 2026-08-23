@@ -19,17 +19,17 @@ export default function WorkspaceSelectorModal() {
       <div className="saas-card w-full max-w-xl p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150">
         
         {/* Modal Header */}
-        <div className="flex items-center justify-between border-b border-[#1F2937] pb-4">
-          <div className="flex items-center space-x-2 text-purple-400">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#1F2937] pb-4">
+          <div className="flex items-center space-x-2 text-purple-600 dark:text-purple-400">
             <Layers className="w-5 h-5" />
             <div>
-              <h3 className="font-heading font-extrabold text-base text-white">MY ACADEMIC WORKSPACES</h3>
-              <p className="text-xs text-slate-400">Select an isolated subject workspace or create a new one.</p>
+              <h3 className="font-heading font-extrabold text-base text-slate-900 dark:text-white">MY ACADEMIC WORKSPACES</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Select an isolated subject workspace or create a new one.</p>
             </div>
           </div>
           <button
             onClick={() => setIsSelectorOpen(false)}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#1F2937] transition-colors"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#1F2937] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -45,25 +45,25 @@ export default function WorkspaceSelectorModal() {
                 onClick={() => switchWorkspace(ws.id)}
                 className={`p-4 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${
                   isActive
-                    ? 'bg-purple-950/30 border-purple-500 text-white shadow-lg glow-purple'
-                    : 'bg-[#0B1020] border-[#1F2937] text-slate-300 hover:border-slate-700 hover:bg-[#0B1020]/80'
+                    ? 'bg-purple-500/10 dark:bg-purple-950/30 border-purple-500 text-slate-900 dark:text-white shadow-lg glow-purple'
+                    : 'bg-white dark:bg-[#0B1020] border-slate-200 dark:border-[#1F2937] text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50 dark:hover:bg-[#0B1020]/80'
                 }`}
               >
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
-                    <span className="font-heading font-bold text-sm text-white">{ws.subject}</span>
+                    <span className="font-heading font-bold text-sm text-slate-900 dark:text-white">{ws.subject}</span>
                     {ws.isDemo && (
-                      <span className="text-[9px] font-extrabold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                      <span className="text-[9px] font-extrabold px-2 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30">
                         PRELOADED DEMO
                       </span>
                     )}
                   </div>
-                  <div className="text-xs text-slate-400 flex items-center space-x-2">
-                    <span className="text-purple-300 font-medium">{ws.university}</span>
+                  <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center space-x-2">
+                    <span className="text-purple-600 dark:text-purple-300 font-medium">{ws.university}</span>
                     <span>•</span>
                     <span>{ws.branch}</span>
                     <span>•</span>
-                    <span className="text-emerald-400">{ws.semester}</span>
+                    <span className="text-emerald-600 dark:text-emerald-400">{ws.semester}</span>
                   </div>
                 </div>
 
@@ -74,7 +74,7 @@ export default function WorkspaceSelectorModal() {
                       <span>Active</span>
                     </span>
                   ) : (
-                    <span className="text-xs font-semibold text-slate-400 hover:text-white">
+                    <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
                       Select
                     </span>
                   )}
@@ -85,8 +85,8 @@ export default function WorkspaceSelectorModal() {
         </div>
 
         {/* Modal Actions */}
-        <div className="pt-2 border-t border-[#1F2937] flex items-center justify-between">
-          <span className="text-xs text-slate-400">
+        <div className="pt-2 border-t border-slate-200 dark:border-[#1F2937] flex items-center justify-between">
+          <span className="text-xs text-slate-500 dark:text-slate-400">
             {workspaces.length} workspace{workspaces.length > 1 ? 's' : ''} available
           </span>
 

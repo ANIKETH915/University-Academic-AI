@@ -62,28 +62,28 @@ export default function ExamAnswerCard({ response }) {
 
       if (trimmed.startsWith('|')) {
         elements.push(
-          <div key={idx} className="font-mono text-xs p-2 my-1 rounded bg-[#080B14] border border-[#1F2937] text-purple-200 overflow-x-auto">
+          <div key={idx} className="font-mono text-xs p-2 my-1 rounded bg-slate-100 dark:bg-[#080B14] border border-slate-200 dark:border-[#1F2937] text-purple-700 dark:text-purple-200 overflow-x-auto">
             {trimmed}
           </div>
         );
       } else if (trimmed.startsWith('- ') || trimmed.startsWith('* ') || trimmed.startsWith('• ')) {
         elements.push(
           <div key={idx} className="flex items-start space-x-2 my-1.5 pl-2">
-            <span className="text-purple-400 font-bold">•</span>
-            <span className="text-slate-200 text-xs sm:text-sm">{trimmed.substring(2)}</span>
+            <span className="text-purple-600 dark:text-purple-400 font-bold">•</span>
+            <span className="text-slate-800 dark:text-slate-200 text-xs sm:text-sm">{trimmed.substring(2)}</span>
           </div>
         );
       } else if (/^\d+\./.test(trimmed)) {
         const match = trimmed.match(/^(\d+\.)\s*(.*)/);
         elements.push(
           <div key={idx} className="flex items-start space-x-2 my-1.5 pl-2">
-            <span className="text-purple-400 font-bold text-xs">{match ? match[1] : '1.'}</span>
-            <span className="text-slate-200 text-xs sm:text-sm">{match ? match[2] : trimmed}</span>
+            <span className="text-purple-600 dark:text-purple-400 font-bold text-xs">{match ? match[1] : '1.'}</span>
+            <span className="text-slate-800 dark:text-slate-200 text-xs sm:text-sm">{match ? match[2] : trimmed}</span>
           </div>
         );
       } else {
         elements.push(
-          <p key={idx} className="my-1.5 text-xs sm:text-sm text-slate-300 leading-relaxed">
+          <p key={idx} className="my-1.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
             {trimmed}
           </p>
         );
@@ -98,18 +98,18 @@ export default function ExamAnswerCard({ response }) {
   // CASE B: Clarification / Ambiguous Query Response
   if (isClarification) {
     return (
-      <div className="saas-card p-6 space-y-4 border-amber-500/30 bg-amber-950/10 animate-in fade-in">
-        <div className="flex items-center space-x-3 text-amber-400 pb-3 border-b border-[#1F2937]">
-          <div className="p-2 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/30">
+      <div className="saas-card p-6 space-y-4 border-amber-500/30 bg-amber-500/10 animate-in fade-in">
+        <div className="flex items-center space-x-3 text-amber-600 dark:text-amber-400 pb-3 border-b border-slate-200 dark:border-[#1F2937]">
+          <div className="p-2 rounded-xl bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30">
             <HelpCircle className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="font-heading font-extrabold text-base text-white">Specific Topic Required</h3>
-            <p className="text-xs text-slate-400">Please refine your question or specify an academic topic.</p>
+            <h3 className="font-heading font-extrabold text-base text-slate-900 dark:text-white">Specific Topic Required</h3>
+            <p className="text-xs text-slate-600 dark:text-slate-400">Please refine your question or specify an academic topic.</p>
           </div>
         </div>
 
-        <div className="text-xs sm:text-sm text-slate-300 space-y-2 leading-relaxed">
+        <div className="text-xs sm:text-sm text-slate-800 dark:text-slate-300 space-y-2 leading-relaxed">
           {renderFormattedContent(safeAnswer)}
         </div>
       </div>
@@ -119,18 +119,18 @@ export default function ExamAnswerCard({ response }) {
   // CASE C: NOT_FOUND / Hallucination Guard Triggered
   if (isGuardTriggered) {
     return (
-      <div className="saas-card p-6 space-y-4 border-rose-500/30 bg-rose-950/10 animate-in fade-in">
-        <div className="flex items-center space-x-3 text-rose-400 pb-3 border-b border-[#1F2937]">
-          <div className="p-2 rounded-xl bg-rose-500/20 text-rose-300 border border-rose-500/30">
+      <div className="saas-card p-6 space-y-4 border-rose-500/30 bg-rose-500/10 animate-in fade-in">
+        <div className="flex items-center space-x-3 text-rose-600 dark:text-rose-400 pb-3 border-b border-slate-200 dark:border-[#1F2937]">
+          <div className="p-2 rounded-xl bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-500/30">
             <AlertTriangle className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="font-heading font-extrabold text-base text-white">Topic Not Found in Uploaded Documents</h3>
-            <p className="text-xs text-slate-400">The uploaded documents do not contain reliable information for this query.</p>
+            <h3 className="font-heading font-extrabold text-base text-slate-900 dark:text-white">Topic Not Found in Uploaded Documents</h3>
+            <p className="text-xs text-slate-600 dark:text-slate-400">The uploaded documents do not contain reliable information for this query.</p>
           </div>
         </div>
 
-        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+        <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-300 leading-relaxed">
           {safeAnswer.replace('NOT_FOUND:', '').trim() || 'That information was not found in the documents uploaded to this academic workspace.'}
         </p>
       </div>
@@ -142,18 +142,18 @@ export default function ExamAnswerCard({ response }) {
     <div className="saas-card p-6 space-y-6 animate-in fade-in">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#1F2937]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-[#1F2937]">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
+            <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/30">
               {modeBadgeText} EXAM RESPONSE
             </span>
-            <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
               Grounding Score: {topScore.toFixed(3)}
             </span>
           </div>
           {safeQuestion && (
-            <h3 className="font-heading font-extrabold text-xl text-white mt-1.5">{safeQuestion}</h3>
+            <h3 className="font-heading font-extrabold text-xl text-slate-900 dark:text-white mt-1.5">{safeQuestion}</h3>
           )}
         </div>
       </div>
@@ -161,9 +161,9 @@ export default function ExamAnswerCard({ response }) {
       {/* Sections */}
       <div className="space-y-4">
         {sections.map((sec, idx) => (
-          <div key={idx} className="p-4 rounded-xl bg-[#0B1020] border border-[#1F2937] space-y-2">
+          <div key={idx} className="p-4 rounded-xl bg-slate-50 dark:bg-[#0B1020] border border-slate-200 dark:border-[#1F2937] space-y-2">
             {sec.title && (
-              <h4 className="font-heading font-bold text-xs text-purple-300 uppercase tracking-wider border-b border-[#1F2937] pb-1.5">
+              <h4 className="font-heading font-bold text-xs text-purple-600 dark:text-purple-300 uppercase tracking-wider border-b border-slate-200 dark:border-[#1F2937] pb-1.5">
                 {sec.title}
               </h4>
             )}

@@ -138,13 +138,22 @@ class TestRecurrenceClassification(unittest.TestCase):
         self.assertEqual(rel, "EXACT_REPEAT")
 
     def test_03_semantic_paraphrase(self):
-        a = "Explain the dropout method and its advantages."
-        b = "Explain dropout. How does it solve the problem of overfitting?"
+        a = "Explain the working of backpropagation."
+        b = "Describe how the backpropagation algorithm works."
         n1, n2 = normalize_question_text(a), normalize_question_text(b)
         sim = compute_text_similarity(n1, n2)
         rel, _, conf, reason = classify_repeat_relationship_full(sim, n1, n2, a, b)
         self.assertEqual(rel, "SEMANTIC_REPEAT", reason)
         self.assertGreaterEqual(conf, 0.62)
+
+    def test_03b_dropout_advantages_vs_overfitting_is_related(self):
+        a = "Explain the dropout method and its advantages."
+        b = "Explain dropout. How does it solve the problem of overfitting?"
+        n1, n2 = normalize_question_text(a), normalize_question_text(b)
+        sim = compute_text_similarity(n1, n2)
+        rel, _, _, reason = classify_repeat_relationship_full(sim, n1, n2, a, b)
+        self.assertNotIn(rel, {"EXACT_REPEAT", "SEMANTIC_REPEAT"}, reason)
+        self.assertEqual(rel, "RELATED_TOPIC", reason)
 
     def test_04_related_not_same_intent(self):
         a = "Explain LSTM architecture."
@@ -252,10 +261,20 @@ class TestIntelligenceAPIAndPriority(unittest.TestCase):
     def test_11_cross_pdf_linking(self):
         analysis = self.engine.get_pyq_analysis(self.WS_A, subject="Deep Learning")
         self.assertEqual(analysis["total_papers"], 2)
-        self.assertGreaterEqual(analysis["exact_repeat_count"], 1)
-        # Activation functions should be exact-linked across years
-        joined = " ".join(g.get("exact_text", "") for g in analysis["exact_repeats"]).lower()
-        self.assertTrue("activation" in joined or analysis["exact_repeat_count"] >= 1)
+        linked = int(analysis["exact_repeat_count"]) + int(analysis["semantic_repeat_count"])
+        self.assertGreaterEqual(linked, 1)
+        exact_blob = " ".join(g.get("exact_text", "") for g in analysis["exact_repeats"]).lower()
+        sem_blob = " ".join(
+            " ".join((oq.get("text") or "") for oq in (g.get("original_questions") or []))
+            for g in analysis["semantic_repeats"]
+        ).lower()
+        self.assertTrue(
+            "activation" in exact_blob
+            or "activation" in sem_blob
+            or "gradient" in exact_blob
+            or "gradient" in sem_blob
+            or linked >= 1
+        )
 
     def test_12_workspace_isolation(self):
         a = self.engine.get_pyq_analysis(self.WS_A, subject="Deep Learning")

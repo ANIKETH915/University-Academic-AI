@@ -20,9 +20,12 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 import fitz
 from fastapi.testclient import TestClient
 
-# Isolate from production workspaces.json / collection
-os.environ["WORKSPACE_DB_TEST_MODE"] = "1"
-os.environ["PYQRAG_TEST_COLLECTION"] = "pyqrag_frontend_flow_regression"
+# Isolate from production workspaces.json / collection.
+# Keep setdefault semantics: pytest imports every test module before running
+# any of them, and rag.api binds its vector-store collection at first import.
+# A hard override here desynchronizes the API layer from test assertions.
+os.environ.setdefault("WORKSPACE_DB_TEST_MODE", "1")
+os.environ.setdefault("PYQRAG_TEST_COLLECTION", "pyqrag_pytest_collection")
 
 from rag.api import app
 from rag.vector_store import VectorStore

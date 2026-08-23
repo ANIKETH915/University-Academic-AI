@@ -219,16 +219,49 @@ export function WorkspaceProvider({ children }) {
     );
   };
 
-  const removeFileFromWorkspace = (workspaceId, fileId, docType = 'syllabus') => {
+  const removeFileFromWorkspace = async (workspaceId, fileId, docType = 'syllabus', filename = '') => {
+    try {
+      const { deleteDocument } = await import('../api/academicApi');
+      await deleteDocument(workspaceId, fileId, docType, filename);
+    } catch (e) {
+      console.error('[WORKSPACE] Backend document delete failed:', e);
+      throw e;
+    }
+
+    const isMatch = (f) => {
+      if (!f) return false;
+      const fId = String(f.id || '');
+      const fName = String(f.name || '');
+      const fFilename = String(f.filename || '');
+      const targetId = String(fileId || '');
+      const targetName = String(filename || '');
+
+      if (targetId && (fId === targetId || fName === targetId || fFilename === targetId)) return true;
+      if (targetName && (fId === targetName || fName === targetName || fFilename === targetName)) return true;
+      return false;
+    };
+
     setWorkspaces((prev) =>
       prev.map((w) => {
         if (w.id !== workspaceId) return w;
         if (docType === 'syllabus') {
-          return { ...w, syllabusFiles: w.syllabusFiles.filter((f) => f.id !== fileId) };
+          return {
+            ...w,
+            syllabusFiles: (w.syllabusFiles || []).filter((f) => !isMatch(f))
+          };
         }
-        return { ...w, pyqFiles: w.pyqFiles.filter((f) => f.id !== fileId) };
+        return {
+          ...w,
+          pyqFiles: (w.pyqFiles || []).filter((f) => !isMatch(f))
+        };
       })
     );
+
+    try {
+      await refreshWorkspaces();
+    } catch (e) {
+      console.warn('[WORKSPACE] refreshWorkspaces after delete warning:', e);
+    }
   };
 
   return (

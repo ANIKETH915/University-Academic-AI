@@ -227,3 +227,22 @@ export async function fetchPYQAudit(workspace_id) {
     return { unavailable: true, error: err?.message || 'Backend unreachable' };
   }
 }
+
+export async function deleteDocument(workspaceId, fileId, docType = 'pyq', filename = '') {
+  if (!workspaceId || !fileId) return null;
+  try {
+    const url = new URL(`${API_BASE_URL}/workspaces/${workspaceId}/documents/${fileId}`);
+    url.searchParams.set('doc_type', docType);
+    if (filename) url.searchParams.set('filename', filename);
+    const res = await fetch(url.toString(), { method: 'DELETE' });
+    if (!res.ok) {
+      const failure = await describeFailure(res, 'Delete document failed');
+      throw new Error(failure.message);
+    }
+    return await res.json();
+  } catch (err) {
+    console.error('Delete document error', err);
+    throw err;
+  }
+}
+

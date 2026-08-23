@@ -1,8 +1,17 @@
 import os
 from datetime import datetime
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-CHROMA_DB_DIR = os.path.join(BASE_DIR, 'chroma_db')
+# Tests may redirect the vector store to a private directory via
+# PYQRAG_CHROMA_DB_DIR so pytest never contends with a running backend
+# process for the same SQLite/HNSW files. Unset => unchanged production path.
+CHROMA_DB_DIR = os.environ.get("PYQRAG_CHROMA_DB_DIR") or os.path.join(BASE_DIR, 'chroma_db')
 
 COLLECTION_NAME = "mu_academic_rag"
 EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
@@ -23,11 +32,12 @@ def resolve_collection_name(explicit: str | None = None) -> str:
     return COLLECTION_NAME
 
 
-LLM_PROVIDER = os.environ.get("LLM_PROVIDER", "").strip()
-LLM_MODEL = os.environ.get("LLM_MODEL", "").strip()
-# LLM_API_KEY read only via rag.llm_client — never hardcode keys here
+
 
 
 def current_academic_year() -> int:
     return datetime.now().year
+
+
+
 

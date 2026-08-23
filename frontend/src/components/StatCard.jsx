@@ -2,16 +2,16 @@ import React from 'react';
 
 export default function StatCard({ label, value, subtext, icon: Icon, accentColor = 'purple' }) {
   const accentStyles = {
-    purple: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-    blue: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-    emerald: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-    amber: 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+    purple: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20',
+    blue: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20',
+    emerald: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
+    amber: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
   };
 
   return (
     <div className="saas-card p-5 flex flex-col justify-between space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
           {label}
         </span>
         {Icon && (
@@ -22,11 +22,11 @@ export default function StatCard({ label, value, subtext, icon: Icon, accentColo
       </div>
 
       <div>
-        <div className="font-heading font-extrabold text-2xl sm:text-3xl text-white tracking-tight">
+        <div className="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900 dark:text-white tracking-tight">
           {value}
         </div>
         {subtext && (
-          <div className="text-[11px] font-medium text-slate-400 mt-1">
+          <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400 mt-1">
             {subtext}
           </div>
         )}

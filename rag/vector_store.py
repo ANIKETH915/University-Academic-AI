@@ -9,8 +9,11 @@ class VectorStore:
         self.persist_directory = persist_directory
         self.collection_name = resolve_collection_name(collection_name)
         
-        # Initialize persistent ChromaDB client
-        self.client = chromadb.PersistentClient(path=self.persist_directory)
+        # Initialize ChromaDB client (Ephemeral for test mode to avoid Windows file lock crashes)
+        if os.environ.get("WORKSPACE_DB_TEST_MODE") == "1" or os.environ.get("PYQRAG_TEST_MODE") == "1":
+            self.client = chromadb.EphemeralClient()
+        else:
+            self.client = chromadb.PersistentClient(path=self.persist_directory)
         self.collection = self.client.get_or_create_collection(name=self.collection_name)
         
         # Initialize sentence transformer model
